@@ -1,3 +1,5 @@
 .vs/
 EShop/bin/
 EShop/obj/
+EShop/App_Data/*.mdf
+EShop/App_Data/*.ldf
