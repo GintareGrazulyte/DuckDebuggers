@@ -7,5 +7,6 @@ namespace EShop.Models
 {
     public class Cart
     {
+        int test = 5;
     }
 }
