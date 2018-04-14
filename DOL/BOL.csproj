@@ -44,6 +44,8 @@
     <Compile Include="Cart\Cart.cs" />
     <Compile Include="Cart\CartItem.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Order\Order.cs" />
+    <Compile Include="Order\OrderStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOL.Cart
+namespace DOL.Carts
 {
     public class CartItem
     {
         public Item Item { get; set; }
         public int Quantity { get; set; }
+        public Cart Cart { get; set; }
     }
 }

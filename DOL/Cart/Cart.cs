@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOL.Cart
+namespace DOL.Carts
 {
     public class Cart
     {
-        public List<CartItem> Items { get; set; }
-        public decimal Cost { get; set; }
+        public ICollection<CartItem> Items { get; set; }
+        public int Cost { get; set; }
     }
 }
