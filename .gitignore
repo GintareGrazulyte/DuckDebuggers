@@ -3,6 +3,14 @@ EShop/bin/
 EShop/obj/
 EShop/App_Data/*.mdf
 EShop/App_Data/*.ldf
+EShop/App_Data/*.ndf
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+EShop/App_Data/*.ldf
 /BLL/bin/Debug
 /BLL/obj
 /DAL/bin/Debug
