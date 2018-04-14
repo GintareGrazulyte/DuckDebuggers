@@ -1,7 +1,7 @@
 ﻿using DOL.Carts;
 using System;
 
-namespace DOL.Order
+namespace DOL.Orders
 {
     public class Order
     {

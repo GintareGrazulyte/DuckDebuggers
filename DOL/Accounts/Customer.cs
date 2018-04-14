@@ -10,6 +10,6 @@ namespace DOL.Accounts
     {
         public Card Card { get; set; }
         public DeliveryAddress DeliveryAddress { get; set; }
-        //TODO: Add Order
+        public ICollection<Order> Order { get; set; }
     }
 }
