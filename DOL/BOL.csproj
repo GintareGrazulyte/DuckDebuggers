@@ -41,8 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Accounts\Admin.cs" />
+    <Compile Include="Accounts\Customer.cs" />
+    <Compile Include="Card.cs" />
     <Compile Include="Cart\Cart.cs" />
     <Compile Include="Cart\CartItem.cs" />
+    <Compile Include="DeliveryAddress.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Order\Order.cs" />
     <Compile Include="Order\OrderStatus.cs" />
