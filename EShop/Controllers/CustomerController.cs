@@ -4,11 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DOL.Accounts;
+using DAL_API;
 
 namespace EShop.Controllers
 {
     public class CustomerController : Controller
     {
+        private ICustomerDAO _customerDAO;
+
+        public CustomerController(ICustomerDAO customerDAO)
+        {
+            _customerDAO = customerDAO;
+        }
         // GET: Customer
         public ActionResult Index()
         {
@@ -22,8 +29,14 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(Customer customer)
         {
+            if (ModelState.IsValid)
+            {
+                _customerDAO.Add(customer);
+                return RedirectToAction("Register");
+            }
             return View(customer);
         }
 
@@ -35,10 +48,10 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult Login(Customer customer)
         {
-            var foundCustomer = new Object();
-            if(foundCustomer != null)
+            var foundCustomer = _customerDAO.FindByEmail(customer.Email);
+            if(foundCustomer != null && foundCustomer.Password == customer.Password)
             {
-                Session["UserId"] = foundCustomer;
+                Session["UserId"] = foundCustomer.Id;
                 return RedirectToAction("LoggedIn");
             }
             else
@@ -48,7 +61,7 @@ namespace EShop.Controllers
             return View(customer);
         }
 
-        public ActionResult LoginIn(Object customer)
+        public ActionResult LoggedIn(Object customer)
         {
             if(Session["UserId"] != null)
             {

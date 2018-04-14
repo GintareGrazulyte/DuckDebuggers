@@ -12,6 +12,6 @@ namespace DAL
 
         public DbSet<Item> Items { get; set; }
 
-        public System.Data.Entity.DbSet<DOL.Accounts.Customer> Customers { get; set; }
+        public DbSet<DOL.Accounts.Customer> Customers { get; set; }
     }
 }

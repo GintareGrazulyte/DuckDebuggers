@@ -69,6 +69,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DuckDebuggersEShop.xsd</DependentUpon>
     </Compile>
+    <Compile Include="CustomerDAO.cs" />
     <Compile Include="EShopDbContext.cs" />
     <Compile Include="ItemsDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
