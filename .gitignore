@@ -18,3 +18,5 @@ EShop/App_Data/*.ldf
 /DOL/bin/Debug
 /DOL/obj/Debug
 /DOL/obj/Release
+/DAL_API/bin/Debug
+/DAL_API/obj/Debug
