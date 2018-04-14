@@ -10,3 +10,11 @@ EShop/App_Data/*.ndf
 *.user
 *.userosscache
 *.sln.docstates
+EShop/App_Data/*.ldf
+/BLL/bin/Debug
+/BLL/obj
+/DAL/bin/Debug
+/DAL/obj
+/DOL/bin/Debug
+/DOL/obj/Debug
+/DOL/obj/Release
