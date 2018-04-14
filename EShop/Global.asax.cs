@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DAL;
+using DAL_API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,6 +22,7 @@ namespace EShop
 
             var container = new UnityContainer();
             DependencyResolver.SetResolver(new Unity.AspNet.Mvc.UnityDependencyResolver(container));
+            container.RegisterType<IItemsDAO, ItemsDAO>();
         }
     }
 }

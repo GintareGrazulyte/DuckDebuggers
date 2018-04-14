@@ -1,8 +1,7 @@
 ﻿using DOL.Objects;
-using System.Collections.Generic;
 using System.Data.Entity;
 
-namespace DAL.EShopDbContext
+namespace DAL
 {
     public class EShopDbContext : DbContext
     {
@@ -12,5 +11,7 @@ namespace DAL.EShopDbContext
         }
 
         public DbSet<Item> Items { get; set; }
+
+
     }
 }

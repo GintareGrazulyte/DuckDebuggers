@@ -183,6 +183,10 @@
       <Project>{adbcda71-58ef-47a8-937a-9c02d0acea50}</Project>
       <Name>DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DAL_API\DAL_API.csproj">
+      <Project>{EC1749EB-DBC8-46EC-82FA-ADC48E93D649}</Project>
+      <Name>DAL_API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DOL\BOL.csproj">
       <Project>{69d1ef68-fad0-4a5a-888c-31df8794647f}</Project>
       <Name>BOL</Name>

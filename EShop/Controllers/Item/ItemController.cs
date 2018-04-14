@@ -2,19 +2,24 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using DAL.EShopDbContext;
+using DAL_API;
 using DOL.Objects;
 
 namespace EShop.Controllers
 {
     public class ItemController : Controller
     {
-        private EShopDbContext db = new EShopDbContext();
+        private IItemsDAO _itemsDAO;
+
+        public ItemController(IItemsDAO itemsDAO)
+        {
+            _itemsDAO = itemsDAO;
+        }
 
         // GET: Item
         public ActionResult Index()
         {
-            return View(db.Items.ToList());
+            return View(_itemsDAO.GetAll());
         }
 
         // GET: Item/Details/5
@@ -24,7 +29,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            Item item = _itemsDAO.Find(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -47,8 +52,7 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Items.Add(item);
-                db.SaveChanges();
+                _itemsDAO.Add(item);
                 return RedirectToAction("Index");
             }
 
@@ -62,7 +66,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            Item item = _itemsDAO.Find(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -79,8 +83,7 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(item).State = EntityState.Modified;
-                db.SaveChanges();
+                _itemsDAO.Modify(item);
                 return RedirectToAction("Index");
             }
             return View(item);
@@ -93,7 +96,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            Item item = _itemsDAO.Find(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -106,9 +109,8 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Item item = db.Items.Find(id);
-            db.Items.Remove(item);
-            db.SaveChanges();
+            Item item = _itemsDAO.Find(id);
+            _itemsDAO.Remove(item);
             return RedirectToAction("Index");
         }
 
@@ -116,7 +118,7 @@ namespace EShop.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _itemsDAO.Dispose();
             }
             base.Dispose(disposing);
         }

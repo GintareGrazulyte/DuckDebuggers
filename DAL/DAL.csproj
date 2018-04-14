@@ -70,12 +70,17 @@
       <DependentUpon>DuckDebuggersEShop.xsd</DependentUpon>
     </Compile>
     <Compile Include="EShopDbContext.cs" />
+    <Compile Include="ItemsDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DAL_API\DAL_API.csproj">
+      <Project>{ec1749eb-dbc8-46ec-82fa-adc48e93d649}</Project>
+      <Name>DAL_API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DOL\BOL.csproj">
       <Project>{69d1ef68-fad0-4a5a-888c-31df8794647f}</Project>
       <Name>BOL</Name>
