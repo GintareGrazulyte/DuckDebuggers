@@ -1,3 +1,5 @@
+using DAL;
+using DAL_API;
 using System;
 
 using Unity;
@@ -42,6 +44,8 @@ namespace EShop
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
+
+            container.RegisterType<IItemsDAO, ItemsDAO>();
         }
     }
 }
