@@ -19,7 +19,14 @@ namespace EShop.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            return View();
+            if (Session["Customer"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         //GET: Customer/Register
@@ -54,25 +61,13 @@ namespace EShop.Controllers
             if(foundCustomer != null && foundCustomer.Password == customer.Password)
             {
                 Session["Customer"] = foundCustomer;
-                return RedirectToAction("LoggedIn");
+                return RedirectToAction("Index");
             }
             else
             {
                 ModelState.AddModelError("", "Wrong email or password");
             }
             return View(customer);
-        }
-
-        public ActionResult LoggedIn(Customer customer)
-        {
-            if(Session["Customer"] != null)
-            {
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
         }
 
         public ActionResult Logout()
