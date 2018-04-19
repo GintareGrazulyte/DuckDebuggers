@@ -34,8 +34,10 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO check if no duplicate email
+                //TODO hash password then store
                 _customerDAO.Add(customer);
-                return RedirectToAction("Register");
+                return RedirectToAction("Login");
             }
             return View(customer);
         }
@@ -51,7 +53,7 @@ namespace EShop.Controllers
             var foundCustomer = _customerDAO.FindByEmail(customer.Email);
             if(foundCustomer != null && foundCustomer.Password == customer.Password)
             {
-                Session["UserId"] = foundCustomer.Id;
+                Session["Customer"] = foundCustomer;
                 return RedirectToAction("LoggedIn");
             }
             else
@@ -61,9 +63,9 @@ namespace EShop.Controllers
             return View(customer);
         }
 
-        public ActionResult LoggedIn(Object customer)
+        public ActionResult LoggedIn(Customer customer)
         {
-            if(Session["UserId"] != null)
+            if(Session["Customer"] != null)
             {
                 return View();
             }
@@ -71,6 +73,12 @@ namespace EShop.Controllers
             {
                 return RedirectToAction("Login");
             }
+        }
+
+        public ActionResult Logout()
+        {
+            Session["Customer"] = null;
+            return RedirectToAction("Login");
         }
     }
 }

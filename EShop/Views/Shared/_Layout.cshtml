@@ -23,7 +23,14 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Register", "Register", "Customer")</li>
-                    <li>@Html.ActionLink("Login", "Login", "Customer")</li>
+                    @if(Session["Customer"] == null)
+                    {
+                        <li>@Html.ActionLink("Login", "Login", "Customer")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Logout", "Logout", "Customer")</li>
+                    }
                 </ul>
             </div>
         </div>
