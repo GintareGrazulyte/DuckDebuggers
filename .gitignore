@@ -1,9 +1,9 @@
 .vs/
 EShop/bin/
 EShop/obj/
-EShop/App_Data/*.mdf
-EShop/App_Data/*.ldf
-EShop/App_Data/*.ndf
+*.mdf
+*.ldf
+*.ndf
 
 # User-specific files
 *.suo

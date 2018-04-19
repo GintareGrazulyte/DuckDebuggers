@@ -3,8 +3,5 @@
     ViewBag.Title = "LoggedIn";
 }
 
-@if(Session["UserId"] != null)
-{
-    <h2>@Session["UserId"].ToString()</h2>
-}
+<h2>@(Session["Customer"] as DOL.Accounts.Customer).Id.ToString()</h2>
 
