@@ -1,0 +1,22 @@
+﻿@{
+    var customer = Session["Customer"] as DOL.Accounts.Customer;
+}
+
+@if (Session["Customer"] == null)
+{
+    <li class="nav-item">
+        @Html.ActionLink("Register", "Register", "Customer", new { area = "" }, new { @class = "nav-link" })
+    </li>
+    <li class="nav-item">
+        @Html.ActionLink("Login", "Login", "Customer", new { area = "" }, new { @class = "nav-link" })
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        @Html.ActionLink(customer.Email, "Index", "Customer", new { area = "" }, new { @class = "nav-link" })
+    </li>
+    <li class="nav-item">
+        @Html.ActionLink("Logout", "Logout", "Customer", new { area = "" }, new { @class = "nav-link" })
+    </li>
+}
