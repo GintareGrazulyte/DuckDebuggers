@@ -1,4 +1,5 @@
-﻿using DOL.Objects;
+﻿using DOL;
+using DOL.Objects;
 using System.Data.Entity;
 
 namespace DAL
@@ -11,6 +12,8 @@ namespace DAL
         }
 
         public DbSet<Item> Items { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
 
         public DbSet<DOL.Accounts.Customer> Customers { get; set; }
     }
