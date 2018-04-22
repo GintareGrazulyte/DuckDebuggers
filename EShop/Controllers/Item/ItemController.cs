@@ -10,10 +10,12 @@ namespace EShop.Controllers
     public class ItemController : Controller
     {
         private IItemsDAO _itemsDAO;
+        private ICategoryDAO _categoryDAO;
 
-        public ItemController(IItemsDAO itemsDAO)
+        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO)
         {
             _itemsDAO = itemsDAO;
+            _categoryDAO = categoryDAO;
         }
 
         // GET: Item
@@ -40,6 +42,7 @@ namespace EShop.Controllers
         // GET: Item/Create
         public ActionResult Create()
         {
+            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -48,14 +51,14 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Price,Description")] Item item)
+        public ActionResult Create([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
         {
             if (ModelState.IsValid)
             {
                 _itemsDAO.Add(item);
                 return RedirectToAction("Index");
             }
-
+            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 
