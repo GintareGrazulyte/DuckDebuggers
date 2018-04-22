@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using DOL.Accounts;
 using DAL_API;
+using EShop.Utils;
 
 namespace EShop.Controllers
 {
@@ -41,10 +42,18 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO check if no duplicate email
-                //TODO hash password then store
-                _customerDAO.Add(customer);
-                return RedirectToAction("Login");
+                var foundCustomer = _customerDAO.FindByEmail(customer.Email);
+                if(foundCustomer == null)
+                {
+                    customer.Password = Encryption.SHA256(customer.Password);
+                    customer.ConfirmPassword = Encryption.SHA256(customer.ConfirmPassword);
+                    _customerDAO.Add(customer);
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Email already exists!");
+                }
             }
             return View(customer);
         }
@@ -58,7 +67,7 @@ namespace EShop.Controllers
         public ActionResult Login(Customer customer)
         {
             var foundCustomer = _customerDAO.FindByEmail(customer.Email);
-            if(foundCustomer != null && foundCustomer.Password == customer.Password)
+            if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password))
             {
                 Session["Customer"] = foundCustomer;
                 return RedirectToAction("Index");
