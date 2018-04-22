@@ -47,6 +47,7 @@ namespace EShop.Controllers
                 {
                     customer.Password = Encryption.SHA256(customer.Password);
                     customer.ConfirmPassword = Encryption.SHA256(customer.ConfirmPassword);
+                    customer.IsActive = true;
                     _customerDAO.Add(customer);
                     return RedirectToAction("Login");
                 }
@@ -67,7 +68,7 @@ namespace EShop.Controllers
         public ActionResult Login(Customer customer)
         {
             var foundCustomer = _customerDAO.FindByEmail(customer.Email);
-            if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password))
+            if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password) && foundCustomer.IsActive)
             {
                 Session["Customer"] = foundCustomer;
                 return RedirectToAction("Index");
