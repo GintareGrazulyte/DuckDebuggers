@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DOL.Objects
@@ -12,6 +13,8 @@ namespace DOL.Objects
         public string Name { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
-        public Category Category { get; set; }
+        [DisplayName("Category")]
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; }
     }
 }
