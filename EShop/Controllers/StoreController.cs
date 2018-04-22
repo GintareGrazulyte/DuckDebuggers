@@ -34,10 +34,5 @@ namespace EShop.Controllers
             var categoryModel = _categoryDAO.FindById(categoryId);
             return View(categoryModel);
         }
-        public ActionResult Details(int itemId, int categoryId)
-        {
-            var item = _categoryDAO.FindById(categoryId).Items.SingleOrDefault(x => x.Id == itemId);
-            return View(item);
-        }
     }
 }
