@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9BB6BFAC-B360-443B-BE27-085A9B3E1F24}</ProjectGuid>
+    <ProjectGuid>{10EC616D-8F34-4B09-A0D2-F549EF1F306C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <RootNamespace>BLL_API</RootNamespace>
+    <AssemblyName>BLL_API</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,16 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Payment.cs" />
+    <Compile Include="IPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BLL_API\BLL_API.csproj">
-      <Project>{10ec616d-8f34-4b09-a0d2-f549ef1f306c}</Project>
-      <Name>BLL_API</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DOL\BOL.csproj">
-      <Project>{69D1EF68-FAD0-4A5A-888C-31DF8794647F}</Project>
+      <Project>{69d1ef68-fad0-4a5a-888c-31df8794647f}</Project>
       <Name>BOL</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,0 +1,23 @@
+﻿@model EShop.Models.PaymentViewModel
+@{
+    ViewBag.Title = "Payment";
+}
+
+<h2>Payment</h2>
+<p>
+    *Kortelės info ir apsipirkimo kaina*
+</p>
+<p>
+    Card <br/>
+    Holder: @Model.Card.Holder <br/>
+    Number: @Model.Card.Number <br/>
+    CVV:    @Model.Card.CV <br/>
+    
+    Cart: <br/>
+    Cost: @Model.Cart.Cost <br/>
+    <br/>
+    @Html.ActionLink("Confirm and pay", "Pay")
+
+</p>
+
+
