@@ -47,6 +47,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="Carts\Cart.cs" />
     <Compile Include="Carts\CartItem.cs" />
+    <Compile Include="Category.cs" />
     <Compile Include="DeliveryAddress.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Orders\Order.cs" />
