@@ -8,6 +8,10 @@ namespace DOL.Orders
 {
     public enum OrderStatus
     {
-        approved, collecting, sent, delivered
+        waitingForPayment,
+        approved,
+        collecting,
+        sent,
+        delivered
     }
 }
