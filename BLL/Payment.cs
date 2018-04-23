@@ -27,7 +27,7 @@ namespace BLL
             return _client.SendAsync(request)
                 .ContinueWith(responseTask =>
                 {
-                    //TODO handle exeptions
+                    //TODO handle exceptions
                     return responseTask.Result.IsSuccessStatusCode;   
                 });
 
