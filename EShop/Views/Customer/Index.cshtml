@@ -1,0 +1,8 @@
+﻿@{
+    ViewBag.Title = "LoggedIn";
+}
+@{
+    var customer = Session["Customer"] as DOL.Accounts.Customer;
+}
+<h2>Hello customer @customer.Email</h2>
+

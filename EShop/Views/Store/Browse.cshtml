@@ -1,0 +1,13 @@
+﻿@model DOL.Category
+@{
+    ViewBag.Title = "Browse";
+}
+<h2>Browsing Category:@Model.Name</h2>
+<ul>
+    @foreach (var item in Model.Items)
+    {
+        <li>
+            @Html.ActionLink(item.Name, "Details", "Item", new { id = item.Id }, null)
+        </li>
+    }
+</ul>
