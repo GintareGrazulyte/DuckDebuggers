@@ -7,6 +7,7 @@ using DOL.Objects;
 
 namespace EShop.Controllers
 {
+    [Authorize]
     public class ItemController : Controller
     {
         private IItemsDAO _itemsDAO;
