@@ -20,7 +20,7 @@ namespace EShop.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            if (Session["Customer"] != null)
+            if ((Session["Account"] as Customer) != null)
             {
                 return View();
             }
@@ -70,7 +70,7 @@ namespace EShop.Controllers
             var foundCustomer = _customerDAO.FindByEmail(customer.Email);
             if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password) && foundCustomer.IsActive)
             {
-                Session["Customer"] = foundCustomer;
+                Session["Account"] = foundCustomer;
                 return RedirectToAction("Index");
             }
             else
@@ -82,7 +82,7 @@ namespace EShop.Controllers
 
         public ActionResult Logout()
         {
-            Session["Customer"] = null;
+            Session["Account"] = null;
             return RedirectToAction("Login");
         }
     }

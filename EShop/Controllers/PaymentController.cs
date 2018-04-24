@@ -52,9 +52,11 @@ namespace EShop.Controllers
 
         public void SetSessionProperties()
         {
-            //TODO: check if null
-            _card = ((Customer)Session["Customer"]).Card;
-            _cart = ((Cart)Session["Cart"]);
+            if(Session["Account"] != null && Session["Account"] != null)
+            {
+                _card = ((Customer)Session["Account"]).Card;
+                _cart = ((Cart)Session["Cart"]);
+            }
 
             //TODO: delete mock
             //_card = new Card { CV = 123, ExpMonth = 9, ExpYear = 2018, Holder = "Test", Number = "4111111111111111" };
