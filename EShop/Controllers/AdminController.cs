@@ -4,6 +4,7 @@ using DOL.Accounts;
 using DAL_API;
 using System.Web.Mvc;
 using System.Web.Security;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
@@ -16,7 +17,7 @@ namespace EShop.Controllers
             _adminDAO = adminDAO;
         }
 
-        [Authorize]
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
         public ActionResult Index()
         {
             return View();
@@ -36,6 +37,10 @@ namespace EShop.Controllers
             {
                 FormsAuthentication.SetAuthCookie(foundAdmin.Email, false);
                 Session["Account"] = foundAdmin;
+                if(returnUrl == null || returnUrl == string.Empty)
+                {
+                    returnUrl = "Index";
+                }
                 return Redirect(returnUrl);
             }
             else
