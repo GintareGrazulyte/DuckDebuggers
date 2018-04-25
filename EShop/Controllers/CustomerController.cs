@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using DOL.Accounts;
 using DAL_API;
 using EShop.Utils;
+using System.Web.Security;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
@@ -17,17 +19,12 @@ namespace EShop.Controllers
         {
             _customerDAO = customerDAO;
         }
-        // GET: Customer
+        
+
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Index()
         {
-            if (Session["Customer"] != null)
-            {
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
+            return View();
         }
 
         //GET: Customer/Register
@@ -67,10 +64,12 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult Login(Customer customer)
         {
+            //TODO also check if admin email isn't reserved
             var foundCustomer = _customerDAO.FindByEmail(customer.Email);
             if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password) && foundCustomer.IsActive)
             {
-                Session["Customer"] = foundCustomer;
+                FormsAuthentication.SetAuthCookie(foundCustomer.Email, false);
+                Session["Account"] = foundCustomer;
                 return RedirectToAction("Index");
             }
             else
@@ -82,7 +81,8 @@ namespace EShop.Controllers
 
         public ActionResult Logout()
         {
-            Session["Customer"] = null;
+            FormsAuthentication.SignOut();
+            Session["Account"] = null;
             return RedirectToAction("Login");
         }
     }

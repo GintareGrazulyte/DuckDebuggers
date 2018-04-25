@@ -48,6 +48,7 @@ namespace EShop
             container.RegisterType<IItemsDAO, ItemsDAO>();
             container.RegisterType<ICustomerDAO, CustomerDAO>();
             container.RegisterType<ICategoryDAO, CategoryDAO>();
+            container.RegisterType<IAdminDAO, AdminDAO>();
         }
     }
 }
