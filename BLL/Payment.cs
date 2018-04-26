@@ -42,7 +42,7 @@ namespace BLL
                             + "\"holder\":\"" + card.Holder + "\","
                             + "\"exp_year\":" + card.ExpYear + ","
                             + "\"exp_month\":" + card.ExpMonth + ","
-                            + "\"cvv\":\"" + card.CV + "\""
+                            + "\"cvv\":\"" + card.CVV + "\""
                         + "}";
             return json;
         }
