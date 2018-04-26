@@ -11,14 +11,14 @@ namespace DOL
         public string Number { get; set; }
         [Required(ErrorMessage = "Card holder is required!")]
         public string Holder { get; set; }
-        [Required(ErrorMessage = "Card experation year is required!")]
-        [Range(2017, 2099, ErrorMessage = "Incorrect card experation year number!")]
+        [Required(ErrorMessage = "Card expiration year is required!")]
+        [Range(2017, 2099, ErrorMessage = "Incorrect card expiration year number!")]
         public int ExpYear { get; set; }
-        [Range(1, 12, ErrorMessage = "Incorrect card experation month number!")]
-        [Required(ErrorMessage = "Card experation month is required!")]
+        [Range(1, 12, ErrorMessage = "Incorrect card expiration month number!")]
+        [Required(ErrorMessage = "Card expiration month is required!")]
         public int ExpMonth { get; set; }
         [Required(ErrorMessage = "Card cvv number is required!")]
-        [Range(0, 999, ErrorMessage = "Incorrect card cvv number!")]
-        public int CV { get; set; }
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "Incorrect card cvv number!")]
+        public string CVV { get; set; }
     }
 }
