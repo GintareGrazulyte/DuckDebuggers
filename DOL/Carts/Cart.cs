@@ -14,6 +14,29 @@ namespace DOL.Carts
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public ICollection<CartItem> Items { get; set; }
-        public int Cost { get; set; }
+        public int Cost {
+            get { return CountCartPrice(); }
+            set { /*cia nk blogo jei tuscia???????????*/}
+        }
+
+        private int CountCartPrice()
+        {
+            if (Items == null)
+                return 0;
+            int price = 0;
+            foreach(var cartItem in Items)
+            {
+                price += cartItem.Item.Price * cartItem.Quantity;
+            }
+            return price;
+        }
+
+        public void RemoveItem(int? cartItemId)
+        {
+            var itemToRemove = Items.FirstOrDefault(i => i.Id == cartItemId);
+            if (itemToRemove != null)
+                Items.Remove(itemToRemove);
+            return;
+        }
     }
 }
