@@ -16,11 +16,13 @@ namespace DOL.Carts
         public ICollection<CartItem> Items { get; set; }
         public int Cost {
             get { return CountCartPrice(); }
-            set { Cost = value; }
+            set { /*cia nk blogo jei tuscia???????????*/}
         }
 
-        public int CountCartPrice()
+        private int CountCartPrice()
         {
+            if (Items == null)
+                return 0;
             int price = 0;
             foreach(var cartItem in Items)
             {
