@@ -14,7 +14,6 @@ namespace EShop.Controllers
     {
         private IItemsDAO _itemsDAO;
         private ICategoryDAO _categoryDAO;
-        //private ICollection<CartItem> _cartItems;
 
         public CartController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO)
         {
@@ -51,8 +50,6 @@ namespace EShop.Controllers
                 cart = new Cart();
                 cart.Items = new List<CartItem>();
                 Session["Cart"] = cart;
-                //ViewBag.cart = cartItems.Count();
-                //Session["Count"] = 1;
             }
             else
             {
