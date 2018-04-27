@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminDAO.cs" />
     <Compile Include="CategoryDAO.cs" />
     <Compile Include="CustomerDAO.cs" />
     <Compile Include="EShopDbContext.cs" />

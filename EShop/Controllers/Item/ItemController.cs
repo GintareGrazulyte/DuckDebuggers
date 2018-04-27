@@ -4,9 +4,11 @@ using System.Net;
 using System.Web.Mvc;
 using DAL_API;
 using DOL.Objects;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
+    [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class ItemController : Controller
     {
         private IItemsDAO _itemsDAO;
