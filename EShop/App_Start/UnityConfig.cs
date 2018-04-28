@@ -1,6 +1,10 @@
+using BLL;
+using BLL_API;
 using DAL;
 using DAL_API;
 using System;
+using BLL_API;
+using BLL;
 
 using Unity;
 
@@ -49,6 +53,8 @@ namespace EShop
             container.RegisterType<ICustomerDAO, CustomerDAO>();
             container.RegisterType<ICategoryDAO, CategoryDAO>();
             container.RegisterType<IAdminDAO, AdminDAO>();
+            container.RegisterType<IFileLoader, FileLoader>();
+            container.RegisterType<IPaymentService, PaymentService>();
         }
     }
 }

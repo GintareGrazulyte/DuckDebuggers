@@ -17,6 +17,7 @@ namespace DOL.Carts
             set { /* TODO: cia nk blogo jei tuscia???????????*/}
         }
 
+        //TODO move to bussiness logics
         private int CountCartPrice()
         {
             if (Items == null)

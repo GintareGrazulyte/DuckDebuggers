@@ -1,10 +1,11 @@
 ﻿using System.Data.Entity;
-using System.Linq;
+using System;
 using System.Net;
 using System.Web.Mvc;
 using DAL_API;
 using DOL.Objects;
 using EShop.Attributes;
+using BLL_API;
 
 namespace EShop.Controllers
 {
@@ -13,11 +14,13 @@ namespace EShop.Controllers
     {
         private IItemsDAO _itemsDAO;
         private ICategoryDAO _categoryDAO;
+        private IFileLoader _fileLoader;
 
-        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO)
+        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, IFileLoader fileLoader)
         {
             _itemsDAO = itemsDAO;
             _categoryDAO = categoryDAO;
+            _fileLoader = fileLoader;
         }
 
         // GET: Item
@@ -53,10 +56,19 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
+        public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+                    item.ImageUrl = _fileLoader.Load(Server.MapPath("~/Uploads/Images"), item.Image);
+                }
+                catch(Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View(item);
+                }
                 _itemsDAO.Add(item);
                 return RedirectToAction("Index");
             }
