@@ -161,8 +161,8 @@
     <Content Include="Views\Store\Index.cshtml" />
     <Content Include="Views\Store\Browse.cshtml" />
     <Content Include="Views\Store\CategoryMenu.cshtml" />
-    <Content Include="Views\Payment\Index.cshtml" />
-    <Content Include="Views\Payment\Pay.cshtml" />
+    <Content Include="Views\PaymentService\Index.cshtml" />
+    <Content Include="Views\PaymentService\Pay.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Cart\EmptyCart.cshtml" />
     <Content Include="Views\Admin\Login.cshtml" />
@@ -199,7 +199,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\Item\ItemController.cs" />
     <Compile Include="Controllers\OrderHistoryController.cs" />
-    <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\PaymentServiceController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

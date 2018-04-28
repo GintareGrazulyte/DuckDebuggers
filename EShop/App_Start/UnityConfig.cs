@@ -1,3 +1,5 @@
+using BLL;
+using BLL_API;
 using DAL;
 using DAL_API;
 using System;
@@ -49,6 +51,7 @@ namespace EShop
             container.RegisterType<ICustomerDAO, CustomerDAO>();
             container.RegisterType<ICategoryDAO, CategoryDAO>();
             container.RegisterType<IAdminDAO, AdminDAO>();
+            container.RegisterType<IPaymentService, PaymentService>();
         }
     }
 }

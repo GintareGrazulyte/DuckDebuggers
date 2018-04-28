@@ -11,10 +11,11 @@ namespace DOL.Accounts
 {
     public class Customer : Account
     {
-        [Required]
+        //TODO: error when modifying
+      //  [Required]
         [DataType(DataType.Password)]
         [NotMapped]
-        [Compare("Password", ErrorMessage = "Passwords don't match!")]
+       // [Compare("Password", ErrorMessage = "Passwords don't match!")]
         public string ConfirmPassword { get; set; }
         public Card Card { get; set; }
         public DeliveryAddress DeliveryAddress { get; set; }

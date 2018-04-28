@@ -37,7 +37,14 @@ namespace DAL
         public void Modify(Customer customer)
         {
             _db.Entry(customer).State = EntityState.Modified;
-            _db.SaveChanges();
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch(Exception e)
+            {
+               
+            }
         }
 
         public void Remove(Customer customer)
