@@ -56,5 +56,14 @@ namespace EShop.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _adminDAO.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
