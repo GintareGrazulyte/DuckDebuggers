@@ -1,5 +1,7 @@
 ﻿using DAL_API;
 using DOL.Accounts;
+using DOL.Carts;
+using DOL.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +26,28 @@ namespace EShop.Controllers
             if (currentCustomer == null)
                 return RedirectToAction("Index", "Store");
 
-            Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
+            //Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
             
-            return View(customer.Orders);
+            return View(currentCustomer.Orders);
         }
         [HttpPost]
-        public ActionResult IndexPartial(FormCollection fc)
+        public ActionResult OrderTable(FormCollection fc)
         {
-            var orderID = fc["OrderId"];
+            int orderID = 0;
+            try
+            {
+                orderID = Convert.ToInt32(fc["OrderId"]);
+            }
+            catch (FormatException)
+            {
+                return Content("<html></html>");
+                //return RedirectToAction("Index");
+            }
 
-            return View();
+            Customer currentCustomer = (Session["Account"] as Customer);
+            Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
+            Cart cart = order.Cart;
+            return View(cart);
         }
     }
 }

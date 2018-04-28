@@ -12,14 +12,14 @@
                                   new { @class = "form-control", @onchange = "Test(this)" })
 
 
-<div id="partial">
-    @Html.Partial("IndexPartial")
+<div id="OrderTable">
+    
 </div>
 
 
 <script type="text/javascript">
     function Test(_this) {
-        var url = '@Url.Action("IndexPartial", "OrderHistory")';
+        var url = '@Url.Action("OrderTable", "OrderHistory")';
 
         $.ajax({
             type: "POST",
@@ -27,8 +27,8 @@
             data: $('#OrderId').serialize(),
             cache: false,
             dataType: 'html',
-            success: function (result) {
-                $("#partial").html(result);
+            success: function (response) {
+                    $("#OrderTable").html(response);
             }
         });
 
