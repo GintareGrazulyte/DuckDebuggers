@@ -24,7 +24,7 @@ namespace DAL
             _db.Dispose();
         }
 
-        public Category FindById(int id)
+        public Category FindById(int? id)
         {
             return _db.Categories.Include("Items")
                     .Where(c => c.Id == id)
