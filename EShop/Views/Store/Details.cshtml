@@ -1,0 +1,51 @@
+﻿@model DOL.Objects.Item
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.Name</h2>
+<div id="item-details">
+    <div>
+        <h4>Item</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Category)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Category.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="fb-comments" data-width="230" data-numposts="5"/>
+    <p>
+        @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id }) | 
+        @Html.ActionLink("AddToCart", "AddToCart", "Cart", new { id = Model.Id }, null)
+    </p>
+</div>
+
