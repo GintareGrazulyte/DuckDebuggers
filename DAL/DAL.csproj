@@ -65,15 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminDAO.cs" />
-    <Compile Include="App_Data\DuckDebuggersEShop.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DuckDebuggersEShop.xsd</DependentUpon>
-    </Compile>
     <Compile Include="CategoryDAO.cs" />
     <Compile Include="CustomerDAO.cs" />
     <Compile Include="EShopDbContext.cs" />
     <Compile Include="ItemsDAO.cs" />
+    <Compile Include="OrderDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,20 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="App_Data\DuckDebuggersEShop.xsc">
-      <DependentUpon>DuckDebuggersEShop.xsd</DependentUpon>
-    </None>
-    <None Include="App_Data\DuckDebuggersEShop.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DuckDebuggersEShop.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="App_Data\DuckDebuggersEShop.xss">
-      <DependentUpon>DuckDebuggersEShop.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>

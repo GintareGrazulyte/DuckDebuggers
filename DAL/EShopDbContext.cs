@@ -2,6 +2,7 @@
 using DOL.Objects;
 using DOL.Accounts;
 using System.Data.Entity;
+using DOL.Orders;
 
 namespace DAL
 {
@@ -19,5 +20,7 @@ namespace DAL
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
     }
 }
