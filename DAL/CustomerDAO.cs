@@ -38,6 +38,7 @@ namespace DAL
         {
             _db.Entry(customer).State = EntityState.Modified;
             _db.SaveChanges();
+          
         }
 
         public void Remove(Customer customer)
