@@ -1,0 +1,10 @@
+﻿@model IEnumerable<DOL.Orders.Order>
+@{
+    ViewBag.Title = "Order History";
+}
+
+@foreach(var order in Model)
+{
+    <p>@Html.DisplayFor(modelItem => order.Id)</p>
+}
+
