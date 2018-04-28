@@ -25,7 +25,15 @@ namespace EShop.Controllers
                 return RedirectToAction("Index", "Store");
 
             Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
+            
             return View(customer.Orders);
+        }
+        [HttpPost]
+        public ActionResult IndexPartial(FormCollection fc)
+        {
+            var orderID = fc["OrderId"];
+
+            return View();
         }
     }
 }

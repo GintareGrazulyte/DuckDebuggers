@@ -5,8 +5,36 @@
 <h1>Order History</h1>
 
 <h5>Choose an order:</h5>
-@foreach(var order in Model)
-{
-    <p>@Html.DisplayFor(modelItem => order.Id)</p>
-}
 
+@Html.DropDownList("OrderId",
+                                  new SelectList(Model, "Id", "DateTime"),
+                                  "Select Order",
+                                  new { @class = "form-control", @onchange = "Test(this)" })
+
+
+<div id="partial">
+    @Html.Partial("IndexPartial")
+</div>
+
+
+<script type="text/javascript">
+    function Test(_this) {
+        var url = '@Url.Action("IndexPartial", "OrderHistory")';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#OrderId').serialize(),
+            cache: false,
+            dataType: 'html',
+            success: function (result) {
+                $("#partial").html(result);
+            }
+        });
+
+    }
+
+    
+
+
+</script>
