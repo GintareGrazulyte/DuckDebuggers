@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DAL_API
 {
-    public interface ICategoryDAO
+    public interface ICategoryDAO : IDisposable
     {
-        Category FindById(int id);
+        Category FindById(int? id);
         List<Category> GetAll();
         void Remove(Category category);
         void Add(Category category);
