@@ -16,7 +16,7 @@ namespace DOL.Carts
         public ICollection<CartItem> Items { get; set; }
         public int Cost {
             get { return CountCartPrice(); }
-            set { /*cia nk blogo jei tuscia???????????*/}
+            set { /* TODO: cia nk blogo jei tuscia???????????*/}
         }
 
         private int CountCartPrice()
