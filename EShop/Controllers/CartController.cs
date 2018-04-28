@@ -60,12 +60,7 @@ namespace EShop.Controllers
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
-                //TODO: PAKEIST I LINQ 
-                foreach(CartItem cItem in cart.Items)
-                {
-                    if (cItem.Item.Id == id)
-                        cItem.Quantity++;
-                }
+                cart.Items.Where(x => x.Item.Id == id).ToList().ForEach(y => y.Quantity += 1);
             }
             else
             {
@@ -76,7 +71,7 @@ namespace EShop.Controllers
                 cart.Items.Add(cartItem);
             }
             Session["Count"] = cart.Items.Count;
-            return RedirectToAction("Index", "Item");
+            return Redirect(Request.UrlReferrer.PathAndQuery);
         }
 
         public ActionResult ChangeCartItemQuantity(FormCollection fc)

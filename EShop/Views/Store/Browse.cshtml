@@ -6,8 +6,8 @@
 <ul>
     @foreach (var item in Model.Items)
     {
-        <li>
-            @Html.ActionLink(item.Name, "Details", "Item", new { id = item.Id }, null)
-        </li>
+    <li>
+        @Html.ActionLink(item.Name, "Details", new { itemId = item.Id, categoryId = Model.Id })
+    </li>
     }
 </ul>

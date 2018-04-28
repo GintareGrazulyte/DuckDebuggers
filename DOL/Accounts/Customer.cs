@@ -18,6 +18,6 @@ namespace DOL.Accounts
         public string ConfirmPassword { get; set; }
         public Card Card { get; set; }
         public DeliveryAddress DeliveryAddress { get; set; }
-        public ICollection<Order> Order { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }
