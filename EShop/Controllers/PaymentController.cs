@@ -60,7 +60,7 @@ namespace EShop.Controllers
 
             //TODO: delete mock
             //_card = new Card { CVV = 123, ExpMonth = 9, ExpYear = 2018, Holder = "Test", Number = "4111111111111111" };
-            _cart = new Cart { Id = 0, Cost = 123, Items = new Collection<CartItem>() };
+            //_cart = new Cart { Id = 0, Cost = 123, Items = new Collection<CartItem>() };
         }
     }
 }
