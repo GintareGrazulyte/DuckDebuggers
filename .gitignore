@@ -22,3 +22,5 @@ EShop/App_Data/*.ldf
 /DAL_API/obj/Debug
 /BLL_API/bin/Debug
 /BLL_API/obj/Debug
+
+/EShop/Uploads
