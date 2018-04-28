@@ -14,7 +14,7 @@
     CVV:    @Model.Card.CVV <br/>
     
     Cart: <br/>
-    Cost: @Model.Cart.Cost <br/>
+    Cost: @(Model.Cart.Cost / 100.0m) <br/>
     <br/>
     @Html.ActionLink("Confirm and pay", "Pay", null, new { @class = "btn btn-primary" })
     

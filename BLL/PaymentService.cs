@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    public class Payment : IPayment
+    public class PaymentService : IPaymentService
     {
         private readonly HttpClient _client = new HttpClient();
 
-        public Task<bool> Pay(Card card, Cart cart)
+        public Task<HttpResponseMessage> Pay(Card card, Cart cart)
         {
             string json = ToJson(card, cart);
 
@@ -27,8 +27,7 @@ namespace BLL
             return _client.SendAsync(request)
                 .ContinueWith(responseTask =>
                 {
-                    //TODO handle exceptions
-                    return responseTask.Result.IsSuccessStatusCode;   
+                    return responseTask.Result;   
                 });
 
         }
