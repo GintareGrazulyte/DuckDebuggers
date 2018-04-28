@@ -69,6 +69,15 @@
     <Compile Include="CustomerDAO.cs" />
     <Compile Include="EShopDbContext.cs" />
     <Compile Include="ItemsDAO.cs" />
+    <Compile Include="Migrations\201804271538277_InitialCreate.cs" />
+    <Compile Include="Migrations\201804271538277_InitialCreate.Designer.cs">
+      <DependentUpon>201804271538277_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804281513540_deleted carts table.cs" />
+    <Compile Include="Migrations\201804281513540_deleted carts table.Designer.cs">
+      <DependentUpon>201804281513540_deleted carts table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +111,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201804271538277_InitialCreate.resx">
+      <DependentUpon>201804271538277_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804281513540_deleted carts table.resx">
+      <DependentUpon>201804281513540_deleted carts table.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
