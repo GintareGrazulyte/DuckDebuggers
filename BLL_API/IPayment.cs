@@ -1,11 +1,13 @@
 ﻿using DOL;
 using DOL.Carts;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BLL_API
 {
-    public interface IPayment
+    public interface IPaymentService
     {
-        Task<bool> Pay(Card card, Cart cart);
+        //TODO: async
+        Task<HttpResponseMessage> Pay(Card card, Cart cart);
     }
 }
