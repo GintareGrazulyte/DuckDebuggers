@@ -15,6 +15,5 @@ namespace DOL.Orders
         public Cart Cart { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime DateTime { get; set; }
-        public ICollection<CartItem> CartItems { get; set; }
     }
 }
