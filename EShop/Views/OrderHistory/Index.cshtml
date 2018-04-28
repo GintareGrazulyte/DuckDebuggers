@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Order History";
 }
+<h1>Order History</h1>
 
+<h5>Choose an order:</h5>
 @foreach(var order in Model)
 {
     <p>@Html.DisplayFor(modelItem => order.Id)</p>

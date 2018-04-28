@@ -20,11 +20,11 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            Customer customer = _customerDAO.FindByEmail(((Customer)Session["Account"]).Email);
-            foreach(var order in customer.Orders)
-            {
-                //
-            }
+            Customer currentCustomer = (Session["Account"] as Customer);
+            if (currentCustomer == null)
+                return RedirectToAction("Index", "Store");
+
+            Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
             return View(customer.Orders);
         }
     }
