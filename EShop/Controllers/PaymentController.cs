@@ -21,7 +21,11 @@ namespace EShop.Controllers
 
         public ActionResult Index()
         {
-            //TODO: can be accessed only by authorized user
+            if (Session["Account"] == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
             SetSessionProperties();
 
             return View(new PaymentViewModel(_cart, _card));
@@ -29,7 +33,16 @@ namespace EShop.Controllers
 
         public ActionResult Pay()
         {
-            //TODO: can be accessed only by authorized user
+            if (Session["Account"] == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            if (Session["Cart"] == null)
+            {
+                return RedirectToAction("EmptyCart", "Cart");
+            }
+
             SetSessionProperties();
 
             bool paymentResult = _payment.Pay(_card, _cart).Result;
@@ -51,12 +64,14 @@ namespace EShop.Controllers
         }
 
         public void SetSessionProperties()
-        {
-            if(Session["Account"] != null && Session["Account"] != null)
+        {        
+            if(Session["Account"] != null)
             {
                 _card = ((Customer)Session["Account"]).Card;
-                _cart = ((Cart)Session["Cart"]);
+                
             }
+
+            _cart = ((Cart)Session["Cart"]);
 
             //TODO: delete mock
             //_card = new Card { CVV = 123, ExpMonth = 9, ExpYear = 2018, Holder = "Test", Number = "4111111111111111" };
