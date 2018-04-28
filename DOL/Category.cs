@@ -14,6 +14,7 @@ namespace DOL
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Incorrect category name")]
         public string Name { get; set; }
         public List<Item> Items { get; set; }
     }
