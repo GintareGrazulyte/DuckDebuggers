@@ -1,4 +1,5 @@
-﻿using DOL.Orders;
+﻿using DOL.Carts;
+using DOL.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace EShop.Models
     {
         public Order Order { get; set; }
         public Cart Cart { get; set; }
+        public List<CartItem> Items { get; set; }
     }
 }

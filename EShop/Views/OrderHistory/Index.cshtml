@@ -1,17 +1,10 @@
-﻿@{
-   
+﻿@model IEnumerable<DOL.Orders.Order>
+@{
+    ViewBag.Title = "Order History";
 }
 
-<!DOCTYPE html>
+@foreach(var order in Model)
+{
+    <p>@Html.DisplayFor(modelItem => order.Id)</p>
+}
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-    
-    </div>
-</body>
-</html>
