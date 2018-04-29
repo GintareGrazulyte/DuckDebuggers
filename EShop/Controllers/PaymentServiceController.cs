@@ -105,10 +105,12 @@ namespace EShop.Controllers
                 //TODO handle;
             }
 
-            var customer = _customerDAO.FindByEmail(currentCustomer.Email);
-            var order = new Order { Cart = (Cart)Session["Cart"], DateTime = DateTime.Now, OrderStatus = orderStatus };
-            customer.Orders.Add(order);
-            _customerDAO.Modify(customer);
+            //TODO: cannot modify as db crashes
+
+            //var customer = _customerDAO.FindByEmail(currentCustomer.Email);
+            //var order = new Order { Cart = (Cart)Session["Cart"], DateTime = DateTime.Now, OrderStatus = orderStatus };
+            //customer.Orders.Add(order);
+            //_customerDAO.Modify(customer);
 
             Session["Cart"] = null;
             Session["count"] = 0;
