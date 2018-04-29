@@ -17,7 +17,7 @@ namespace DOL.Objects
         public HttpPostedFileBase Image { get; set; }
         public string Description { get; set; }
         [DisplayName("Category")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public string ImageUrl { get; set; }
     }

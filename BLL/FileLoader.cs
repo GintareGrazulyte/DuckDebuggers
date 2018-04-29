@@ -11,7 +11,7 @@ namespace BLL
         {
             if(file == null || file.ContentLength <= 0)
             {
-                throw new Exception("File doesn't exist");
+                return null;
             }
             string fileName = Path.GetFileName(file.FileName);
             string path = Path.Combine(folder, fileName);

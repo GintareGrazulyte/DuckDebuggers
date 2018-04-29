@@ -58,17 +58,10 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
         {
+            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                try
-                {
-                    item.ImageUrl = _fileLoader.Load(Server.MapPath("~/Uploads/Images"), item.Image);
-                }
-                catch(Exception ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                    return View(item);
-                }
+                item.ImageUrl = _fileLoader.Load(Server.MapPath("~/Uploads/Images"), item.Image);
                 _itemsDAO.Add(item);
                 return RedirectToAction("Index");
             }

@@ -41,10 +41,8 @@
 
     <div class="form-group">
         @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="input-group mb-3">
-            <div class="custom-file">
-                @Html.TextBoxFor(model => model.Image, new { type = "file" })
-            </div>
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Image, new { type = "file" })
         </div>
     </div>
 
@@ -58,7 +56,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <input type="submit" value="Create" class="btn btn-primary" />
         </div>
     </div>
 </div>
