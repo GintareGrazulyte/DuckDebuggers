@@ -176,6 +176,8 @@
     <Content Include="Views\Store\Details.cshtml" />
     <Content Include="Views\OrderHistory\OrderTable.cshtml" />
     <Content Include="Views\OrderHistory\NoOrders.cshtml" />
+    <Content Include="Views\Shared\_NavigationBar.cshtml" />
+    <Content Include="Views\Shared\_GoBackButton.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
