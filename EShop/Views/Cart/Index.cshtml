@@ -21,12 +21,16 @@
             <th>
                 Price
             </th>
+            <th>
+                Total Price
+            </th>
             <th></th>
         </tr>
 
         @foreach (var cartItem in cartItems)
         {
-            decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
+            decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
+            decimal piecePrice = cartItem.Item.Price / 100.0m;
 
             <tr>
                 <td width="10%">
@@ -52,6 +56,10 @@
                 </td>
                 
                 <td style="vertical-align:middle;">
+                    @Html.DisplayFor(modelItem => piecePrice) Eur/Piece
+                </td>
+
+                <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
                 <td style="vertical-align:middle;">
@@ -68,6 +76,7 @@
             <th>
                 Total:
             </th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

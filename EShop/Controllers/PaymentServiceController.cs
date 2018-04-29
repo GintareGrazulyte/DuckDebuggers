@@ -43,11 +43,15 @@ namespace EShop.Controllers
         public ActionResult Pay()
         {
             ActionResult actionResult = SetSessionProperties();
-
+            
+            
             if (actionResult != null)
             {
                 return actionResult;
             }
+
+            //TODO: neaisku ar cia ar ne cia ikisau, Gintare tegu paziuri
+            _cart.Cost = _cart.CountCartPrice();
 
             HttpResponseMessage paymentResult = _paymentService.Pay(_card, _cart).Result;
             OrderStatus orderStatus;
