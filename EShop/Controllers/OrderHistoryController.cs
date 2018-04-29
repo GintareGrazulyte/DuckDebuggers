@@ -52,8 +52,7 @@ namespace EShop.Controllers
 
             Customer currentCustomer = (Session["Account"] as Customer);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
-            Cart cart = order.Cart;
-            return View(cart);
+            return View(order);
         }
     }
 }
