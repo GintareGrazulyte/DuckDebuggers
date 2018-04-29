@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using DOL.Accounts;
 using DAL_API;
 using EShop.Utils;
@@ -84,6 +80,15 @@ namespace EShop.Controllers
             FormsAuthentication.SignOut();
             Session["Account"] = null;
             return RedirectToAction("Login");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _customerDAO.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
