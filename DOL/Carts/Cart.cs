@@ -15,10 +15,7 @@ namespace DOL.Carts
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public ICollection<CartItem> Items { get; set; }
-        public int Cost {
-            get { return CountCartPrice(); }
-            set { /* TODO: cia nk blogo jei tuscia???????????*/}
-        }
+        public int Cost { get; set; }
 
         //TODO move to bussiness logics
 
@@ -34,7 +31,7 @@ namespace DOL.Carts
             }
             return count;
         }
-        private int CountCartPrice()
+        public int CountCartPrice()
         {
             if (Items == null)
                 return 0;

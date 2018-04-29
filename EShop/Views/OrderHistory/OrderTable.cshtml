@@ -34,13 +34,17 @@
         {
             decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
             decimal piecePrice = cartItem.BuyPrice / 100.0m;
-            cartItem.Item.Price = cartItem.BuyPrice;
+            
             <tr>
                 <td width="10%">
                     @{
                         if (cartItem.Item.ImageUrl != null)
                         {
                             @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
+                        }
+                        else
+                        {
+                            @:@cartItem.Item.Price
                         }
                     }
                 </td>
@@ -82,4 +86,5 @@
         </tr>
 
     </table>
+    <p>Order status: @Model.OrderStatus</p>
 </div>
