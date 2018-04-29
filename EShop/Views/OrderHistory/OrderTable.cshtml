@@ -4,6 +4,7 @@
     Layout = null;
     var orderDateTime = Model.DateTime;
 }
+@using DOL.Orders
 <br />
 <h3>Order: @orderDateTime</h3>
 
@@ -83,5 +84,5 @@
         </tr>
 
     </table>
-    <p>Order status: @Model.OrderStatus</p>
+    <p>Order status: @Model.OrderStatus.GetDescription()</p>
 </div>
