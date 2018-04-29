@@ -6,19 +6,21 @@
 
 <h5>Choose an order:</h5>
 
-@Html.DropDownList("OrderId",
-                                  new SelectList(Model, "Id", "DateTime"),
-                                  "Select Order",
-                                  new { @class = "form-control", @onchange = "Test(this)" })
+<body onload="OptionChange()">
 
+    @Html.DropDownList("OrderId",
+                             new SelectList(Model, "Id", "DateTime"),
+                             "Select Order",
+                             new { @class = "form-control", @onchange = "OptionChange()" })
 
-<div id="OrderTable">
-    
-</div>
+    <div id="OrderTable"></div>
+
+</body>
 
 
 <script type="text/javascript">
-    function Test(_this) {
+    function OptionChange() {
+        alert("la");
         var url = '@Url.Action("OrderTable", "OrderHistory")';
 
         $.ajax({

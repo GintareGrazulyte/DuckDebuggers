@@ -26,7 +26,8 @@
 
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => cartItem.Item.Name)
+                    @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, null)
+                    
                 </td>
 
                 <td>
