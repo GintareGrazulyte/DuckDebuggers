@@ -1,25 +1,18 @@
 ﻿using BLL_API;
 using DAL_API;
-using DOL;
 using DOL.Accounts;
 using DOL.Carts;
 using DOL.Orders;
 using EShop.Models;
-using Newtonsoft.Json.Linq;
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Text;
 using System.Web.Mvc;
-
+using System.Linq;
+using System;
 
 namespace EShop.Controllers
 {
     public class PaymentServiceController : Controller
     {
         private IPaymentService _paymentService;
-        private Card _card;
-        private Cart _cart;
         private ICustomerDAO _customerDAO;
 
         public PaymentServiceController(ICustomerDAO customerDAO, IPaymentService paymentService)
@@ -28,84 +21,55 @@ namespace EShop.Controllers
             _paymentService = paymentService;
         }
 
-        //TODO add attribute
         public ActionResult Index()
         {
-            ActionResult actionResult = SetSessionProperties();
+            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
+            if (actionResult != null)
+            {
+                return actionResult;
+            }
+            return View(new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = false });
+        }
 
+        public ActionResult IndexFormedOrder(Cart cart)
+        {
+            ActionResult actionResult = GetSessionCustomer(out Customer customer);
+            if (actionResult != null)
+            {
+                return actionResult;
+            }
+            return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
+        }
+
+        public ActionResult PayFormedOrder(Cart cart)
+        {
+            ActionResult actionResult = GetSessionCustomer(out Customer currentCustomer);
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-            return View(new PaymentViewModel() { Card = _card, Cart = _cart });
+            _paymentService.Payment(currentCustomer.Card, cart.Cost, out OrderStatus orderStatus, out string paymentInfo);
+
+            //TODO: now does not change anything in DB
+            var customer = _customerDAO.FindByEmail(currentCustomer.Email);
+            Order order = currentCustomer.Orders.FirstOrDefault(o => o.Cart.Id == cart.Id);
+            order.OrderStatus = orderStatus;
+            _customerDAO.Modify(customer);
+
+            return View("Pay", new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
         }
 
         //TODO add attribute
-        public ActionResult Pay()
+        public ActionResult Pay(Cart cart)
         {
-            ActionResult actionResult = SetSessionProperties();
-            
-            
+            ActionResult actionResult = GetSessionCustomer(out Customer currentCustomer);
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-
-            HttpResponseMessage paymentResult = _paymentService.Pay(_card, _cart).Result;
-
-            var receiveStream = paymentResult.Content.ReadAsStreamAsync().Result;
-            var readStream = new StreamReader(receiveStream, Encoding.UTF8);
-            JObject responseContent = JObject.Parse(readStream.ReadToEnd());
-
-
-            string paymentInfo = "";
-            OrderStatus orderStatus;
- 
-            if (paymentResult.IsSuccessStatusCode)
-            {
-                orderStatus = OrderStatus.approved;
-            }
-            else
-            {
-                orderStatus = OrderStatus.waitingForPayment;
-
-                switch (paymentResult.StatusCode)
-                {
-                    case System.Net.HttpStatusCode.BadRequest:
-                        paymentInfo = "Invalid card number, ";
-                        break;
-                    case System.Net.HttpStatusCode.Unauthorized:
-                        //401 nepavyko autentifikuoti API serviso vartotojo
-                        //Exception
-                        break;
-                    case System.Net.HttpStatusCode.PaymentRequired:
-                        string error = responseContent.Property("error").Value.ToString();
-                        if (error == "OutOfFunds")
-                        {
-                            paymentInfo = "Insufficient balance in the card, ";
-                        }
-                        else if (error == "CardExpired")
-                        {
-                            paymentInfo = "Card is expired, ";
-                        }
-                        break;
-                    case System.Net.HttpStatusCode.NotFound:
-                        //404 operacija nerasta (Galima tik post)
-                        //Exception
-                        break;
-                }
-                paymentInfo += "please use another card for payment";
-
-            }
-                
-            
-            var currentCustomer = (Customer)Session["Account"] as Customer;
-            if (currentCustomer == null)
-            {
-                //TODO handle;
-            }
+            _paymentService.Payment(currentCustomer.Card, cart.Cost, out OrderStatus orderStatus, out string paymentInfo);
 
             //TODO: cannot modify as db crashes
 
@@ -118,15 +82,16 @@ namespace EShop.Controllers
             Session["count"] = 0;
 
             return View(new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
-
         }
 
-        public ActionResult SetSessionProperties()
+        private ActionResult GetSessionProperties(out Customer customer, out Cart cart)
         {
-            Customer customer = Session["Account"] as Customer;
-            if (customer == null )
+            ActionResult actionResult = GetSessionCustomer(out customer);
+            cart = null;
+
+            if (actionResult != null)
             {
-                return RedirectToAction("Login", "Customer");
+                return actionResult;
             }
 
             if (Session["Cart"] == null)
@@ -134,11 +99,22 @@ namespace EShop.Controllers
                 return RedirectToAction("EmptyCart", "Cart");
             }
 
-            _card = ((Customer)Session["Account"]).Card;
-            _cart = ((Cart)Session["Cart"]);
+            cart = (Cart)Session["Cart"];
 
             return null;
         }
+
+        private ActionResult GetSessionCustomer(out Customer customer)
+        {
+            customer = Session["Account"] as Customer;
+            if (customer == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            return null;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

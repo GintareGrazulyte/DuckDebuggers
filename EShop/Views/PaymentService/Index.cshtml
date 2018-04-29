@@ -9,14 +9,23 @@
 </p>
 <p>
     Card <br/>
-    Holder: @Model.Card.Holder <br/>
-    Number: @Model.Card.Number <br/>
-    CVV:    @Model.Card.CVV <br/>
+    Holder: @Model.Customer.Card.Holder <br/>
+    Number: @Model.Customer.Card.Number <br/>
+    CVV:    @Model.Customer.Card.CVV <br/>
     
     Cart: <br/>
     Cost: @(Model.Cart.Cost / 100.0m) <br/>
     <br/>
-    @Html.ActionLink("Confirm and pay", "Pay", null, new { @class = "btn btn-primary" })
+
+    @if (@Model.FormedOrder)
+    {
+    @Html.ActionLink("Confirm and pay", "PayFormedOrder", Model.Cart, new { @class = "btn btn-primary" })
+    }
+    else
+    {
+    @Html.ActionLink("Confirm and pay", "Pay", Model.Cart, new { @class = "btn btn-primary" })
+    }
+   
     
 
 </p>

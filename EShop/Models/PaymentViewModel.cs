@@ -1,4 +1,4 @@
-﻿using DOL;
+﻿using DOL.Accounts;
 using DOL.Carts;
 
 namespace EShop.Models
@@ -9,6 +9,8 @@ namespace EShop.Models
         public string PaymentDetails { get; set; }
 
         public Cart Cart;
-        public Card Card;
+        public Customer Customer;
+
+        public bool FormedOrder;
     }
 }

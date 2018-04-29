@@ -85,4 +85,8 @@
 
     </table>
     <p>Order status: @Model.OrderStatus.GetDescription()</p>
+    @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
+    {
+        @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", Model.Cart, new { @class = "btn btn-primary" })
+    }
 </div>

@@ -5,10 +5,14 @@
 }
 
 <h2>Information about payment</h2>
-<p>*items and cost*</p>
+
 <p>Status: @Model.Status</p>
-<p>Additional info: @Model.PaymentDetails</p>
-<p>*Go to all orders*</p>
-<p>*Edit user info*</p>
+@if (@Model.PaymentDetails != "")
+{
+    <p>Additional info: @Model.PaymentDetails</p>
+    <p>*Edit user info*</p>
+}
+@Html.ActionLink("Order History", "Index", "OrderHistory")
+
 
 
