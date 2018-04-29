@@ -1,5 +1,6 @@
 ﻿using DOL.Accounts;
 using System;
+using System.Collections.Generic;
 
 namespace DAL_API
 {
@@ -8,5 +9,6 @@ namespace DAL_API
         //TODO should be IAdmin
         Admin FindByEmail(string email);
         void Modify(Admin admin);
+        List<Admin> GetAll();
     }
 }

@@ -178,6 +178,9 @@
     <Content Include="Views\OrderHistory\NoOrders.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Shared\_GoBackButton.cshtml" />
+    <Content Include="Views\UsersList\Index.cshtml" />
+    <Content Include="Views\UsersList\_Customers.cshtml" />
+    <Content Include="Views\UsersList\_Admins.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -205,6 +208,7 @@
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\UsersListController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

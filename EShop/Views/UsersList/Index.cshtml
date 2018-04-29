@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>All users</h2>
+
+
+<h3>Admins</h3>
+@Html.Partial("_Admins")
+
+<h3>Customers</h3>
+@Html.Partial("_Customers")
