@@ -23,14 +23,14 @@ namespace DAL
 
         public Customer FindByEmail(string email)
         {
-            return _db.Customers.Include("Orders.Cart.Items.Item")
+            return _db.Customers.Include("Orders.Cart.Items.Item.Category")
                     .Where(c => c.Email == email)
                     .FirstOrDefault();
         }
 
         public List<Customer> GetAll()
         {
-            return _db.Customers.Include("Orders.Cart.Items.Item").ToList();
+            return _db.Customers.Include("Orders.Cart.Items.Item.Category").ToList();
         }
 
         public void Modify(Customer customer)

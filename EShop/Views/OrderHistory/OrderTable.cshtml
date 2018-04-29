@@ -1,16 +1,23 @@
-﻿@model DOL.Carts.Cart
+﻿@model DOL.Orders.Order
 @{
-    var cartItems = Model.Items;
+    IEnumerable<DOL.Carts.CartItem> cartItems = Model.Cart.Items;
     Layout = null;
+    var orderDateTime = Model.DateTime;
 }
-
-<h2>Order</h2>
+<br />
+<h3>Order: @orderDateTime</h3>
 
 <div class="col-xs-1">
     <table class="table">
         <tr>
             <th>
+
+            </th>
+            <th>
                 Name
+            </th>
+            <th>
+                Category
             </th>
             <th>
                 Quantity
@@ -18,38 +25,63 @@
             <th>
                 Price
             </th>
+            <th>
+                Total Price
+            </th>
         </tr>
 
         @foreach (var cartItem in cartItems)
         {
-            decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
-
+            decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
+            decimal piecePrice = cartItem.BuyPrice / 100.0m;
+            
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => cartItem.Item.Name)
+                <td width="10%">
+                    @{
+                        if (cartItem.Item.ImageUrl != null)
+                        {
+                            @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
+                        }
+                    }
+                </td>
+                <td style="vertical-align:middle;">
+                    @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                    
+                </td>
+                <td style="vertical-align:middle;">
+                    @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
                 </td>
 
-                <td>
+                <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => cartItem.Quantity)
                 </td>
 
-                <td>
+                <td style="vertical-align:middle;">
+                    @Html.DisplayFor(modelItem => piecePrice) Eur/piece
+                </td>
+
+                <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
             </tr>
         }
 
+        @{var totalCost = Model.Cart.Cost / 100.0m; }
 
         <tr>
             <th>
                 Total:
             </th>
             <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
             <td>
-                @(Model.Cost / 100.0m) Eur
+                @Html.DisplayFor(model => totalCost) Eur
             </td>
             
         </tr>
 
     </table>
+    <p>Order status: @Model.OrderStatus</p>
 </div>

@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Details";
 }
-
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+</head>
 <div class="jumbotron">
     <h1 class="display-3">@Model.Name</h1>
 
@@ -22,7 +24,9 @@
                 decimal price = Model.Price / 100.0m;
                 <p class="lead">@Html.DisplayFor(model => price) Eur</p>
             }
-            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = Model.Id }, null)'">Add to cart</button>
+            
+            <button type="button" id="addToCart" class="btn btn-primary" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = Model.Id }, null)'">Add to cart</button>
+            <div id="msg"></div>
         </div>
     </div>
 
@@ -40,7 +44,14 @@
 
 <div class="fb-comments" data-width="230" data-numposts="5"/>
 <p>
-    @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id }) | 
-    
+    @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id }) |
+
 </p>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#addToCart").click(function () {
+            $("#msg").html('Item was added to Cart').delay(1000).fadeOut(200);
+        });
+    });
+    </script>
