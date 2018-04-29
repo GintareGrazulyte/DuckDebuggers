@@ -2,9 +2,39 @@
 @{
     ViewBag.Title = "Order History";
 }
+<h1>Order History</h1>
 
-@foreach(var order in Model)
-{
-    <p>@Html.DisplayFor(modelItem => order.Id)</p>
-}
+<h5>Choose an order:</h5>
 
+@Html.DropDownList("OrderId",
+                                  new SelectList(Model, "Id", "DateTime"),
+                                  "Select Order",
+                                  new { @class = "form-control", @onchange = "Test(this)" })
+
+
+<div id="OrderTable">
+    
+</div>
+
+
+<script type="text/javascript">
+    function Test(_this) {
+        var url = '@Url.Action("OrderTable", "OrderHistory")';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#OrderId').serialize(),
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                    $("#OrderTable").html(response);
+            }
+        });
+
+    }
+
+    
+
+
+</script>

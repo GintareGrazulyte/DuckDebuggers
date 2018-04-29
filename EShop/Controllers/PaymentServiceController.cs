@@ -111,5 +111,13 @@ namespace EShop.Controllers
 
             return null;
         }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _customerDAO.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

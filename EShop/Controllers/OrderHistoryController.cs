@@ -1,5 +1,7 @@
 ﻿using DAL_API;
 using DOL.Accounts;
+using DOL.Carts;
+using DOL.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +22,32 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            Customer customer = _customerDAO.FindByEmail(((Customer)Session["Account"]).Email);
-            foreach(var order in customer.Orders)
+            Customer currentCustomer = (Session["Account"] as Customer);
+            if (currentCustomer == null)
+                return RedirectToAction("Index", "Store");
+
+            //Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
+            
+            return View(currentCustomer.Orders);
+        }
+        [HttpPost]
+        public ActionResult OrderTable(FormCollection fc)
+        {
+            int orderID = 0;
+            try
             {
-                //
+                orderID = Convert.ToInt32(fc["OrderId"]);
             }
-            return View(customer.Orders);
+            catch (FormatException)
+            {
+                return Content("<html></html>");
+                //return RedirectToAction("Index");
+            }
+
+            Customer currentCustomer = (Session["Account"] as Customer);
+            Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
+            Cart cart = order.Cart;
+            return View(cart);
         }
     }
 }
