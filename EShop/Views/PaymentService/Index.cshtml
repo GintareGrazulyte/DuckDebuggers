@@ -4,29 +4,49 @@
 }
 
 <h2>Payment</h2>
+<br />
 <p>
-    *Kortelės info ir apsipirkimo kaina*
-</p>
-<p>
-    Card <br/>
-    Holder: @Model.Customer.Card.Holder <br/>
-    Number: @Model.Customer.Card.Number <br/>
-    CVV:    @Model.Customer.Card.CVV <br/>
-    
-    Cart: <br/>
-    Cost: @(Model.Cart.Cost / 100.0m) <br/>
-    <br/>
+    <b>Card information</b><br/>
+    <table class="table">
+        <tr>
+            <th>
+                Holder
+            </th>
+            <th>
+                Number
+            </th>
+            <th>
+                CVV
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Model.Customer.Card.Holder
+            </th>
+            <th>
+                @Model.Customer.Card.Number
+            </th>
+            <th>
+                @Model.Customer.Card.CVV
+            </th>
+        </tr>
+    </table>
 
-    @if (@Model.FormedOrder)
-    {
-    @Html.ActionLink("Confirm and pay", "PayFormedOrder", Model.Cart, new { @class = "btn btn-primary" })
-    }
-    else
-    {
-    @Html.ActionLink("Confirm and pay", "Pay", Model.Cart, new { @class = "btn btn-primary" })
-    }
-   
-    
+    <br />
+    <b>Cart cost:</b> @(Model.Cart.Cost / 100.0m) Eur
+    <br />
+    <br />
+
+        @if (@Model.FormedOrder)
+        {
+            @Html.ActionLink("Confirm and pay", "PayFormedOrder", Model.Cart, new { @class = "btn btn-primary" })
+        }
+        else
+        {
+            @Html.ActionLink("Confirm and pay", "Pay", Model.Cart, new { @class = "btn btn-primary" })
+        }
+
+
 
 </p>
 
