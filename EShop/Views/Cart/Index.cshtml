@@ -8,6 +8,7 @@
 <div class="col-xs-1">
     <table class="table">
         <tr>
+            <th></th>
             <th>
                 Name
             </th>
@@ -28,24 +29,32 @@
             decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
 
             <tr>
-                <td>
+                <td width="10%">
+                    @{
+                        if (cartItem.Item.ImageUrl != null)
+                        {
+                           @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
+                        }
+                     }
+                </td>
+                <td style="vertical-align:middle;">
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                 </td>
-                <td>
+                <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
                 </td>
 
-                <td>
+                <td style="vertical-align:middle;" width="25%">
                     @{ Html.BeginForm("ChangeCartItemQuantity", "Cart", new { id = "myForm"}); }
                     @Html.HiddenFor(modelItem => cartItem.Item.Id)
                     @Html.TextBoxFor(modelItem => cartItem.Quantity, new { OnChange = "this.form.submit();", type = "number", min = "1"})
                     @{ Html.EndForm();}
                 </td>
                 
-                <td>
+                <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
-                <td>
+                <td style="vertical-align:middle;">
                     @Html.ActionLink("Remove", "RemoveFromCart", new { cartItemId = cartItem.Id })
                 </td>
             </tr>
@@ -59,6 +68,7 @@
             <th>
                 Total:
             </th>
+            <th></th>
             <th></th>
             <th></th>
             <td>
