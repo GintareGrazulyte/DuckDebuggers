@@ -81,5 +81,14 @@ namespace EShop.Controllers
             Session["Account"] = null;
             return RedirectToAction("Login");
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _customerDAO.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

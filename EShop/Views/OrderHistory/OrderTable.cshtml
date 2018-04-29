@@ -1,0 +1,55 @@
+﻿@model DOL.Carts.Cart
+@{
+    var cartItems = Model.Items;
+    Layout = null;
+}
+
+<h2>Order</h2>
+
+<div class="col-xs-1">
+    <table class="table">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+        </tr>
+
+        @foreach (var cartItem in cartItems)
+        {
+            decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Item.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Quantity)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => price) Eur
+                </td>
+            </tr>
+        }
+
+
+        <tr>
+            <th>
+                Total:
+            </th>
+            <th></th>
+            <td>
+                @(Model.Cost / 100.0m) Eur
+            </td>
+            
+        </tr>
+
+    </table>
+</div>
