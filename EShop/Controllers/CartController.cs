@@ -36,7 +36,8 @@ namespace EShop.Controllers
         {
             Cart cart = (Cart)Session["Cart"];
             cart.RemoveItem(cartItemId);
-            Session["Count"] = cart.Items.Count;
+            Session["Count"] = cart.CountItemsInCart();
+            cart.Cost = cart.CountCartPrice();
             return RedirectToAction("Index");
         }
 
@@ -58,7 +59,8 @@ namespace EShop.Controllers
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
-                cart.Items.Where(x => x.Item.Id == id).ToList().ForEach(y => y.Quantity += 1);
+                cart.Items.Where(x => x.Item.Id == id).ToList()
+                    .ForEach(y => y.Quantity += 1);
             }
             else
             {
@@ -68,7 +70,12 @@ namespace EShop.Controllers
                 cartItem.Quantity = 1;
                 cart.Items.Add(cartItem);
             }
-            Session["Count"] = cart.Items.Count;
+            //TODO: sita gal irgi reiktu iskelt uz krepselio, kai jau zinom, kad nesikeis jis??
+            cart.Items.Where(x => x.Item.Id == id).ToList()
+                .ForEach(y => y.BuyPrice = y.Item.Price);
+            cart.Cost = cart.CountCartPrice();
+            
+            Session["Count"] = cart.CountItemsInCart();
             return Redirect(Request.UrlReferrer.PathAndQuery);
         }
 
@@ -96,6 +103,9 @@ namespace EShop.Controllers
             CartItem item = cart.Items.FirstOrDefault(x => x.Item.Id == cartItemId);
             if (item != null)
                 item.Quantity = cartItemQuantity;
+
+            cart.Cost = cart.CountCartPrice();
+            Session["Count"] = cart.CountItemsInCart();
             return RedirectToAction("Index");
         }
 

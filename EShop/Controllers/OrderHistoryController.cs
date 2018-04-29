@@ -27,9 +27,15 @@ namespace EShop.Controllers
                 return RedirectToAction("Index", "Store");
 
             //Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
-            
+            if (currentCustomer.Orders.Count == 0)
+                return RedirectToAction("NoOrders");
             return View(currentCustomer.Orders);
         }
+        public ActionResult NoOrders()
+        {
+            return View();
+        }
+            
         [HttpPost]
         public ActionResult OrderTable(FormCollection fc)
         {
@@ -46,8 +52,7 @@ namespace EShop.Controllers
 
             Customer currentCustomer = (Session["Account"] as Customer);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
-            Cart cart = order.Cart;
-            return View(cart);
+            return View(order);
         }
     }
 }

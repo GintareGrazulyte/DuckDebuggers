@@ -45,11 +45,13 @@ namespace EShop.Controllers
         public ActionResult Pay()
         {
             ActionResult actionResult = SetSessionProperties();
-
+            
+            
             if (actionResult != null)
             {
                 return actionResult;
             }
+
 
             HttpResponseMessage paymentResult = _paymentService.Pay(_card, _cart).Result;
 
