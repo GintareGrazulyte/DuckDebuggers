@@ -13,6 +13,9 @@
                 Name
             </th>
             <th>
+                Category
+            </th>
+            <th>
                 Quantity
             </th>
             <th>
@@ -28,6 +31,9 @@
                 <td>
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                     
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
                 </td>
 
                 <td>
@@ -45,6 +51,7 @@
             <th>
                 Total:
             </th>
+            <th></th>
             <th></th>
             <td>
                 @(Model.Cost / 100.0m) Eur
