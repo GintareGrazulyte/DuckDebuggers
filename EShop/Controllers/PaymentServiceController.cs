@@ -1,13 +1,15 @@
-﻿using BLL;
-using BLL_API;
+﻿using BLL_API;
 using DAL_API;
 using DOL;
 using DOL.Accounts;
 using DOL.Carts;
 using DOL.Orders;
 using EShop.Models;
+using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Web.Mvc;
 
 
@@ -36,7 +38,7 @@ namespace EShop.Controllers
                 return actionResult;
             }
 
-            return View(new PaymentViewModel(_cart, _card));
+            return View(new PaymentViewModel() { Card = _card, Cart = _cart });
         }
 
         //TODO add attribute
@@ -50,31 +52,50 @@ namespace EShop.Controllers
             }
 
             HttpResponseMessage paymentResult = _paymentService.Pay(_card, _cart).Result;
-            OrderStatus orderStatus;
 
-            orderStatus = OrderStatus.waitingForPayment;
+            var receiveStream = paymentResult.Content.ReadAsStreamAsync().Result;
+            var readStream = new StreamReader(receiveStream, Encoding.UTF8);
+            JObject responseContent = JObject.Parse(readStream.ReadToEnd());
+
+
+            string paymentInfo = "";
+            OrderStatus orderStatus;
  
-            switch(paymentResult.StatusCode)
+            if (paymentResult.IsSuccessStatusCode)
             {
-                case System.Net.HttpStatusCode.Created:
-                    orderStatus = OrderStatus.approved;
-                    //201 pradinis Payment objektas su papildomais id ir created_at laukais
-                    break;
-                case System.Net.HttpStatusCode.BadRequest:
-                    //400 nekorektiški užklausos įvesties duomenys
-                    //error obj
-                    break;
-                case System.Net.HttpStatusCode.Unauthorized:
-                    //401 nepavyko autentifikuoti serviso vartotojo
-                    break;
-                case System.Net.HttpStatusCode.PaymentRequired:
-                    //402 nepavyko įvykdyti mokėjimo
-                    //error obj
-                    break;
-                case System.Net.HttpStatusCode.NotFound:
-                    //404 operacija nerasta
-                    //error obj
-                    break;
+                orderStatus = OrderStatus.approved;
+            }
+            else
+            {
+                orderStatus = OrderStatus.waitingForPayment;
+
+                switch (paymentResult.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.BadRequest:
+                        paymentInfo = "Invalid card number, ";
+                        break;
+                    case System.Net.HttpStatusCode.Unauthorized:
+                        //401 nepavyko autentifikuoti API serviso vartotojo
+                        //Exception
+                        break;
+                    case System.Net.HttpStatusCode.PaymentRequired:
+                        string error = responseContent.Property("error").Value.ToString();
+                        if (error == "OutOfFunds")
+                        {
+                            paymentInfo = "Insufficient balance in the card, ";
+                        }
+                        else if (error == "CardExpired")
+                        {
+                            paymentInfo = "Card is expired, ";
+                        }
+                        break;
+                    case System.Net.HttpStatusCode.NotFound:
+                        //404 operacija nerasta (Galima tik post)
+                        //Exception
+                        break;
+                }
+                paymentInfo += "please use another card for payment";
+
             }
                 
             
@@ -85,11 +106,14 @@ namespace EShop.Controllers
             }
 
             var customer = _customerDAO.FindByEmail(currentCustomer.Email);
-            customer.Orders.Add(new Order { Cart = (Cart)Session["Cart"], DateTime = DateTime.Now, OrderStatus = orderStatus });
+            var order = new Order { Cart = (Cart)Session["Cart"], DateTime = DateTime.Now, OrderStatus = orderStatus };
+            customer.Orders.Add(order);
             _customerDAO.Modify(customer);
 
-            //TODO: reset cart 
-            return View(new PaymentViewModel(orderStatus));
+            Session["Cart"] = null;
+            Session["count"] = 0;
+
+            return View(new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
 
         }
 
