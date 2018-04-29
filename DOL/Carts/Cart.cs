@@ -21,6 +21,19 @@ namespace DOL.Carts
         }
 
         //TODO move to bussiness logics
+
+        public int CountItemsInCart()
+        {
+            if (Items == null || Items.Count == 0)
+                return 0;
+
+            int count = 0;
+            foreach(var cartItem in Items)
+            {
+                count += cartItem.Quantity;
+            }
+            return count;
+        }
         private int CountCartPrice()
         {
             if (Items == null)

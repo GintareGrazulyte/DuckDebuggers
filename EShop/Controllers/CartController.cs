@@ -38,7 +38,7 @@ namespace EShop.Controllers
         {
             Cart cart = (Cart)Session["Cart"];
             cart.RemoveItem(cartItemId);
-            Session["Count"] = cart.Items.Count;
+            Session["Count"] = cart.CountItemsInCart();
             return RedirectToAction("Index");
         }
 
@@ -70,7 +70,7 @@ namespace EShop.Controllers
                 cartItem.Quantity = 1;
                 cart.Items.Add(cartItem);
             }
-            Session["Count"] = cart.Items.Count;
+            Session["Count"] = cart.CountItemsInCart();
             return Redirect(Request.UrlReferrer.PathAndQuery);
         }
 
@@ -98,6 +98,7 @@ namespace EShop.Controllers
             CartItem item = cart.Items.FirstOrDefault(x => x.Item.Id == cartItemId);
             if (item != null)
                 item.Quantity = cartItemQuantity;
+            Session["Count"] = cart.CountItemsInCart();
             return RedirectToAction("Index");
         }
 
