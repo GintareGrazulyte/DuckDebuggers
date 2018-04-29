@@ -26,7 +26,7 @@
 
         @foreach (var cartItem in cartItems)
         {
-            decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
+            decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
 
             <tr>
                 <td width="10%">

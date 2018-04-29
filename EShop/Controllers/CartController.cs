@@ -60,7 +60,8 @@ namespace EShop.Controllers
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
-                cart.Items.Where(x => x.Item.Id == id).ToList().ForEach(y => y.Quantity += 1);
+                cart.Items.Where(x => x.Item.Id == id).ToList()
+                    .ForEach(y => y.Quantity += 1);
             }
             else
             {
@@ -70,6 +71,10 @@ namespace EShop.Controllers
                 cartItem.Quantity = 1;
                 cart.Items.Add(cartItem);
             }
+
+            cart.Items.Where(x => x.Item.Id == id).ToList()
+                .ForEach(y => y.BuyPrice = y.Item.Price);
+            
             Session["Count"] = cart.CountItemsInCart();
             return Redirect(Request.UrlReferrer.PathAndQuery);
         }
