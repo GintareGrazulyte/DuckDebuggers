@@ -4,6 +4,7 @@ using DOL.Orders;
 using EShop.Attributes;
 using System;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
@@ -29,6 +30,23 @@ namespace EShop.Controllers
                 Customers = _customerDAO.GetAll()
             };
             return View(view);
+        }
+
+        public ActionResult ChangeStatus(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Customer customer = _customerDAO.FindById(id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            customer.IsActive = !customer.IsActive;
+            ViewBag.Message = "Are you sure?";
+
+            return View();
         }
 
 

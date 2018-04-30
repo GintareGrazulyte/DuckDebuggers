@@ -91,7 +91,27 @@
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
             <td>
+                @if (item.IsActive)
+                {
+                            @Html.ActionLink("Disable User", "ChangeStatus", new { id = item.Id })
+
+                    <script>
+                        $.get("/ChangeStatus", { id: @item.Id }, function (@item.Id) {
+                            alert(@item.Id);
+                        });
+                    </script>
+                    
+
+                }
+                else
+                {
+                            @Html.ActionLink("Activate User", "ChangeStatus", new { id = item.Id })
+                }
+
+
+                |
                 @Html.ActionLink("Change Role", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
