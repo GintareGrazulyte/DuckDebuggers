@@ -1,8 +1,10 @@
-﻿using DAL_API;
+﻿using DAL;
+using DAL_API;
 using DOL.Accounts;
 using DOL.Orders;
 using EShop.Attributes;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -14,6 +16,7 @@ namespace EShop.Controllers
     {
         private ICustomerDAO _customerDAO;
         private IAdminDAO _adminDAO;
+        private EShopDbContext _db = new EShopDbContext();
 
         public UsersListController(ICustomerDAO customerDAO, IAdminDAO adminDAO)
         {
@@ -43,12 +46,16 @@ namespace EShop.Controllers
             {
                 return HttpNotFound();
             }
-            customer.IsActive = !customer.IsActive;
-            ViewBag.Message = "Are you sure?";
 
+            customer.IsActive = !customer.IsActive;
+            if (ModelState.IsValid)
+            {
+                _db.Entry(customer).State = EntityState.Modified;
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View();
         }
-
 
         [HttpPost]
         public ActionResult OrderTable(FormCollection fc)

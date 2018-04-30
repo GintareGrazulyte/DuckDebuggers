@@ -93,26 +93,14 @@
             <td>
                 @if (item.IsActive)
                 {
-                            @Html.ActionLink("Disable User", "ChangeStatus", new { id = item.Id })
-
-                    <script>
-                        $.get("/ChangeStatus", { id: @item.Id }, function (@item.Id) {
-                            alert(@item.Id);
-                        });
-                    </script>
-                    
+                    @Html.ActionLink("Disable User", "ChangeStatus", new { id = item.Id }, null)
 
                 }
                 else
                 {
-                            @Html.ActionLink("Activate User", "ChangeStatus", new { id = item.Id })
+                    @Html.ActionLink("Enable User", "ChangeStatus", new { id = item.Id }, null)
                 }
 
-
-                |
-                @Html.ActionLink("Change Role", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }
