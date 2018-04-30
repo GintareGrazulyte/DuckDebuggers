@@ -1,9 +1,11 @@
 ﻿using BLL_API;
 using DOL;
-using DOL.Carts;
+using DOL.Orders;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace BLL
 {
@@ -11,9 +13,9 @@ namespace BLL
     {
         private readonly HttpClient _client = new HttpClient();
 
-        public Task<HttpResponseMessage> Pay(Card card, Cart cart)
+        private Task<HttpResponseMessage> Pay(Card card, int cost)
         {
-            string json = ToJson(card, cart);
+            string json = ToJson(card, cost);
 
             _client.DefaultRequestHeaders
                    .Accept
@@ -21,9 +23,10 @@ namespace BLL
             _client.DefaultRequestHeaders
                     .Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "dGVjaG5vbG9naW5lczpwbGF0Zm9ybW9z");
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://mock-payment-processor.appspot.com/v1/payment");
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://mock-payment-processor.appspot.com/v1/payment")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
             return _client.SendAsync(request)
                 .ContinueWith(responseTask =>
                 {
@@ -33,10 +36,10 @@ namespace BLL
         }
 
 
-        private string ToJson(Card card, Cart cart)
+        private string ToJson(Card card, int cost)
         {
             string json = "{"
-                            + "\"amount\":" + cart.Cost + ","
+                            + "\"amount\":" + cost + ","
                             + "\"number\":\"" + card.Number + "\","
                             + "\"holder\":\"" + card.Holder + "\","
                             + "\"exp_year\":" + card.ExpYear + ","
@@ -45,6 +48,53 @@ namespace BLL
                         + "}";
             return json;
         }
-        
+
+        public void Payment(Card card, int cost, out OrderStatus orderStatus, out string paymentInfo)
+        {
+            HttpResponseMessage paymentResult = Pay(card, cost).Result;
+
+            var receiveStream = paymentResult.Content.ReadAsStreamAsync().Result;
+            var readStream = new StreamReader(receiveStream, Encoding.UTF8);
+            JObject responseContent = JObject.Parse(readStream.ReadToEnd());
+
+            paymentInfo = "";
+
+            if (paymentResult.IsSuccessStatusCode)
+            {
+                orderStatus = OrderStatus.approved;
+            }
+            else
+            {
+                orderStatus = OrderStatus.waitingForPayment;
+
+                switch (paymentResult.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.BadRequest:
+                        paymentInfo = "Invalid card number, ";
+                        break;
+                    case System.Net.HttpStatusCode.Unauthorized:
+                        //401 nepavyko autentifikuoti API serviso vartotojo
+                        //Exception
+                        break;
+                    case System.Net.HttpStatusCode.PaymentRequired:
+                        string error = responseContent.Property("error").Value.ToString();
+                        if (error == "OutOfFunds")
+                        {
+                            paymentInfo = "Insufficient balance in the card, ";
+                        }
+                        else if (error == "CardExpired")
+                        {
+                            paymentInfo = "Card is expired, ";
+                        }
+                        break;
+                    case System.Net.HttpStatusCode.NotFound:
+                        //404 operacija nerasta (Galima tik post)
+                        //Exception
+                        break;
+                }
+                paymentInfo += "please use another card for payment";
+            }
+        }
+
     }
 }
