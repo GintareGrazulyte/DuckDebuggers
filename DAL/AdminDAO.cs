@@ -30,7 +30,7 @@ namespace DAL
 
         public List<Admin> GetAll()
         {
-            return _db.Admins.Include("Id.Name.Surname.Email").ToList();
+            return _db.Admins.ToList();
         }
     }
 }

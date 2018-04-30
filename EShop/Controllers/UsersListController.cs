@@ -1,16 +1,14 @@
-﻿using DAL;
-using DAL_API;
+﻿using DAL_API;
 using DOL.Accounts;
-using DOL.Carts;
 using DOL.Orders;
+using EShop.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
 {
+    [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class UsersListController : Controller
     {
         private ICustomerDAO _customerDAO;
@@ -25,7 +23,12 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            return View();
+            var view = new UserListViewModel()
+            {
+                Admins = _adminDAO.GetAll(),
+                Customers = _customerDAO.GetAll()
+            };
+            return View(view);
         }
 
 
@@ -46,16 +49,6 @@ namespace EShop.Controllers
             Customer currentCustomer = (Session["Account"] as Customer);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
             return View(order);
-        }
-
-        public PartialViewResult Customers()
-        {
-            return PartialView(_customerDAO.GetAll());
-        }
-
-        public PartialViewResult Admins()
-        {
-            return PartialView(_adminDAO);
         }
     }
 }
