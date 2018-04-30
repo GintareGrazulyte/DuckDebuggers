@@ -1,11 +1,10 @@
-﻿using System.Data.Entity;
-using System;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using DAL_API;
 using DOL.Objects;
 using EShop.Attributes;
 using BLL_API;
+using System.Collections.Generic;
 
 namespace EShop.Controllers
 {
@@ -15,18 +14,36 @@ namespace EShop.Controllers
         private IItemsDAO _itemsDAO;
         private ICategoryDAO _categoryDAO;
         private IFileLoader _fileLoader;
+        private IImportService _importService;
 
-        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, IFileLoader fileLoader)
+        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, 
+            IFileLoader fileLoader, IImportService importService)
         {
             _itemsDAO = itemsDAO;
             _categoryDAO = categoryDAO;
             _fileLoader = fileLoader;
+            _importService = importService;
         }
 
         // GET: Item
         public ActionResult Index()
         {
             return View(_itemsDAO.GetAll());
+        }
+
+        public ActionResult Import(string path)
+        {
+            //TODO delete mock
+            path = "C:\\Users\\Laura\\Desktop\\Test.xlsx";
+
+           var items = _importService.GetItemsFromFile(path);
+
+            //TODO check if exists
+
+
+
+            return View();
+           // return View(_itemsDAO.GetAll());
         }
 
         // GET: Item/Details/5
