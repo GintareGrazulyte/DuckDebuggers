@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using DAL_API;
 using DOL.Accounts;
@@ -25,6 +26,11 @@ namespace DAL
         {
             _db.Entry(admin).State = EntityState.Modified;
             _db.SaveChanges();
+        }
+
+        public List<Admin> GetAll()
+        {
+            return _db.Admins.ToList();
         }
     }
 }

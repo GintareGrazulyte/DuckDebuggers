@@ -8,6 +8,7 @@ namespace DAL_API
     {
         //TODO should be ICustomer
         Customer FindByEmail(string email);
+        Customer FindById(int? id);
         List<Customer> GetAll();
         void Remove(Customer customer);
         void Add(Customer customer);
