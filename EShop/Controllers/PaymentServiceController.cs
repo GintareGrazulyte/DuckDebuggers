@@ -79,7 +79,7 @@ namespace EShop.Controllers
             //_customerDAO.Modify(customer);
 
             Session["Cart"] = null;
-            Session["count"] = 0;
+            Session["count"] = 0;   //TODO: cia speju turi but "Count"? -Rytis
 
             return View(new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
         }

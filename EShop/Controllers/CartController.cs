@@ -7,18 +7,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using BLL_API;
 
 namespace EShop.Controllers
 {
     public class CartController : Controller
     {
-        private IItemRepository _itemsDAO;
-        private ICategoryRepository _categoryDAO;
+        private IItemQueryService _itemQueryService;
 
-        public CartController(IItemRepository itemsDAO, ICategoryRepository categoryDAO)
+        public CartController(IItemQueryService itemQueryService)
         {
-            _itemsDAO = itemsDAO;
-            _categoryDAO = categoryDAO;
+            _itemQueryService = itemQueryService;
         }
         // GET: Cart
         public ActionResult Index()
@@ -57,7 +56,7 @@ namespace EShop.Controllers
                 cart = (Cart)Session["Cart"];
             }
             
-            Item item = _itemsDAO.FindById(id);
+            Item item = _itemQueryService.GetItem(id.Value);
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
@@ -124,7 +123,7 @@ namespace EShop.Controllers
             Item itemToAdd;
             foreach (var item in order.Cart.Items)
             {
-                itemToAdd = _itemsDAO.FindById(item.Item.Id);
+                itemToAdd = _itemQueryService.GetItem(item.Item.Id);
 
                 if (itemToAdd != null)
                 {
