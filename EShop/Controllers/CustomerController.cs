@@ -68,10 +68,8 @@ namespace EShop.Controllers
                 Session["Account"] = foundCustomer;
                 return RedirectToAction("Index");
             }
-            else
-            {
-                ModelState.AddModelError("", "Wrong email or password");
-            }
+
+            ModelState.AddModelError("", "Wrong email or password");
             return View(customer);
         }
 

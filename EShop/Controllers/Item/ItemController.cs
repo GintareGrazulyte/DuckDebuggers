@@ -5,6 +5,7 @@ using DOL.Objects;
 using EShop.Attributes;
 using BLL_API;
 using System.Collections.Generic;
+using System;
 
 namespace EShop.Controllers
 {
@@ -31,19 +32,31 @@ namespace EShop.Controllers
             return View(_itemsDAO.GetAll());
         }
 
-        public ActionResult Import(string path)
+        public ActionResult Import()
         {
-            //TODO delete mock
-            path = "C:\\Users\\Laura\\Desktop\\Test.xlsx";
-
-           var items = _importService.GetItemsFromFile(path);
-
-            //TODO check if exists
-
-
-
             return View();
-           // return View(_itemsDAO.GetAll());
+        }
+
+        [HttpPost]
+        public ActionResult ImportItemsFromFile(string path)
+        {
+            ICollection<Item> items;
+            try
+            {
+                items = _importService.GetItemsFromFile(path);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View("Import");
+            }
+
+            foreach (var item in items)
+            {
+                _itemsDAO.Add(item);
+            }
+
+            return View("Index", _itemsDAO.GetAll());
         }
 
         // GET: Item/Details/5
