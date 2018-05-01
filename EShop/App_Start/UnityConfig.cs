@@ -53,6 +53,7 @@ namespace EShop
             container.RegisterType<IAdminRepository, AdminRepository>();
             container.RegisterType<IFileLoader, FileLoader>();
             container.RegisterType<IPaymentService, PaymentService>();
+            container.RegisterType<IImportService, ImportService>();
         }
     }
 }
