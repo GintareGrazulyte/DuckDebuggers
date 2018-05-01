@@ -59,6 +59,8 @@ namespace EShop
             container.RegisterType<IAdminService, AdminService>();
             container.RegisterType<ICategoryService, CategoryService>();
             container.RegisterType<IItemQueryService, ItemQueryService>();
+            container.RegisterType<IItemManagementService, ItemManagementService>();
+
 
             container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());
             container.RegisterInstance<IAmbientDbContextLocator>(new AmbientDbContextLocator());

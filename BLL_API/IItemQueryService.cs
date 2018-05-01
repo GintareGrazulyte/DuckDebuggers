@@ -11,5 +11,6 @@ namespace BLL_API
     {
         Item GetItem(int itemId);
         IEnumerable<Item> GetItems(int categoryId);
+        IEnumerable<Item> GetAllItems();
     }
 }

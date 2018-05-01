@@ -46,6 +46,7 @@
     <Compile Include="ICustomerAccountService.cs" />
     <Compile Include="IImportService.cs" />
     <Compile Include="IFileLoader.cs" />
+    <Compile Include="IItemManagementService.cs" />
     <Compile Include="IItemQueryService.cs" />
     <Compile Include="IPaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

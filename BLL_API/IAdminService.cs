@@ -10,5 +10,6 @@ namespace BLL_API
     public interface IAdminService
     {
         Admin LoginAdmin(Admin adminToLogin);
+        Admin GetAdmin(string email);
     }
 }

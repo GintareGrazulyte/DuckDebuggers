@@ -5,6 +5,7 @@ using System.Web;
 using BOL.Accounts;
 using DAL;
 using System.Web.Security;
+using BLL_API;
 
 namespace EShop.RoleProviders
 {
@@ -39,10 +40,9 @@ namespace EShop.RoleProviders
 
         public override string[] GetRolesForUser(string username)   //TODO: IMPORTANT
         {
-            //AdminRepository adminDAO = new AdminRepository(); //cannot inject here :(
-            //Admin admin = adminDAO.FindByEmail(username);
-            //string role = admin != null ? "Admin" : "Customer";
-            string role = "Customer";
+            var adminService = UnityConfig.Container.Resolve(typeof(IAdminService), "") as IAdminService;
+            var admin = adminService.GetAdmin(username);
+            string role = admin != null ? "Admin" : "Customer";
             string[] result = { role };
             return result;
         }

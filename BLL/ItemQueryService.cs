@@ -28,6 +28,13 @@ namespace BLL
             _categoryRepository = categoryRepository;
         }
 
+        public IEnumerable<Item> GetAllItems()
+        {
+            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            {
+                return _itemRepository.GetAll();
+            }
+        }
 
         public Item GetItem(int itemId)
         {

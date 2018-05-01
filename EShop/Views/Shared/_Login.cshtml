@@ -1,8 +1,8 @@
 ﻿@{
-    var customer = Session["Account"] as BOL.Accounts.Account;
+    var accountEmail = Session["AccountEmail"] as string;
 }
 
-@if (Session["Account"] == null)
+@if (Session["AccountId"] == null)
 {
     <li class="nav-item">
         @Html.ActionLink("Register", "Register", "Customer", new { area = "" }, new { @class = "nav-link" })
@@ -15,7 +15,7 @@ else
 {
     //TODO this won't work in admin
     <li class="nav-item">
-        @Html.ActionLink(customer.Email, "Index", "Customer", new { area = "" }, new { @class = "nav-link" })
+        @Html.ActionLink(accountEmail, "Index", "Customer", new { area = "" }, new { @class = "nav-link" })
     </li>
     <li class="nav-item">
         @Html.ActionLink("Logout", "Logout", "Customer", new { area = "" }, new { @class = "nav-link" })

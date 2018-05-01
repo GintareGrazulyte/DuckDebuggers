@@ -11,7 +11,7 @@ namespace BLL
     public class ImportService : IImportService
     {
 
-        public ICollection<Item> ImportItemsFromFile(string path)
+        public IEnumerable<Item> ImportItemsFromFile(string path)
         {
             var document = new Spreadsheet();
 
@@ -93,7 +93,7 @@ namespace BLL
             }
         }
 
-        public void ExportItemsToFile(ICollection<Item> items, string path)
+        public void ExportItemsToFile(IEnumerable<Item> items, string path)
         {
             var document = new Spreadsheet();
 

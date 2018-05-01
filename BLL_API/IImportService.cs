@@ -6,7 +6,7 @@ namespace BLL_API
     //TODO: find proper name
     public interface IImportService
     {
-        ICollection<Item> ImportItemsFromFile(string path);
-        void ExportItemsToFile(ICollection<Item> items, string path);
+        IEnumerable<Item> ImportItemsFromFile(string path);
+        void ExportItemsToFile(IEnumerable<Item> items, string path);
     }
 }

@@ -23,6 +23,14 @@ namespace BLL
             _adminRepository = adminRepository;
         }
 
+        public Admin GetAdmin(string email)
+        {
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return _adminRepository.FindByEmail(email);
+            }
+        }
+
         public Admin LoginAdmin(Admin adminToLogin)
         {
             using (_dbContextScopeFactory.CreateReadOnly())
