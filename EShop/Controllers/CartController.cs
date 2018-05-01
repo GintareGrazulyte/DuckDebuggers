@@ -1,6 +1,8 @@
 ﻿using DAL_API;
+using DOL.Accounts;
 using DOL.Carts;
 using DOL.Objects;
+using DOL.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +109,29 @@ namespace EShop.Controllers
             cart.Cost = cart.CountCartPrice();
             Session["Count"] = cart.CountItemsInCart();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult RepeatOrder(int orderId)
+        {
+            //TODO handle exceptions
+            Order order = ((Customer)Session["Account"]).Orders.FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return View("Index", (Cart)Session["Cart"]);
+            }
+
+            Item itemToAdd;
+            foreach (var item in order.Cart.Items)
+            {
+                itemToAdd = _itemsDAO.Find(item.Item.Id);
+
+                if (itemToAdd != null)
+                {
+                    AddToCart(itemToAdd.Id);
+                }
+            }
+            return View("Index", (Cart)Session["Cart"]);
         }
 
     }
