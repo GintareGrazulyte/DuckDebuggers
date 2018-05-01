@@ -120,6 +120,7 @@ namespace BLL
                 cellIndex++;
             }
 
+            //TODO: remove additionaly created worksheet. 
             document.SaveAs(path);
             document.Close();
         }
