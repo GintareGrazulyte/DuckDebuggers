@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Web.Mvc;
 using DAL_API;
-using DOL.Objects;
+using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
 
@@ -12,11 +12,11 @@ namespace EShop.Controllers
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class ItemController : Controller
     {
-        private IItemsDAO _itemsDAO;
-        private ICategoryDAO _categoryDAO;
+        private IItemRepository _itemsDAO;
+        private ICategoryRepository _categoryDAO;
         private IFileLoader _fileLoader;
 
-        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, IFileLoader fileLoader)
+        public ItemController(IItemRepository itemsDAO, ICategoryRepository categoryDAO, IFileLoader fileLoader)
         {
             _itemsDAO = itemsDAO;
             _categoryDAO = categoryDAO;

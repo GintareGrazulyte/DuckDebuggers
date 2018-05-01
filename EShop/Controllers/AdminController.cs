@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -10,9 +10,9 @@ namespace EShop.Controllers
 {
     public class AdminController : Controller
     {
-        private IAdminDAO _adminDAO;
+        private IAdminRepository _adminDAO;
 
-        public AdminController(IAdminDAO adminDAO)
+        public AdminController(IAdminRepository adminDAO)
         {
             _adminDAO = adminDAO;
         }

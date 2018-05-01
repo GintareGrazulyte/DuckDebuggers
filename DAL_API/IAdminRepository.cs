@@ -1,10 +1,10 @@
-﻿using DOL.Accounts;
+﻿using BOL.Accounts;
 using System;
 using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface IAdminDAO : IDisposable
+    public interface IAdminRepository : IDisposable
     {
         //TODO should be IAdmin
         Admin FindByEmail(string email);

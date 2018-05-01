@@ -7,9 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DAL;
-using DOL;
+using BOL;
 using EShop.Attributes;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
 
 namespace EShop.Controllers
@@ -17,9 +17,9 @@ namespace EShop.Controllers
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class CategoriesController : Controller
     {
-        private ICategoryDAO _categoryDAO;
+        private ICategoryRepository _categoryDAO;
 
-        public CategoriesController(ICategoryDAO categoryDAO)
+        public CategoriesController(ICategoryRepository categoryDAO)
         {
             _categoryDAO = categoryDAO;
         }

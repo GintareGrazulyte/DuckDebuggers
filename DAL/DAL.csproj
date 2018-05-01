@@ -64,11 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminDAO.cs" />
-    <Compile Include="CategoryDAO.cs" />
-    <Compile Include="CustomerDAO.cs" />
+    <Compile Include="AdminRepository.cs" />
+    <Compile Include="CategoryRepository.cs" />
+    <Compile Include="CustomerRepository.cs" />
     <Compile Include="EShopDbContext.cs" />
-    <Compile Include="ItemsDAO.cs" />
+    <Compile Include="ItemRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

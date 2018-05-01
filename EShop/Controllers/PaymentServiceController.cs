@@ -1,8 +1,8 @@
 ﻿using BLL_API;
 using DAL_API;
-using DOL.Accounts;
-using DOL.Carts;
-using DOL.Orders;
+using BOL.Accounts;
+using BOL.Carts;
+using BOL.Orders;
 using EShop.Models;
 using System.Web.Mvc;
 using System.Linq;
@@ -13,9 +13,9 @@ namespace EShop.Controllers
     public class PaymentServiceController : Controller
     {
         private IPaymentService _paymentService;
-        private ICustomerDAO _customerDAO;
+        private ICustomerRepository _customerDAO;
 
-        public PaymentServiceController(ICustomerDAO customerDAO, IPaymentService paymentService)
+        public PaymentServiceController(ICustomerRepository customerDAO, IPaymentService paymentService)
         {
             _customerDAO = customerDAO;
             _paymentService = paymentService;

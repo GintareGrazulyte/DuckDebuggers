@@ -1,6 +1,6 @@
 ﻿using BLL_API;
-using DOL;
-using DOL.Orders;
+using BOL;
+using BOL.Orders;
 using System.IO;
 using System.Net.Http;
 using System.Text;

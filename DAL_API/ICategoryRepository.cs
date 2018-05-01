@@ -1,10 +1,10 @@
-﻿using DOL;
+﻿using BOL;
 using System;
 using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface ICategoryDAO : IDisposable
+    public interface ICategoryRepository : IDisposable
     {
         Category FindById(int? id);
         List<Category> GetAll();

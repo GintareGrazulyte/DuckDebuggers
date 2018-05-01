@@ -9,9 +9,9 @@ namespace EShop.Controllers
 {
     public class StoreController : Controller
     {
-        private ICategoryDAO _categoryDAO;
+        private ICategoryRepository _categoryDAO;
 
-        public StoreController(ICategoryDAO categoryDAO)
+        public StoreController(ICategoryRepository categoryDAO)
         {
             _categoryDAO = categoryDAO;
         }

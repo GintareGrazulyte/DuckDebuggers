@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DOL
+namespace BOL
 {
     public class DeliveryAddress
     {

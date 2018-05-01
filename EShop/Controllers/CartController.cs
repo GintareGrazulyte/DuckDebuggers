@@ -1,6 +1,6 @@
 ﻿using DAL_API;
-using DOL.Carts;
-using DOL.Objects;
+using BOL.Carts;
+using BOL.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace EShop.Controllers
 {
     public class CartController : Controller
     {
-        private IItemsDAO _itemsDAO;
-        private ICategoryDAO _categoryDAO;
+        private IItemRepository _itemsDAO;
+        private ICategoryRepository _categoryDAO;
 
-        public CartController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO)
+        public CartController(IItemRepository itemsDAO, ICategoryRepository categoryDAO)
         {
             _itemsDAO = itemsDAO;
             _categoryDAO = categoryDAO;

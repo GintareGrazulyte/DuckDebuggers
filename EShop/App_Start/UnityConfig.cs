@@ -47,10 +47,10 @@ namespace EShop
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
-            container.RegisterType<IItemsDAO, ItemsDAO>();
-            container.RegisterType<ICustomerDAO, CustomerDAO>();
-            container.RegisterType<ICategoryDAO, CategoryDAO>();
-            container.RegisterType<IAdminDAO, AdminDAO>();
+            container.RegisterType<IItemRepository, ItemRepository>();
+            container.RegisterType<ICustomerRepository, CustomerRepository>();
+            container.RegisterType<ICategoryRepository, CategoryRepository>();
+            container.RegisterType<IAdminRepository, AdminRepository>();
             container.RegisterType<IFileLoader, FileLoader>();
             container.RegisterType<IPaymentService, PaymentService>();
         }

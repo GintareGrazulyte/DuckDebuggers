@@ -1,5 +1,5 @@
-﻿using DOL.Accounts;
-using DOL.Carts;
+﻿using BOL.Accounts;
+using BOL.Carts;
 
 namespace EShop.Models
 {

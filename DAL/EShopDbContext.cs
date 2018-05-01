@@ -1,8 +1,8 @@
-﻿using DOL;
-using DOL.Objects;
-using DOL.Accounts;
+﻿using BOL;
+using BOL.Objects;
+using BOL.Accounts;
 using System.Data.Entity;
-using DOL.Carts;
+using BOL.Carts;
 
 namespace DAL
 {

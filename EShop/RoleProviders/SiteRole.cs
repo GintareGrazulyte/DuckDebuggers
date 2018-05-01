@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL;
 using System.Web.Security;
 
@@ -39,7 +39,7 @@ namespace EShop.RoleProviders
 
         public override string[] GetRolesForUser(string username)
         {
-            AdminDAO adminDAO = new AdminDAO(); //cannot inject here :(
+            AdminRepository adminDAO = new AdminRepository(); //cannot inject here :(
             Admin admin = adminDAO.FindByEmail(username);
             string role = admin != null ? "Admin" : "Customer";
             string[] result = { role };

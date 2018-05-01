@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DOL.Carts
+namespace BOL.Carts
 {
     //[ComplexType]
     public class Cart

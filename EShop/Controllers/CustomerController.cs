@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
 using EShop.Utils;
 using System.Web.Security;
@@ -9,9 +9,9 @@ namespace EShop.Controllers
 {
     public class CustomerController : Controller
     {
-        private ICustomerDAO _customerDAO;
+        private ICustomerRepository _customerDAO;
 
-        public CustomerController(ICustomerDAO customerDAO)
+        public CustomerController(ICustomerRepository customerDAO)
         {
             _customerDAO = customerDAO;
         }

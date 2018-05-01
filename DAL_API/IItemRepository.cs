@@ -1,10 +1,10 @@
-﻿using DOL.Objects;
+﻿using BOL.Objects;
 using System;
 using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface IItemsDAO : IDisposable
+    public interface IItemRepository : IDisposable
     {
         Item Find(int? id);
         List<Item> GetAll();

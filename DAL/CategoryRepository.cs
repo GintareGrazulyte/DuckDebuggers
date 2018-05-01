@@ -1,5 +1,5 @@
 ﻿using DAL_API;
-using DOL;
+using BOL;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class CategoryDAO : ICategoryDAO
+    public class CategoryRepository : ICategoryRepository
     {
         private EShopDbContext _db = new EShopDbContext();
 

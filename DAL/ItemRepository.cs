@@ -2,11 +2,11 @@
 using System.Data.Entity;
 using System.Linq;
 using DAL_API;
-using DOL.Objects;
+using BOL.Objects;
 
 namespace DAL
 {
-    public class ItemsDAO : IItemsDAO
+    public class ItemRepository : IItemRepository
     {
         private EShopDbContext _db = new EShopDbContext();
 
