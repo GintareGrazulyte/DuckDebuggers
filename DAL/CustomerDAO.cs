@@ -28,6 +28,17 @@ namespace DAL
                     .FirstOrDefault();
         }
 
+        public Customer FindById(int? id)
+        {
+            if (id == null)
+                return null;
+
+            return _db.Customers
+                    .Where(c => c.Id == id)
+                    .FirstOrDefault();
+        }
+
+
         public List<Customer> GetAll()
         {
             return _db.Customers.Include("Orders.Cart.Items.Item.Category").ToList();
