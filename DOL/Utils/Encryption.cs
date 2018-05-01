@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EShop.Utils
+namespace BOL.Utils
 {
     public class Encryption
     {

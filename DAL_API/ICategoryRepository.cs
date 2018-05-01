@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface ICategoryRepository : IDisposable
+    public interface ICategoryRepository
     {
         Category FindById(int? id);
         List<Category> GetAll();

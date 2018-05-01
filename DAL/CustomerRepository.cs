@@ -3,27 +3,43 @@ using System.Data.Entity;
 using System.Linq;
 using DAL_API;
 using BOL.Accounts;
+using System;
+using Mehdime.Entity;
 
 namespace DAL
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private EShopDbContext _db = new EShopDbContext();
+        private readonly IAmbientDbContextLocator _ambientDbContextLocator;
+
+        private EShopDbContext DbContext
+        {
+            get
+            {
+                var dbContext = _ambientDbContextLocator.Get<EShopDbContext>();
+
+                if (dbContext == null)
+                    throw new InvalidOperationException("No ambient DbContext of type EShopDbContext found.");
+
+                return dbContext;
+            }
+        }
+
+        public CustomerRepository(IAmbientDbContextLocator ambientDbContextLocator)
+        {
+            if (ambientDbContextLocator == null) throw new ArgumentNullException("ambientDbContextLocator");
+            _ambientDbContextLocator = ambientDbContextLocator;
+        }
 
         public void Add(Customer customer)
         {
-            _db.Customers.Add(customer);
-            _db.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            _db.Dispose();
+            DbContext.Customers.Add(customer);
+            DbContext.SaveChanges();
         }
 
         public Customer FindByEmail(string email)
         {
-            return _db.Customers.Include("Orders.Cart.Items.Item.Category")
+            return DbContext.Customers.Include("Orders.Cart.Items.Item.Category")
                     .Where(c => c.Email == email)
                     .FirstOrDefault();
         }
@@ -33,7 +49,7 @@ namespace DAL
             if (id == null)
                 return null;
 
-            return _db.Customers
+            return DbContext.Customers
                     .Where(c => c.Id == id)
                     .FirstOrDefault();
         }
@@ -41,20 +57,20 @@ namespace DAL
 
         public List<Customer> GetAll()
         {
-            return _db.Customers.Include("Orders.Cart.Items.Item.Category").ToList();
+            return DbContext.Customers.Include("Orders.Cart.Items.Item.Category").ToList();
         }
 
         public void Modify(Customer customer)
         {
-            _db.Entry(customer).State = EntityState.Modified;
-            _db.SaveChanges();
+            DbContext.Entry(customer).State = EntityState.Modified;
+            DbContext.SaveChanges();
           
         }
 
         public void Remove(Customer customer)
         {
-            _db.Customers.Remove(customer);
-            _db.SaveChanges();
+            DbContext.Customers.Remove(customer);
+            DbContext.SaveChanges();
         }
 
     }

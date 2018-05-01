@@ -6,46 +6,61 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mehdime.Entity;
 
 namespace DAL
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private EShopDbContext _db = new EShopDbContext();
+        private readonly IAmbientDbContextLocator _ambientDbContextLocator;
+
+        private EShopDbContext DbContext
+        {
+            get
+            {
+                var dbContext = _ambientDbContextLocator.Get<EShopDbContext>();
+
+                if (dbContext == null)
+                    throw new InvalidOperationException("No ambient DbContext of type EShopDbContext found");
+
+                return dbContext;
+            }
+        }
+
+        public CategoryRepository(IAmbientDbContextLocator ambientDbContextLocator)
+        {
+            if (ambientDbContextLocator == null) throw new ArgumentNullException("ambientDbContextLocator");
+            _ambientDbContextLocator = ambientDbContextLocator;
+        }
 
         public void Add(Category category)
         {
-            _db.Categories.Add(category);
-            _db.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            _db.Dispose();
+            DbContext.Categories.Add(category);
+            DbContext.SaveChanges();
         }
 
         public Category FindById(int? id)
         {
-            return _db.Categories.Include("Items")
+            return DbContext.Categories.Include("Items")
                     .Where(c => c.Id == id)
                     .FirstOrDefault();
         }
 
         public List<Category> GetAll()
         {
-            return _db.Categories.Include("Items").ToList();
+            return DbContext.Categories.Include("Items").ToList();
         }
 
         public void Modify(Category category)
         {
-            _db.Entry(category).State = EntityState.Modified;
-            _db.SaveChanges();
+            DbContext.Entry(category).State = EntityState.Modified;
+            DbContext.SaveChanges();
         }
 
         public void Remove(Category category)
         {
-            _db.Categories.Remove(category);
-            _db.SaveChanges();
+            DbContext.Categories.Remove(category);
+            DbContext.SaveChanges();
         }
     }
 }

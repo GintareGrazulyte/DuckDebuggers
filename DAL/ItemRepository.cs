@@ -3,44 +3,60 @@ using System.Data.Entity;
 using System.Linq;
 using DAL_API;
 using BOL.Objects;
+using System;
+using Mehdime.Entity;
 
 namespace DAL
 {
     public class ItemRepository : IItemRepository
     {
-        private EShopDbContext _db = new EShopDbContext();
+        private readonly IAmbientDbContextLocator _ambientDbContextLocator;
+
+        private EShopDbContext DbContext
+        {
+            get
+            {
+                var dbContext = _ambientDbContextLocator.Get<EShopDbContext>();
+
+                if (dbContext == null)
+                    throw new InvalidOperationException("No ambient DbContext of type EShopDbContext found");
+
+                return dbContext;
+            }
+        }
+
+        public ItemRepository(IAmbientDbContextLocator ambientDbContextLocator)
+        {
+            if (ambientDbContextLocator == null) throw new ArgumentNullException("ambientDbContextLocator");
+            _ambientDbContextLocator = ambientDbContextLocator;
+        }
 
         public void Add(Item item)
         {
-            _db.Items.Add(item);
-            _db.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            _db.Dispose();
+            DbContext.Items.Add(item);
+            DbContext.SaveChanges();
         }
 
         public Item Find(int? id)
         {
-            return _db.Items.Find(id);
+            return DbContext.Items.Find(id);
         }
 
         public List<Item> GetAll()
         {
-            return _db.Items.ToList();
+            return DbContext.Items.ToList();
         }
 
         public void Modify(Item item)
         {
-            _db.Entry(item).State = EntityState.Modified;
-            _db.SaveChanges();
+            DbContext.Entry(item).State = EntityState.Modified;
+            DbContext.SaveChanges();
         }
 
         public void Remove(Item item)
         {
-            _db.Items.Remove(item);
-            _db.SaveChanges();
+            DbContext.Items.Remove(item);
+            DbContext.SaveChanges();
         }
 
     }

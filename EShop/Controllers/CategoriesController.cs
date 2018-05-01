@@ -126,7 +126,7 @@ namespace EShop.Controllers
         {
             if (disposing)
             {
-                _categoryDAO.Dispose();
+                //_categoryDAO.Dispose();
             }
             base.Dispose(disposing);
         }

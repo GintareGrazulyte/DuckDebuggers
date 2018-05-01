@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface IItemRepository : IDisposable
+    public interface IItemRepository
     {
         Item Find(int? id);
         List<Item> GetAll();

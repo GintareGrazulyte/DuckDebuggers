@@ -2,6 +2,7 @@ using BLL;
 using BLL_API;
 using DAL;
 using DAL_API;
+using Mehdime.Entity;
 using System;
 
 using Unity;
@@ -54,6 +55,10 @@ namespace EShop
             container.RegisterType<IFileLoader, FileLoader>();
             container.RegisterType<IPaymentService, PaymentService>();
             container.RegisterType<IImportService, ImportService>();
+            container.RegisterType<ICustomerAccountService, CustomerAccountService>();
+
+            container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());
+            container.RegisterInstance<IAmbientDbContextLocator>(new AmbientDbContextLocator());
         }
     }
 }

@@ -3,6 +3,7 @@ using BOL.Objects;
 using BOL.Accounts;
 using System.Data.Entity;
 using BOL.Carts;
+using System.Reflection;
 
 namespace DAL
 {
@@ -20,6 +21,15 @@ namespace DAL
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Overrides for the convention-based mappings.
+            // We're assuming that all our fluent mappings are declared in this assembly.
+            modelBuilder.Configurations.AddFromAssembly(Assembly.GetAssembly(typeof(EShopDbContext)));
+        }
 
     }
 }

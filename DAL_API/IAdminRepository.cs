@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface IAdminRepository : IDisposable
+    public interface IAdminRepository
     {
         //TODO should be IAdmin
         Admin FindByEmail(string email);

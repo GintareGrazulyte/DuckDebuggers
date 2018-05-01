@@ -1,10 +1,10 @@
-﻿@model DOL.Orders.Order
+﻿@model BOL.Orders.Order
 @{
-    IEnumerable<DOL.Carts.CartItem> cartItems = Model.Cart.Items;
+    IEnumerable<BOL.Carts.CartItem> cartItems = Model.Cart.Items;
     Layout = null;
     var orderDateTime = Model.DateTime;
 }
-@using DOL.Orders
+@using BOL.Orders
 <br />
 <h3>Order: @orderDateTime</h3>
 

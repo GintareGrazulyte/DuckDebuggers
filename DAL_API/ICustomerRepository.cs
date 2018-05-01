@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface ICustomerRepository : IDisposable
+    public interface ICustomerRepository
     {
         //TODO should be ICustomer
         Customer FindByEmail(string email);

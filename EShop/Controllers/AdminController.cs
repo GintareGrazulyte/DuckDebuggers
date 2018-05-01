@@ -61,7 +61,7 @@ namespace EShop.Controllers
         {
             if (disposing)
             {
-                _adminDAO.Dispose();
+                //_adminDAO.Dispose();
             }
             base.Dispose(disposing);
         }

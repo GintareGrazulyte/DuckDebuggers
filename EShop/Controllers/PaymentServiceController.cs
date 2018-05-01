@@ -119,7 +119,7 @@ namespace EShop.Controllers
         {
             if (disposing)
             {
-                _customerDAO.Dispose();
+                //_customerDAO.Dispose();
             }
             base.Dispose(disposing);
         }

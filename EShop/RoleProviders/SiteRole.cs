@@ -37,11 +37,12 @@ namespace EShop.RoleProviders
             throw new NotImplementedException();
         }
 
-        public override string[] GetRolesForUser(string username)
+        public override string[] GetRolesForUser(string username)   //TODO: IMPORTANT
         {
-            AdminRepository adminDAO = new AdminRepository(); //cannot inject here :(
-            Admin admin = adminDAO.FindByEmail(username);
-            string role = admin != null ? "Admin" : "Customer";
+            //AdminRepository adminDAO = new AdminRepository(); //cannot inject here :(
+            //Admin admin = adminDAO.FindByEmail(username);
+            //string role = admin != null ? "Admin" : "Customer";
+            string role = "Customer";
             string[] result = { role };
             return result;
         }
