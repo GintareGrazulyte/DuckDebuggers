@@ -78,6 +78,7 @@ namespace EShop.Controllers
         {
             FormsAuthentication.SignOut();
             Session["AccountId"] = null;
+            Session["AccountEmail"] = null;
             return RedirectToAction("Login");
         }
     }

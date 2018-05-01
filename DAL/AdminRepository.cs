@@ -41,7 +41,6 @@ namespace DAL
         public void Modify(Admin admin)
         {
             DbContext.Entry(admin).State = EntityState.Modified;
-            DbContext.SaveChanges();
         }
 
         public List<Admin> GetAll()

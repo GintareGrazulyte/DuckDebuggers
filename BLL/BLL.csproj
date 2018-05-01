@@ -60,9 +60,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminService.cs" />
+    <Compile Include="CategoryService.cs" />
     <Compile Include="CustomerAccountService.cs" />
     <Compile Include="ImportService.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="ItemQueryService.cs" />
     <Compile Include="PaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

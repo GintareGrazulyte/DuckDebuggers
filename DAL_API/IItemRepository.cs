@@ -6,7 +6,7 @@ namespace DAL_API
 {
     public interface IItemRepository
     {
-        Item Find(int? id);
+        Item FindById(int? id);
         List<Item> GetAll();
         void Remove(Item item);
         void Add(Item item);

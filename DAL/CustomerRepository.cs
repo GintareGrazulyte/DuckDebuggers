@@ -34,7 +34,6 @@ namespace DAL
         public void Add(Customer customer)
         {
             DbContext.Customers.Add(customer);
-            DbContext.SaveChanges();
         }
 
         public Customer FindByEmail(string email)
@@ -62,15 +61,12 @@ namespace DAL
 
         public void Modify(Customer customer)
         {
-            DbContext.Entry(customer).State = EntityState.Modified;
-            DbContext.SaveChanges();
-          
+            DbContext.Entry(customer).State = EntityState.Modified;          
         }
 
         public void Remove(Customer customer)
         {
             DbContext.Customers.Remove(customer);
-            DbContext.SaveChanges();
         }
 
     }

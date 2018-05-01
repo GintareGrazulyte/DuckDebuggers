@@ -57,7 +57,7 @@ namespace EShop.Controllers
                 cart = (Cart)Session["Cart"];
             }
             
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemsDAO.FindById(id);
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
@@ -124,7 +124,7 @@ namespace EShop.Controllers
             Item itemToAdd;
             foreach (var item in order.Cart.Items)
             {
-                itemToAdd = _itemsDAO.Find(item.Item.Id);
+                itemToAdd = _itemsDAO.FindById(item.Item.Id);
 
                 if (itemToAdd != null)
                 {

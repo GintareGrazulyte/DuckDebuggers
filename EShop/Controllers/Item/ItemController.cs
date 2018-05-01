@@ -89,7 +89,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemsDAO.FindById(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -129,7 +129,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemsDAO.FindById(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -159,7 +159,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemsDAO.FindById(id);
             if (item == null)
             {
                 return HttpNotFound();
@@ -172,7 +172,7 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemsDAO.FindById(id);
             _itemsDAO.Remove(item);
             return RedirectToAction("Index");
         }

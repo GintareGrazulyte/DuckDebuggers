@@ -36,14 +36,12 @@ namespace DAL
         public void Add(Category category)
         {
             DbContext.Categories.Add(category);
-            DbContext.SaveChanges();
         }
 
         public Category FindById(int? id)
         {
             return DbContext.Categories.Include("Items")
-                    .Where(c => c.Id == id)
-                    .FirstOrDefault();
+                    .SingleOrDefault(c => c.Id == id);
         }
 
         public List<Category> GetAll()
@@ -54,13 +52,18 @@ namespace DAL
         public void Modify(Category category)
         {
             DbContext.Entry(category).State = EntityState.Modified;
-            DbContext.SaveChanges();
         }
 
         public void Remove(Category category)
         {
             DbContext.Categories.Remove(category);
-            DbContext.SaveChanges();
+        }
+
+        public Category FindByName(string name)
+        {
+            return DbContext.Categories.Include("Items")
+                    .Where(c => c.Name == name)
+                    .SingleOrDefault();
         }
     }
 }
