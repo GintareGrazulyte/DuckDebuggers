@@ -1,11 +1,11 @@
-﻿using System.Data.Entity;
-using System;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using DAL_API;
 using DOL.Objects;
 using EShop.Attributes;
 using BLL_API;
+using System.Collections.Generic;
+using System;
 
 namespace EShop.Controllers
 {
@@ -15,18 +15,71 @@ namespace EShop.Controllers
         private IItemsDAO _itemsDAO;
         private ICategoryDAO _categoryDAO;
         private IFileLoader _fileLoader;
+        private IImportService _importService;
 
-        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, IFileLoader fileLoader)
+        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, 
+            IFileLoader fileLoader, IImportService importService)
         {
             _itemsDAO = itemsDAO;
             _categoryDAO = categoryDAO;
             _fileLoader = fileLoader;
+            _importService = importService;
         }
 
         // GET: Item
         public ActionResult Index()
         {
             return View(_itemsDAO.GetAll());
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        public ActionResult Export()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ImportItemsFromFile(string path)
+        {
+            ICollection<Item> items;
+            try
+            {
+                items = _importService.ImportItemsFromFile(path);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View("Import");
+            }
+
+            foreach (var item in items)
+            {
+                _itemsDAO.Add(item);
+            }
+
+            return View("Index", _itemsDAO.GetAll());
+        }
+
+        [HttpPost]
+        public ActionResult ExportItemsToFile(string path)
+        {
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError("", "File alredy exists");
+                return View("Export");
+            }
+
+            ICollection<Item> items = _itemsDAO.GetAll();
+
+            _importService.ExportItemsToFile(items, path);
+
+            //TODO: inform that action completed successfully somehow differently
+            ModelState.AddModelError("", "Successfully exported");
+            return View("Export");
         }
 
         // GET: Item/Details/5
