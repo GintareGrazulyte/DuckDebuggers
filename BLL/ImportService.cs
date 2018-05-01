@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using DOL.Objects;
 using Bytescout.Spreadsheet;
+using System.Drawing;
 
 namespace BLL
 {
+    //TODO: find proper name
     public class ImportService : IImportService
     {
 
-        public ICollection<Item> GetItemsFromFile(string path)
+        public ICollection<Item> ImportItemsFromFile(string path)
         {
             var document = new Spreadsheet();
 
@@ -44,7 +46,6 @@ namespace BLL
             int? categoryId;
             var items = new List<Item>();
 
-            //TODO get column order name
             while (IsValidRow(name = worksheet.Cell(i, 0).ValueAsString, 
                              price = worksheet.Cell(i, 1).ValueAsInteger))
             {
@@ -64,6 +65,8 @@ namespace BLL
                 });
                 i++;
             }
+
+            document.Close();
             return items;
         }
 
@@ -88,6 +91,37 @@ namespace BLL
             {
                 categoryId = null;
             }
+        }
+
+        public void ExportItemsToFile(ICollection<Item> items, string path)
+        {
+            var document = new Spreadsheet();
+
+            Worksheet worksheet = document.Workbook.Worksheets.Add("Items");
+
+            var columnNames = new List<string> { "Name", "Price", "Description", "CategoryId", "ImageUrl" };
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                worksheet.Columns[i].Width = 90;
+                var cell = worksheet.Cell(0, i);
+                cell.Value = columnNames[i];
+                cell.Font = new Font("Calibri", 12, FontStyle.Bold);
+            }
+
+            int cellIndex = 1;
+            foreach (var item in items)
+            {
+                worksheet.Cell(cellIndex, 0).Value = item.Name;
+                worksheet.Cell(cellIndex, 1).Value = item.Price;
+                worksheet.Cell(cellIndex, 2).Value = item.Description;
+                worksheet.Cell(cellIndex, 3).Value = item.CategoryId;
+                worksheet.Cell(cellIndex, 4).Value = item.ImageUrl;
+
+                cellIndex++;
+            }
+
+            document.SaveAs(path);
+            document.Close();
         }
     }
 }

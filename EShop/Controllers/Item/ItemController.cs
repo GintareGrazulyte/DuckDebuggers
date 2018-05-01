@@ -37,13 +37,18 @@ namespace EShop.Controllers
             return View();
         }
 
+        public ActionResult Export()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult ImportItemsFromFile(string path)
         {
             ICollection<Item> items;
             try
             {
-                items = _importService.GetItemsFromFile(path);
+                items = _importService.ImportItemsFromFile(path);
             }
             catch (Exception ex)
             {
@@ -57,6 +62,24 @@ namespace EShop.Controllers
             }
 
             return View("Index", _itemsDAO.GetAll());
+        }
+
+        [HttpPost]
+        public ActionResult ExportItemsToFile(string path)
+        {
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError("", "File alredy exists");
+                return View("Export");
+            }
+
+            ICollection<Item> items = _itemsDAO.GetAll();
+
+            _importService.ExportItemsToFile(items, path);
+
+            //TODO: inform that action completed successfully somehow differently
+            ModelState.AddModelError("", "Successfully exported");
+            return View("Export");
         }
 
         // GET: Item/Details/5
