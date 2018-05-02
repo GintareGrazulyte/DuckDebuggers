@@ -48,11 +48,10 @@ namespace DAL
             if (id == null)
                 return null;
 
-            return DbContext.Customers
+            return DbContext.Customers.Include("Orders.Cart.Items.Item.Category")
                     .Where(c => c.Id == id)
                     .FirstOrDefault();
         }
-
 
         public List<Customer> GetAll()
         {
@@ -62,6 +61,11 @@ namespace DAL
         public void Modify(Customer customer)
         {
             DbContext.Entry(customer).State = EntityState.Modified;          
+        }
+
+        public void UpdateCustomerOrder(Customer customer)
+        {
+            DbContext.Entry(customer).State = EntityState.Modified;
         }
 
         public void Remove(Customer customer)

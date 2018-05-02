@@ -38,7 +38,7 @@ namespace BOL.Carts
             int price = 0;
             foreach(var cartItem in Items)
             {
-                price += cartItem.Item.Price * cartItem.Quantity;
+                price += cartItem.BuyPrice * cartItem.Quantity;
             }
             return price;
         }

@@ -65,5 +65,13 @@ namespace BLL
                     return null;
             }
         }
+
+        public Customer GetCustomer(int customerId)
+        {
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return _customerRepository.FindById(customerId);
+            }
+        }
     }
 }

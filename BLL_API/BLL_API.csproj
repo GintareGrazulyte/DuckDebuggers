@@ -44,6 +44,7 @@
     <Compile Include="IAdminService.cs" />
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ICustomerAccountService.cs" />
+    <Compile Include="ICustomerPaymentService.cs" />
     <Compile Include="IImportService.cs" />
     <Compile Include="IFileLoader.cs" />
     <Compile Include="IItemManagementService.cs" />

@@ -12,13 +12,13 @@ namespace EShop.Controllers
 {
     public class PaymentServiceController : Controller
     {
-        private IPaymentService _paymentService;
-        private ICustomerRepository _customerDAO;
+        private ICustomerPaymentService _customerPaymentService;
+        private ICustomerAccountService _customerAccountService;
 
-        public PaymentServiceController(ICustomerRepository customerDAO, IPaymentService paymentService)
+        public PaymentServiceController(ICustomerAccountService customerAccountService, ICustomerPaymentService customerPaymentService)
         {
-            _customerDAO = customerDAO;
-            _paymentService = paymentService;
+            _customerAccountService = customerAccountService;
+            _customerPaymentService = customerPaymentService;
         }
 
         public ActionResult Index()
@@ -41,47 +41,41 @@ namespace EShop.Controllers
             return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
         }
 
-        public ActionResult PayFormedOrder(Cart cart)
+        public ActionResult PayFormedOrder()
         {
-            ActionResult actionResult = GetSessionCustomer(out Customer currentCustomer);
+
+            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart); 
+
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-            _paymentService.Payment(currentCustomer.Card, cart.Cost, out OrderStatus orderStatus, out string paymentInfo);
+            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
 
-            //TODO: now does not change anything in DB
-            var customer = _customerDAO.FindByEmail(currentCustomer.Email);
-            Order order = currentCustomer.Orders.FirstOrDefault(o => o.Cart.Id == cart.Id);
-            order.OrderStatus = orderStatus;
-            _customerDAO.Modify(customer);
+            //TODO: is this needed?
+            Session["Cart"] = null;
+            Session["Count"] = 0;
 
-            return View("Pay", new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
+            return View("Pay", new PaymentViewModel() { PaymentDetails = paymentInfo.PaymentDetails, Status = paymentInfo.OrderStatus.GetDescription() });
         }
 
         //TODO add attribute
-        public ActionResult Pay(Cart cart)
+        public ActionResult Pay()    
         {
-            ActionResult actionResult = GetSessionCustomer(out Customer currentCustomer);
+            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
+
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-            _paymentService.Payment(currentCustomer.Card, cart.Cost, out OrderStatus orderStatus, out string paymentInfo);
-
-            //TODO: cannot modify as db crashes
-
-            //var customer = _customerDAO.FindByEmail(currentCustomer.Email);
-            //var order = new Order { Cart = (Cart)Session["Cart"], DateTime = DateTime.Now, OrderStatus = orderStatus };
-            //customer.Orders.Add(order);
-            //_customerDAO.Modify(customer);
+            var paymentInfo = _customerPaymentService.Pay(customer.Id, cart);
 
             Session["Cart"] = null;
-            Session["count"] = 0;   //TODO: cia speju turi but "Count"? -Rytis
+            Session["Count"] = 0;
 
-            return View(new PaymentViewModel() { PaymentDetails = paymentInfo, Status = orderStatus.GetDescription() });
+            return View(new PaymentViewModel() { PaymentDetails = paymentInfo.PaymentDetails, Status = paymentInfo.OrderStatus.GetDescription() });
         }
 
         private ActionResult GetSessionProperties(out Customer customer, out Cart cart)
@@ -104,24 +98,16 @@ namespace EShop.Controllers
             return null;
         }
 
-        private ActionResult GetSessionCustomer(out Customer customer)
+        private ActionResult GetSessionCustomer(out Customer customer)  //TODO: enough to return Customer.Id?
         {
-            customer = Session["Account"] as Customer;
-            if (customer == null)
+            int customerId = (int)Session["AccountId"];
+            customer = _customerAccountService.GetCustomer(customerId);
+            
+            if(customer == null)
             {
                 return RedirectToAction("Login", "Customer");
             }
-
             return null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                //_customerDAO.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

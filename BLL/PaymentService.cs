@@ -49,7 +49,7 @@ namespace BLL
             return json;
         }
 
-        public void Payment(Card card, int cost, out OrderStatus orderStatus, out string paymentInfo)
+        public PaymentInfo Payment(Card card, int cost)
         {
             HttpResponseMessage paymentResult = Pay(card, cost).Result;
 
@@ -57,7 +57,8 @@ namespace BLL
             var readStream = new StreamReader(receiveStream, Encoding.UTF8);
             JObject responseContent = JObject.Parse(readStream.ReadToEnd());
 
-            paymentInfo = "";
+            string paymentDetails = "";
+            OrderStatus orderStatus;
 
             if (paymentResult.IsSuccessStatusCode)
             {
@@ -70,7 +71,7 @@ namespace BLL
                 switch (paymentResult.StatusCode)
                 {
                     case System.Net.HttpStatusCode.BadRequest:
-                        paymentInfo = "Invalid card number, ";
+                        paymentDetails = "Invalid card number, ";
                         break;
                     case System.Net.HttpStatusCode.Unauthorized:
                         //401 nepavyko autentifikuoti API serviso vartotojo
@@ -80,11 +81,11 @@ namespace BLL
                         string error = responseContent.Property("error").Value.ToString();
                         if (error == "OutOfFunds")
                         {
-                            paymentInfo = "Insufficient balance in the card, ";
+                            paymentDetails = "Insufficient balance in the card, ";
                         }
                         else if (error == "CardExpired")
                         {
-                            paymentInfo = "Card is expired, ";
+                            paymentDetails = "Card is expired, ";
                         }
                         break;
                     case System.Net.HttpStatusCode.NotFound:
@@ -92,8 +93,9 @@ namespace BLL
                         //Exception
                         break;
                 }
-                paymentInfo += "please use another card for payment";
+                paymentDetails += "please use another card for payment";
             }
+            return new PaymentInfo() { OrderStatus = orderStatus, PaymentDetails = paymentDetails };
         }
 
     }

@@ -8,7 +8,7 @@ namespace EShop.Models
         public string Status { get; set; }
         public string PaymentDetails { get; set; }
 
-        public Cart Cart;
+        public Cart Cart { get; set; }
         public Customer Customer;
 
         public bool FormedOrder;

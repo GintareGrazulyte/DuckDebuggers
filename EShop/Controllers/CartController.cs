@@ -44,6 +44,13 @@ namespace EShop.Controllers
 
         public ActionResult AddToCart(int? id)
         {
+            if(id == null)          //TODO: error handling
+                return RedirectToAction("Index");
+
+            Item item = _itemQueryService.GetItem(id.Value);
+
+            if(item == null)        //TODO: error handling
+                return RedirectToAction("Index");
             Cart cart;
             if (Session["Cart"] == null)
             {
@@ -55,8 +62,6 @@ namespace EShop.Controllers
             {
                 cart = (Cart)Session["Cart"];
             }
-            
-            Item item = _itemQueryService.GetItem(id.Value);
 
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
