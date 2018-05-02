@@ -1,10 +1,10 @@
-﻿using DOL.Accounts;
+﻿using BOL.Accounts;
 using System;
 using System.Collections.Generic;
 
 namespace DAL_API
 {
-    public interface ICustomerDAO : IDisposable
+    public interface ICustomerRepository
     {
         //TODO should be ICustomer
         Customer FindByEmail(string email);

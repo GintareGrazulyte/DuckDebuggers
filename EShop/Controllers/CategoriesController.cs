@@ -7,42 +7,45 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DAL;
-using DOL;
+using BOL;
 using EShop.Attributes;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
+using BLL_API;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-    public class CategoriesController : Controller
+    public class CategoriesController : Controller      //TODO: exception handling -> error messages
     {
-        private ICategoryDAO _categoryDAO;
+        private ICategoryService _categoryService;
 
-        public CategoriesController(ICategoryDAO categoryDAO)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _categoryDAO = categoryDAO;
+            _categoryService = categoryService;
         }
 
         // GET: Categories
         public ActionResult Index()
         {
-            return View(_categoryDAO.GetAll());
+            return View(_categoryService.GetAllCategories());
         }
 
         // GET: Categories/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            try
+            {
+                var category = _categoryService.GetCategory(id.Value);
+                return View(category);
             }
-            Category category = _categoryDAO.FindById(id);
-            if (category == null)
+            catch (ArgumentException ex)
             {
                 return HttpNotFound();
             }
-            return View(category);
         }
 
         // GET: Categories/Create
@@ -60,7 +63,7 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryDAO.Add(category);
+                _categoryService.CreateCategory(category);
                 return RedirectToAction("Index");
             }
 
@@ -71,15 +74,17 @@ namespace EShop.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            try
+            {
+                Category category = _categoryService.GetCategory(id.Value);
+                return View(category);
             }
-            Category category = _categoryDAO.FindById(id);
-            if (category == null)
+            catch (ArgumentException ex)
             {
                 return HttpNotFound();
             }
-            return View(category);
         }
 
         // POST: Categories/Edit/5
@@ -91,7 +96,7 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryDAO.Modify(category);
+                _categoryService.UpdateCategory(category);
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -101,15 +106,17 @@ namespace EShop.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            try
+            {
+                Category category = _categoryService.GetCategory(id.Value);
+                return View(category);
             }
-            Category category = _categoryDAO.FindById(id);
-            if (category == null)
+            catch (ArgumentException ex)
             {
                 return HttpNotFound();
             }
-            return View(category);
         }
 
         // POST: Categories/Delete/5
@@ -117,18 +124,15 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = _categoryDAO.FindById(id);
-            _categoryDAO.Remove(category);
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            try
             {
-                _categoryDAO.Dispose();
+                _categoryService.DeleteCategory(id);
+                return RedirectToAction("Index");
             }
-            base.Dispose(disposing);
+            catch (ArgumentException ex)
+            {
+                return HttpNotFound();
+            }
         }
     }
 }

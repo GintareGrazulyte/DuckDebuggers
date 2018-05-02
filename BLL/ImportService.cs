@@ -1,7 +1,7 @@
 ﻿using BLL_API;
 using System;
 using System.Collections.Generic;
-using DOL.Objects;
+using BOL.Objects;
 using Bytescout.Spreadsheet;
 using System.Drawing;
 
@@ -11,7 +11,7 @@ namespace BLL
     public class ImportService : IImportService
     {
 
-        public ICollection<Item> ImportItemsFromFile(string path)
+        public IEnumerable<Item> ImportItemsFromFile(string path)
         {
             var document = new Spreadsheet();
 
@@ -93,7 +93,7 @@ namespace BLL
             }
         }
 
-        public void ExportItemsToFile(ICollection<Item> items, string path)
+        public void ExportItemsToFile(IEnumerable<Item> items, string path)
         {
             var document = new Spreadsheet();
 

@@ -40,10 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAdminDAO.cs" />
-    <Compile Include="ICategoryDAO.cs" />
-    <Compile Include="ICustomerDAO.cs" />
-    <Compile Include="IItemsDAO.cs" />
+    <Compile Include="IAdminRepository.cs" />
+    <Compile Include="ICategoryRepository.cs" />
+    <Compile Include="ICustomerRepository.cs" />
+    <Compile Include="IItemRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL;
 using System.Web.Security;
+using BLL_API;
 
 namespace EShop.RoleProviders
 {
@@ -37,10 +38,10 @@ namespace EShop.RoleProviders
             throw new NotImplementedException();
         }
 
-        public override string[] GetRolesForUser(string username)
+        public override string[] GetRolesForUser(string username)   //TODO: IMPORTANT
         {
-            AdminDAO adminDAO = new AdminDAO(); //cannot inject here :(
-            Admin admin = adminDAO.FindByEmail(username);
+            var adminService = UnityConfig.Container.Resolve(typeof(IAdminService), "") as IAdminService;
+            var admin = adminService.GetAdmin(username);
             string role = admin != null ? "Admin" : "Customer";
             string[] result = { role };
             return result;
