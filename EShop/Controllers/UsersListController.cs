@@ -1,7 +1,7 @@
 ﻿using DAL;
 using DAL_API;
-using DOL.Accounts;
-using DOL.Orders;
+using BOL.Accounts;
+using BOL.Orders;
 using EShop.Attributes;
 using System;
 using System.Data.Entity;
@@ -14,11 +14,11 @@ namespace EShop.Controllers
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class UsersListController : Controller
     {
-        private ICustomerDAO _customerDAO;
-        private IAdminDAO _adminDAO;
+        private ICustomerRepository _customerDAO;
+        private IAdminRepository _adminDAO;
         private EShopDbContext _db = new EShopDbContext();
 
-        public UsersListController(ICustomerDAO customerDAO, IAdminDAO adminDAO)
+        public UsersListController(ICustomerRepository customerDAO, IAdminRepository adminDAO)
         {
             _customerDAO = customerDAO;
             _adminDAO = adminDAO;

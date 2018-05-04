@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOL.Accounts
+namespace BOL.Accounts
 {
     public class Admin : Account
     {

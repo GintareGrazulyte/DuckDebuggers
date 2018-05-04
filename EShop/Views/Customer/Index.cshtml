@@ -2,9 +2,9 @@
     ViewBag.Title = "LoggedIn";
 }
 @{
-    var customer = Session["Account"] as DOL.Accounts.Customer;
+    var customer = (string)Session["AccountEmail"];
 }
-<h2>Hello customer @customer.Email</h2>
+<h2>Hello customer @customer</h2>
 
 @Html.ActionLink("Order History", "Index", "OrderHistory")
 

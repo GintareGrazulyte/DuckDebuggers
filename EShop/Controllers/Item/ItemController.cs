@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using DAL_API;
-using DOL.Objects;
+using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
 using System.Collections.Generic;
@@ -10,26 +10,24 @@ using System;
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-    public class ItemController : Controller
+    public class ItemController : Controller    //TODO: exception handling
     {
-        private IItemsDAO _itemsDAO;
-        private ICategoryDAO _categoryDAO;
-        private IFileLoader _fileLoader;
-        private IImportService _importService;
+        private IItemQueryService _itemQueryService;
+        private ICategoryService _categoryService;
+        private IItemManagementService _itemManagementService;
 
-        public ItemController(IItemsDAO itemsDAO, ICategoryDAO categoryDAO, 
-            IFileLoader fileLoader, IImportService importService)
+        public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
+            IItemManagementService itemManagementService)
         {
-            _itemsDAO = itemsDAO;
-            _categoryDAO = categoryDAO;
-            _fileLoader = fileLoader;
-            _importService = importService;
+            _itemQueryService = itemQueryService;
+            _categoryService = categoryService;
+            _itemManagementService = itemManagementService;
         }
 
         // GET: Item
         public ActionResult Index()
         {
-            return View(_itemsDAO.GetAll());
+            return View(_itemQueryService.GetAllItems());
         }
 
         public ActionResult Import()
@@ -45,23 +43,17 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ImportItemsFromFile(string path)
         {
-            ICollection<Item> items;
             try
             {
-                items = _importService.ImportItemsFromFile(path);
+                _itemManagementService.ImportItemsFromFile(path);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
                 return View("Import");
             }
-
-            foreach (var item in items)
-            {
-                _itemsDAO.Add(item);
-            }
-
-            return View("Index", _itemsDAO.GetAll());
+            
+            return View("Index", _itemQueryService.GetAllItems());
         }
 
         [HttpPost]
@@ -73,9 +65,7 @@ namespace EShop.Controllers
                 return View("Export");
             }
 
-            ICollection<Item> items = _itemsDAO.GetAll();
-
-            _importService.ExportItemsToFile(items, path);
+            _itemManagementService.ExportAllItemsToFile(path);
 
             //TODO: inform that action completed successfully somehow differently
             ModelState.AddModelError("", "Successfully exported");
@@ -89,7 +79,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
                 return HttpNotFound();
@@ -100,7 +90,7 @@ namespace EShop.Controllers
         // GET: Item/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             return View();
         }
 
@@ -111,14 +101,13 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
         {
-            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                item.ImageUrl = _fileLoader.Load(Server.MapPath("~/Uploads/Images"), item.Image);
-                _itemsDAO.Add(item);
+                _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(_categoryDAO.GetAll(), "Id", "Name", item.CategoryId);
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 
@@ -129,7 +118,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
                 return HttpNotFound();
@@ -146,7 +135,7 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _itemsDAO.Modify(item);
+                _itemManagementService.UpdateItem(item);
                 return RedirectToAction("Index");
             }
             return View(item);
@@ -159,7 +148,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = _itemsDAO.Find(id);
+            Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
                 return HttpNotFound();
@@ -172,18 +161,8 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Item item = _itemsDAO.Find(id);
-            _itemsDAO.Remove(item);
+            _itemManagementService.DeleteItem(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _itemsDAO.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

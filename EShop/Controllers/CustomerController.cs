@@ -1,19 +1,22 @@
 ﻿using System.Web.Mvc;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
-using EShop.Utils;
 using System.Web.Security;
 using EShop.Attributes;
+using BOL.Utils;
+using BLL_API;
+using System;
+using System.Diagnostics;
 
 namespace EShop.Controllers
 {
     public class CustomerController : Controller
     {
-        private ICustomerDAO _customerDAO;
+        private ICustomerAccountService _customerAccountService;
 
-        public CustomerController(ICustomerDAO customerDAO)
+        public CustomerController(ICustomerAccountService customerAccountService)
         {
-            _customerDAO = customerDAO;
+            _customerAccountService = customerAccountService;
         }
         
 
@@ -35,17 +38,14 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                var foundCustomer = _customerDAO.FindByEmail(customer.Email);
-                if(foundCustomer == null)
+                try
                 {
-                    customer.Password = Encryption.SHA256(customer.Password);
-                    customer.ConfirmPassword = Encryption.SHA256(customer.ConfirmPassword);
-                    customer.IsActive = true;
-                    _customerDAO.Add(customer);
+                    _customerAccountService.CreateCustomer(customer);
                     return RedirectToAction("Login");
                 }
-                else
+                catch(Exception ex)    //TODO: create separate exception to handle "Email already exists"
                 {
+                    Debug.WriteLine(ex.Message);
                     ModelState.AddModelError("", "Email already exists!");
                 }
             }
@@ -58,35 +58,28 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(Customer customer)
+        public ActionResult Login(Customer customerToLogin)
         {
             //TODO also check if admin email isn't reserved
-            var foundCustomer = _customerDAO.FindByEmail(customer.Email);
-            if(foundCustomer != null && foundCustomer.Password == Encryption.SHA256(customer.Password) && foundCustomer.IsActive)
+            var foundCustomer = _customerAccountService.LoginCustomer(customerToLogin);
+            if(foundCustomer != null)
             {
                 FormsAuthentication.SetAuthCookie(foundCustomer.Email, false);
-                Session["Account"] = foundCustomer;
+                Session["AccountId"] = foundCustomer.Id;
+                Session["AccountEmail"] = foundCustomer.Email;
                 return RedirectToAction("Index");
             }
 
             ModelState.AddModelError("", "Wrong email or password");
-            return View(customer);
+            return View(foundCustomer);
         }
 
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            Session["Account"] = null;
+            Session["AccountId"] = null;
+            Session["AccountEmail"] = null;
             return RedirectToAction("Login");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _customerDAO.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

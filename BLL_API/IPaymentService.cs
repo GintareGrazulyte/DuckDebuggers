@@ -1,10 +1,10 @@
-﻿using DOL;
-using DOL.Orders;
+﻿using BOL;
+using BOL.Orders;
 
 namespace BLL_API
 {
     public interface IPaymentService
     {
-        void Payment(Card card, int cost, out OrderStatus orderStatus, out string paymentInfo);
+        PaymentInfo Payment(Card card, int cost);
     }
 }

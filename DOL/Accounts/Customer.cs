@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using DOL.Orders;
+using BOL.Orders;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DOL.Accounts
+namespace BOL.Accounts
 {
     public class Customer : Account
     {

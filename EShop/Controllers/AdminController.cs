@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using DOL.Accounts;
+using BOL.Accounts;
 using DAL_API;
 using System.Web.Mvc;
 using System.Web.Security;
 using EShop.Attributes;
+using BLL_API;
 
 namespace EShop.Controllers
 {
     public class AdminController : Controller
     {
-        private IAdminDAO _adminDAO;
+        private IAdminService _adminService;
 
-        public AdminController(IAdminDAO adminDAO)
+        public AdminController(IAdminService adminService)
         {
-            _adminDAO = adminDAO;
+            _adminService = adminService;
         }
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
@@ -29,14 +30,14 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(Admin customer, string returnUrl)
+        public ActionResult Login(Admin admin, string returnUrl)
         {
-            var foundAdmin = _adminDAO.FindByEmail(customer.Email);
-            //TODO needs to hashed, but how do you create an admin then?
-            if (foundAdmin != null && foundAdmin.Password == customer.Password)
+            var foundAdmin = _adminService.LoginAdmin(admin);
+            if (foundAdmin != null)
             {
                 FormsAuthentication.SetAuthCookie(foundAdmin.Email, false);
-                Session["Account"] = foundAdmin;
+                Session["AccountId"] = foundAdmin.Id;
+                Session["AccountEmail"] = foundAdmin.Email;
                 if(returnUrl == null || returnUrl == string.Empty)
                 {
                     returnUrl = "Index";
@@ -47,12 +48,13 @@ namespace EShop.Controllers
             {
                 ModelState.AddModelError("", "Wrong email or password");
             }
-            return View(customer);
+            return View(admin);
         }
 
         public ActionResult Logout()
         {
-            Session["Account"] = null;
+            Session["AccountId"] = null;
+            Session["AccountEmail"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
         }
@@ -61,7 +63,7 @@ namespace EShop.Controllers
         {
             if (disposing)
             {
-                _adminDAO.Dispose();
+                //_adminDAO.Dispose();
             }
             base.Dispose(disposing);
         }

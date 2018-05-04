@@ -1,7 +1,10 @@
+using AutoMapper;
 using BLL;
 using BLL_API;
 using DAL;
 using DAL_API;
+using EShop.App_Start;
+using Mehdime.Entity;
 using System;
 
 using Unity;
@@ -46,14 +49,25 @@ namespace EShop
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
-
-            container.RegisterType<IItemsDAO, ItemsDAO>();
-            container.RegisterType<ICustomerDAO, CustomerDAO>();
-            container.RegisterType<ICategoryDAO, CategoryDAO>();
-            container.RegisterType<IAdminDAO, AdminDAO>();
+            
+            container.RegisterType<IItemRepository, ItemRepository>();
+            container.RegisterType<ICustomerRepository, CustomerRepository>();
+            container.RegisterType<ICategoryRepository, CategoryRepository>();
+            container.RegisterType<IAdminRepository, AdminRepository>();
             container.RegisterType<IFileLoader, FileLoader>();
             container.RegisterType<IPaymentService, PaymentService>();
             container.RegisterType<IImportService, ImportService>();
+            container.RegisterType<ICustomerAccountService, CustomerAccountService>();
+            container.RegisterType<IAdminService, AdminService>();
+            container.RegisterType<ICategoryService, CategoryService>();
+            container.RegisterType<IItemQueryService, ItemQueryService>();
+            container.RegisterType<IItemManagementService, ItemManagementService>();
+            container.RegisterType<ICustomerPaymentService, CustomerPaymentService>();
+            
+
+            container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());
+            container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());
+            container.RegisterInstance<IAmbientDbContextLocator>(new AmbientDbContextLocator());
         }
     }
 }

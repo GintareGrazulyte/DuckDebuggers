@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace DOL.Orders
+namespace BOL.Orders
 {
     public enum OrderStatus
     {

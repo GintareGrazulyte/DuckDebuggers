@@ -1,7 +1,7 @@
 ﻿using DAL_API;
-using DOL.Accounts;
-using DOL.Carts;
-using DOL.Orders;
+using BOL.Accounts;
+using BOL.Carts;
+using BOL.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace EShop.Controllers
 {
     public class OrderHistoryController : Controller
     {
-        private ICustomerDAO _customerDAO;
+        private ICustomerRepository _customerDAO;
 
-        public OrderHistoryController(ICustomerDAO customerDAO)
+        public OrderHistoryController(ICustomerRepository customerDAO)
         {
             _customerDAO = customerDAO;
         }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 
-namespace DOL.Objects
+namespace BOL.Objects
 {
     public class Item
     {

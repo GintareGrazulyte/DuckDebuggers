@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DOL.Accounts
+namespace BOL.Accounts
 {
     public abstract class Account
     {

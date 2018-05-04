@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DOL.Carts
+namespace BOL.Carts
 {
     //[ComplexType]
     public class Cart
@@ -38,7 +38,7 @@ namespace DOL.Carts
             int price = 0;
             foreach(var cartItem in Items)
             {
-                price += cartItem.Item.Price * cartItem.Quantity;
+                price += cartItem.BuyPrice * cartItem.Quantity;
             }
             return price;
         }

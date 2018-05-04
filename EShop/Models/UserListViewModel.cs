@@ -1,4 +1,4 @@
-﻿using DOL.Accounts;
+﻿using BOL.Accounts;
 using System.Collections.Generic;
 
 public class UserListViewModel

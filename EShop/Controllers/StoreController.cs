@@ -1,7 +1,9 @@
-﻿using DAL_API;
+﻿using BLL_API;
+using DAL_API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,35 +11,55 @@ namespace EShop.Controllers
 {
     public class StoreController : Controller
     {
-        private ICategoryDAO _categoryDAO;
+        private ICategoryService _categoryService;
+        private IItemQueryService _itemQueryService;
 
-        public StoreController(ICategoryDAO categoryDAO)
+        public StoreController(ICategoryService categoryService, IItemQueryService itemQueryService)
         {
-            _categoryDAO = categoryDAO;
+            _categoryService = categoryService;
+            _itemQueryService = itemQueryService;
         }
         // GET: Store
         public ActionResult Index()
         {
-            var categories = _categoryDAO.GetAll();
-
+            var categories = _categoryService.GetAllCategories();
             return View(categories);
         }
         [ChildActionOnly]
         public ActionResult CategoryMenu()
         {
-            var categories = _categoryDAO.GetAll();
+            var categories = _categoryService.GetAllCategories();
             return PartialView(categories);
 
         }
-        public ActionResult Browse(int categoryId)
+        public ActionResult Browse(int? categoryId)
         {
-            var categoryModel = _categoryDAO.FindById(categoryId);
-            return View(categoryModel);
+            if (categoryId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            try
+            { 
+                var category = _categoryService.GetCategory(categoryId.Value);
+                return View(category);
+            }
+            catch (ArgumentException ex)
+            {
+                return HttpNotFound();
+            }
         }
-        public ActionResult Details(int itemId, int categoryId)
+        public ActionResult Details(int? itemId)
         {
-            var item = _categoryDAO.FindById(categoryId).Items.SingleOrDefault(x => x.Id == itemId);
-            return View(item);
+            if (itemId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            try
+            {
+                var item = _itemQueryService.GetItem(itemId.Value);
+                return View(item);
+            }
+            catch (ArgumentException ex)
+            {
+                return HttpNotFound();
+            }
         }
     }
 }
