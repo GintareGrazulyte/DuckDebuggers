@@ -19,36 +19,6 @@ namespace BOL.Carts
 
         //TODO move to bussiness logics
 
-        public int CountItemsInCart()
-        {
-            if (Items == null || Items.Count == 0)
-                return 0;
-
-            int count = 0;
-            foreach(var cartItem in Items)
-            {
-                count += cartItem.Quantity;
-            }
-            return count;
-        }
-        public int CountCartPrice()
-        {
-            if (Items == null)
-                return 0;
-            int price = 0;
-            foreach(var cartItem in Items)
-            {
-                price += cartItem.BuyPrice * cartItem.Quantity;
-            }
-            return price;
-        }
-
-        public void RemoveItem(int? cartItemId)
-        {
-            var itemToRemove = Items.FirstOrDefault(i => i.Id == cartItemId);
-            if (itemToRemove != null)
-                Items.Remove(itemToRemove);
-            return;
-        }
+        
     }
 }
