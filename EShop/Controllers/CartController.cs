@@ -14,10 +14,12 @@ namespace EShop.Controllers
     public class CartController : Controller
     {
         private IItemQueryService _itemQueryService;
+        private ICartService _cartService;
 
-        public CartController(IItemQueryService itemQueryService)
+        public CartController(IItemQueryService itemQueryService, ICartService cartService)
         {
             _itemQueryService = itemQueryService;
+            _cartService = cartService;
         }
         // GET: Cart
         public ActionResult Index()
@@ -36,9 +38,9 @@ namespace EShop.Controllers
         public ActionResult RemoveFromCart(int? cartItemId)
         {
             Cart cart = (Cart)Session["Cart"];
-            cart.RemoveItem(cartItemId);
-            Session["Count"] = cart.CountItemsInCart();
-            cart.Cost = cart.CountCartPrice();
+            _cartService.RemoveItem(cart.Items, cartItemId);
+            Session["Count"] = _cartService.CountItemsInCart(cart.Items);
+            cart.Cost = _cartService.CountCartPrice(cart.Items);
             return RedirectToAction("Index");
         }
 
@@ -51,6 +53,7 @@ namespace EShop.Controllers
 
             if(item == null)        //TODO: error handling
                 return RedirectToAction("Index");
+
             Cart cart;
             if (Session["Cart"] == null)
             {
@@ -76,12 +79,12 @@ namespace EShop.Controllers
                 cartItem.Quantity = 1;
                 cart.Items.Add(cartItem);
             }
-            //TODO: sita gal irgi reiktu iskelt uz krepselio, kai jau zinom, kad nesikeis jis??
+
             cart.Items.Where(x => x.Item.Id == id).ToList()
                 .ForEach(y => y.BuyPrice = y.Item.Price);
-            cart.Cost = cart.CountCartPrice();
+            cart.Cost = _cartService.CountCartPrice(cart.Items);
             
-            Session["Count"] = cart.CountItemsInCart();
+            Session["Count"] = _cartService.CountItemsInCart(cart.Items);
             return Redirect(Request.UrlReferrer.PathAndQuery);
         }
 
@@ -110,8 +113,8 @@ namespace EShop.Controllers
             if (item != null)
                 item.Quantity = cartItemQuantity;
 
-            cart.Cost = cart.CountCartPrice();
-            Session["Count"] = cart.CountItemsInCart();
+            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            Session["Count"] = _cartService.CountItemsInCart(cart.Items);
             return RedirectToAction("Index");
         }
 

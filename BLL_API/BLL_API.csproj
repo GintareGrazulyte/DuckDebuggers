@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAdminService.cs" />
+    <Compile Include="ICartService.cs" />
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ICustomerAccountService.cs" />
     <Compile Include="ICustomerPaymentService.cs" />

@@ -63,6 +63,7 @@ namespace EShop
             container.RegisterType<IItemQueryService, ItemQueryService>();
             container.RegisterType<IItemManagementService, ItemManagementService>();
             container.RegisterType<ICustomerPaymentService, CustomerPaymentService>();
+            container.RegisterType<ICartService, CartService>();
             
 
             container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());

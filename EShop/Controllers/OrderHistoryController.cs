@@ -51,7 +51,6 @@ namespace EShop.Controllers
             catch (FormatException)
             {
                 return Content("<html></html>");
-                //return RedirectToAction("Index");
             }
 
             int? currentCustomerId = (int)Session["AccountId"];
