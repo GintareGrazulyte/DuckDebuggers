@@ -23,12 +23,14 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            int currentCustomerId = (int)Session["AccountId"];
-            Customer currentCustomer = _customerAccountService.GetCustomer(currentCustomerId);
+            int? currentCustomerId = (int)Session["AccountId"];
+            if (currentCustomerId == null)
+                return RedirectToAction("Index", "Store");
+
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
             if (currentCustomer == null)
                 return RedirectToAction("Index", "Store");
 
-            //Customer customer = _customerDAO.FindByEmail(currentCustomer.Email); 
             if (currentCustomer.Orders.Count == 0)
                 return RedirectToAction("NoOrders");
             return View(currentCustomer.Orders);
@@ -52,8 +54,11 @@ namespace EShop.Controllers
                 //return RedirectToAction("Index");
             }
 
-            int currentCustomerId = (int)Session["AccountId"];
-            Customer currentCustomer = _customerAccountService.GetCustomer(currentCustomerId);
+            int? currentCustomerId = (int)Session["AccountId"];
+            if (currentCustomerId == null)
+                return Content("<html></html>");
+
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
             return View(order);
         }
