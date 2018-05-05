@@ -1,5 +1,6 @@
 ﻿@{
     var accountEmail = Session["AccountEmail"] as string;
+    var isAdmin = Session["IsAdminAccount"] as bool?;
 }
 
 @if (Session["AccountId"] == null)
@@ -13,11 +14,22 @@
 }
 else
 {
-    //TODO this won't work in admin
-    <li class="nav-item">
-        @Html.ActionLink(accountEmail, "Index", "Customer", new { area = "" }, new { @class = "nav-link" })
-    </li>
-    <li class="nav-item">
-        @Html.ActionLink("Logout", "Logout", "Customer", new { area = "" }, new { @class = "nav-link" })
-    </li>
+    if ((bool)!isAdmin)
+    {
+        <li class="nav-item">
+            @Html.ActionLink(accountEmail, "Index", "Customer", new { area = "" }, new { @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Logout", "Logout", "Customer", new { area = "" }, new { @class = "nav-link" })
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            @Html.ActionLink(accountEmail, "Index", "Admin", new { area = "" }, new { @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Logout", "Logout", "Admin", new { area = "" }, new { @class = "nav-link" })
+        </li>
+    }
 }
