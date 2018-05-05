@@ -187,6 +187,8 @@
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Shared\_GoBackButton.cshtml" />
     <Content Include="Views\UsersList\Index.cshtml" />
+    <Content Include="Views\Item\Export.cshtml" />
+    <Content Include="Views\Item\Import.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
