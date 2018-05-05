@@ -14,11 +14,13 @@ namespace EShop.Controllers
     {
         private IItemQueryService _itemQueryService;
         private ICartService _cartService;
+        private ICustomerAccountService _customerAccountService;
 
-        public CartController(IItemQueryService itemQueryService, ICartService cartService)
+        public CartController(IItemQueryService itemQueryService, ICartService cartService, ICustomerAccountService customerAccountService)
         {
             _itemQueryService = itemQueryService;
             _cartService = cartService;
+            _customerAccountService = customerAccountService;
         }
         // GET: Cart
         public ActionResult Index()
@@ -119,8 +121,21 @@ namespace EShop.Controllers
 
         public ActionResult RepeatOrder(int orderId)
         {
-            //TODO handle exceptions
-            Order order = ((Customer)Session["Account"]).Orders.FirstOrDefault(o => o.Id == orderId);
+            int? customerId = (int?)Session["AccountId"];
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            var customer = _customerAccountService.GetCustomer((int)customerId);
+
+            if (customer == null)
+            {
+                return RedirectToAction("Register", "Customer");
+            }
+
+            Order order = customer.Orders.FirstOrDefault(o => o.Id == orderId);
 
             if (order == null)
             {
