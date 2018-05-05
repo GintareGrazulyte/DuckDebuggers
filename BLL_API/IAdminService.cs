@@ -1,9 +1,5 @@
 ﻿using BOL.Accounts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL_API
 {
@@ -11,5 +7,10 @@ namespace BLL_API
     {
         Admin LoginAdmin(Admin adminToLogin);
         Admin GetAdmin(string email);
+        Admin GetAdmin(int id);
+        Customer GetCustomer(int id);
+        List<Customer> GetCustomers();
+        List<Admin> GetAdmins();
+        void ChangeStatus(Customer account);
     }
 }

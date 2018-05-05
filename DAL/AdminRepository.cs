@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+﻿using BOL.Accounts;
 using DAL_API;
-using BOL.Accounts;
 using Mehdime.Entity;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace DAL
 {
@@ -35,6 +35,13 @@ namespace DAL
         {
             return DbContext.Admins
                     .Where(c => c.Email == email)
+                    .FirstOrDefault();
+        }
+
+        public Admin FindById(int id)
+        {
+            return DbContext.Admins
+                    .Where(c => c.Id == id)
                     .FirstOrDefault();
         }
 

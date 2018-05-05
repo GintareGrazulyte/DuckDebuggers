@@ -1,12 +1,9 @@
-﻿using DAL;
-using DAL_API;
+﻿using BLL_API;
 using BOL.Accounts;
 using BOL.Orders;
 using EShop.Attributes;
 using System;
-using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
@@ -14,14 +11,11 @@ namespace EShop.Controllers
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class UsersListController : Controller
     {
-        private ICustomerRepository _customerDAO;
-        private IAdminRepository _adminDAO;
-        private EShopDbContext _db = new EShopDbContext();
+        private IAdminService _adminService;
 
-        public UsersListController(ICustomerRepository customerDAO, IAdminRepository adminDAO)
+        public UsersListController(IAdminService adminService)
         {
-            _customerDAO = customerDAO;
-            _adminDAO = adminDAO;
+            _adminService = adminService;
         }
 
         // GET: OrderHistory
@@ -29,32 +23,23 @@ namespace EShop.Controllers
         {
             var view = new UserListViewModel()
             {
-                Admins = _adminDAO.GetAll(),
-                Customers = _customerDAO.GetAll()
+                Admins = _adminService.GetAdmins(),
+                Customers = _adminService.GetCustomers()
             };
             return View(view);
         }
 
-        public ActionResult ChangeStatus(int? id)
+        public ActionResult ChangeStatus(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = _customerDAO.FindById(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-
-            customer.IsActive = !customer.IsActive;
+            var account = _adminService.GetCustomer(id);
             if (ModelState.IsValid)
             {
-                _db.Entry(customer).State = EntityState.Modified;
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                if (account != null)
+                {
+                    _adminService.ChangeStatus(account);
+                }
             }
-            return View();
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
