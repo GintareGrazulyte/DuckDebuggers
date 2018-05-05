@@ -1,12 +1,9 @@
 ﻿using BLL_API;
-using DAL_API;
 using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
 using EShop.Models;
 using System.Web.Mvc;
-using System.Linq;
-using System;
 
 namespace EShop.Controllers
 {
@@ -100,12 +97,20 @@ namespace EShop.Controllers
 
         private ActionResult GetSessionCustomer(out Customer customer)  //TODO: enough to return Customer.Id?
         {
-            int customerId = (int)Session["AccountId"];
-            customer = _customerAccountService.GetCustomer(customerId);
+            customer = null; 
+
+            int? customerId = (int?)Session["AccountId"];
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            customer = _customerAccountService.GetCustomer((int)customerId);
             
             if(customer == null)
             {
-                return RedirectToAction("Login", "Customer");
+                return RedirectToAction("Register", "Customer");
             }
             return null;
         }
