@@ -1,5 +1,4 @@
-﻿using DAL_API;
-using BOL.Accounts;
+﻿using BOL.Accounts;
 using BOL.Carts;
 using BOL.Objects;
 using BOL.Orders;
