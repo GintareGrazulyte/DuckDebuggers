@@ -12,6 +12,8 @@ namespace BOL.Objects
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        //TODO maybe should be better to change from int to unsigned int?
+        [Range(1, int.MaxValue, ErrorMessage = "Item price must be positive!")]
         public int Price { get; set; }
         [NotMapped]
         public HttpPostedFileBase Image { get; set; }
