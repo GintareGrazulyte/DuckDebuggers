@@ -1,13 +1,9 @@
 ﻿using BLL_API;
 using BOL;
-using BOL.Objects;
 using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -18,10 +14,8 @@ namespace BLL
 
         public CategoryService(IDbContextScopeFactory dbContextScopeFactory, ICategoryRepository categoryRepository)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (categoryRepository == null) throw new ArgumentNullException("categoryRepository");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _categoryRepository = categoryRepository;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException("categoryRepository");
         }
 
         public void CreateCategory(Category categoryToCreate)

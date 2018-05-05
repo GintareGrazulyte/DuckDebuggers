@@ -15,12 +15,9 @@ namespace BLL
 
         public AdminService(IDbContextScopeFactory dbContextScopeFactory, IAdminRepository adminRepository, ICustomerRepository customerRepository)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (adminRepository == null) throw new ArgumentNullException("adminRepository");
-            if (customerRepository == null) throw new ArgumentNullException("customerRepository");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _adminRepository = adminRepository;
-            _customerRepository = customerRepository;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _adminRepository = adminRepository ?? throw new ArgumentNullException("adminRepository");
+            _customerRepository = customerRepository ?? throw new ArgumentNullException("customerRepository");
         }
 
         public Admin GetAdmin(string email)

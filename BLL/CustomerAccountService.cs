@@ -4,10 +4,6 @@ using BOL.Utils;
 using DAL_API;
 using Mehdime.Entity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -18,10 +14,8 @@ namespace BLL
 
         public CustomerAccountService(IDbContextScopeFactory dbContextScopeFactory, ICustomerRepository customerRepository)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (customerRepository == null) throw new ArgumentNullException("customerRepository");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _customerRepository = customerRepository;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _customerRepository = customerRepository ?? throw new ArgumentNullException("customerRepository");
         }
 
         public void CreateCustomer(Customer customerToCreate)

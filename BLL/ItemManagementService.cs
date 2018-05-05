@@ -4,9 +4,6 @@ using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -20,14 +17,10 @@ namespace BLL
         public ItemManagementService(IDbContextScopeFactory dbContextScopeFactory, IItemRepository itemRepository,
                                     IImportService importService, IFileLoader fileLoader)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (itemRepository == null) throw new ArgumentNullException("itemRepository");
-            if (importService == null) throw new ArgumentNullException("importService");
-            if (fileLoader == null) throw new ArgumentNullException("fileLoader");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _itemRepository = itemRepository;
-            _fileLoader = fileLoader;
-            _importService = importService;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _itemRepository = itemRepository ?? throw new ArgumentNullException("itemRepository");
+            _fileLoader = fileLoader ?? throw new ArgumentNullException("fileLoader");
+            _importService = importService ?? throw new ArgumentNullException("importService");
         }
 
         public void ImportItemsFromFile(string path)

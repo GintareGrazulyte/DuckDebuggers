@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mehdime.Entity;
 
 namespace DAL
@@ -29,8 +27,7 @@ namespace DAL
 
         public CategoryRepository(IAmbientDbContextLocator ambientDbContextLocator)
         {
-            if (ambientDbContextLocator == null) throw new ArgumentNullException("ambientDbContextLocator");
-            _ambientDbContextLocator = ambientDbContextLocator;
+            _ambientDbContextLocator = ambientDbContextLocator ?? throw new ArgumentNullException("ambientDbContextLocator");
         }
 
         public void Add(Category category)

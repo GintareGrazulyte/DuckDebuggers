@@ -5,10 +5,7 @@ using BOL.Orders;
 using DAL_API;
 using Mehdime.Entity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -22,14 +19,10 @@ namespace BLL
         public CustomerPaymentService(IDbContextScopeFactory dbContextScopeFactory, ICustomerRepository customerRepository,
                                         IPaymentService paymentService, IItemQueryService itemQueryService)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (customerRepository == null) throw new ArgumentNullException("customerRepository");
-            if (paymentService == null) throw new ArgumentNullException("paymentService");
-            if (itemQueryService == null) throw new ArgumentNullException("itemQueryService");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _customerRepository = customerRepository;
-            _paymentService = paymentService;
-            _itemQueryService = itemQueryService;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _customerRepository = customerRepository ?? throw new ArgumentNullException("customerRepository");
+            _paymentService = paymentService ?? throw new ArgumentNullException("paymentService");
+            _itemQueryService = itemQueryService ?? throw new ArgumentNullException("itemQueryService");
         }
 
         public PaymentInfo Pay(int customerId, Cart cart)

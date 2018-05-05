@@ -27,8 +27,7 @@ namespace DAL
 
         public AdminRepository(IAmbientDbContextLocator ambientDbContextLocator)
         {
-            if (ambientDbContextLocator == null) throw new ArgumentNullException("ambientDbContextLocator");
-            _ambientDbContextLocator = ambientDbContextLocator;
+            _ambientDbContextLocator = ambientDbContextLocator ?? throw new ArgumentNullException("ambientDbContextLocator");
         }
 
         public Admin FindByEmail(string email)

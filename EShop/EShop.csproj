@@ -151,6 +151,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Uploads\Images\ExcelExampleStructure.PNG" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -186,6 +187,8 @@
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Shared\_GoBackButton.cshtml" />
     <Content Include="Views\UsersList\Index.cshtml" />
+    <Content Include="Views\Item\Export.cshtml" />
+    <Content Include="Views\Item\Import.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -225,7 +228,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Uploads\Images\" />
     <Folder Include="Views\AdminViewModel\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>

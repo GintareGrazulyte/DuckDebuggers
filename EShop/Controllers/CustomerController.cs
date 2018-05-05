@@ -67,6 +67,7 @@ namespace EShop.Controllers
                 FormsAuthentication.SetAuthCookie(foundCustomer.Email, false);
                 Session["AccountId"] = foundCustomer.Id;
                 Session["AccountEmail"] = foundCustomer.Email;
+                Session["IsAdminAccount"] = false;
                 return RedirectToAction("Index");
             }
 
@@ -79,6 +80,7 @@ namespace EShop.Controllers
             FormsAuthentication.SignOut();
             Session["AccountId"] = null;
             Session["AccountEmail"] = null;
+            Session["IsAdminAccount"] = null;
             return RedirectToAction("Login");
         }
     }

@@ -5,9 +5,6 @@ using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -20,12 +17,9 @@ namespace BLL
         public ItemQueryService(IDbContextScopeFactory dbContextScopeFactory, IItemRepository itemRepository,
             ICategoryRepository categoryRepository)
         {
-            if (dbContextScopeFactory == null) throw new ArgumentNullException("dbContextScopeFactory");
-            if (itemRepository == null) throw new ArgumentNullException("itemRepository");
-            if (categoryRepository == null) throw new ArgumentNullException("categoryRepository");
-            _dbContextScopeFactory = dbContextScopeFactory;
-            _itemRepository = itemRepository;
-            _categoryRepository = categoryRepository;
+            _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
+            _itemRepository = itemRepository ?? throw new ArgumentNullException("itemRepository");
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException("categoryRepository");
         }
 
         public IEnumerable<Item> GetAllItems()
