@@ -8,7 +8,7 @@ namespace BLL_API
     {
         void SetDocument(string path);
         Task ImportItemsFromFile(Admin admin);
-        void ExportAllItemsToFile(string path);
+        Task ExportAllItemsToFile(string path, Admin admin);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);
         void UpdateItem(Item itemToUpdate);

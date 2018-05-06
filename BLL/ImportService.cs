@@ -11,6 +11,7 @@ namespace BLL
     //TODO: find proper name
     public class ImportService : IImportService
     {
+        //TODO: can it be class variables?
         private Spreadsheet _document;
         private Worksheet _worksheet;
 
@@ -100,36 +101,39 @@ namespace BLL
             }
         }
 
-        public void ExportItemsToFile(IEnumerable<Item> items, string path)
+        public Task ExportItemsToFile(IEnumerable<Item> items, string path)
         {
             var document = new Spreadsheet();
 
             Worksheet worksheet = document.Workbook.Worksheets.Add("Items");
 
-            var columnNames = new List<string> { "Name", "Price", "Description", "CategoryId", "ImageUrl" };
-            for (int i = 0; i < columnNames.Count; i++)
+            return Task.Run(() =>
             {
-                worksheet.Columns[i].Width = 90;
-                var cell = worksheet.Cell(0, i);
-                cell.Value = columnNames[i];
-                cell.Font = new Font("Calibri", 12, FontStyle.Bold);
-            }
+                var columnNames = new List<string> { "Name", "Price", "Description", "CategoryId", "ImageUrl" };
+                for (int i = 0; i < columnNames.Count; i++)
+                {
+                    worksheet.Columns[i].Width = 90;
+                    var cell = worksheet.Cell(0, i);
+                    cell.Value = columnNames[i];
+                    cell.Font = new Font("Calibri", 12, FontStyle.Bold);
+                }
 
-            int cellIndex = 1;
-            foreach (var item in items)
-            {
-                worksheet.Cell(cellIndex, 0).Value = item.Name;
-                worksheet.Cell(cellIndex, 1).Value = item.Price;
-                worksheet.Cell(cellIndex, 2).Value = item.Description;
-                worksheet.Cell(cellIndex, 3).Value = item.CategoryId;
-                worksheet.Cell(cellIndex, 4).Value = item.ImageUrl;
+                int cellIndex = 1;
+                foreach (var item in items)
+                {
+                    worksheet.Cell(cellIndex, 0).Value = item.Name;
+                    worksheet.Cell(cellIndex, 1).Value = item.Price;
+                    worksheet.Cell(cellIndex, 2).Value = item.Description;
+                    worksheet.Cell(cellIndex, 3).Value = item.CategoryId;
+                    worksheet.Cell(cellIndex, 4).Value = item.ImageUrl;
 
-                cellIndex++;
-            }
+                    cellIndex++;
+                }
 
-            //TODO: remove additionaly created worksheet. 
-            document.SaveAs(path);
-            document.Close();
+                //TODO: remove additionaly created worksheet. 
+                document.SaveAs(path);
+                document.Close();
+            });
         }
     }
 }

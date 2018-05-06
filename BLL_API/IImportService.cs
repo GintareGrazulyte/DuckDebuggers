@@ -9,6 +9,6 @@ namespace BLL_API
     {
         void SetDocument(string path);
         Task<List<Item>> ImportItemsFromFile();
-        void ExportItemsToFile(IEnumerable<Item> items, string path);
+        Task ExportItemsToFile(IEnumerable<Item> items, string path);
     }
 }

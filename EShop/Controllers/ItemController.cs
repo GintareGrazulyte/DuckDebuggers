@@ -44,7 +44,6 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ImportItemsFromFile(string path)
         {
-            //TODO check, smth is wrong
             int? adminId = (int?)Session["AccountId"];
 
             if (adminId == null)
@@ -73,17 +72,25 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ExportItemsToFile(string path)
         {
+            int? adminId = (int?)Session["AccountId"];
+
+            if (adminId == null)
+            {
+                //TODO handle
+            }
+
+            Admin admin = _adminService.GetAdmin((int)adminId);
+
             if (System.IO.File.Exists(path))
             {
                 ModelState.AddModelError("", "File alredy exists");
-                return View("Export");
+                
             }
-
-            _itemManagementService.ExportAllItemsToFile(path);
-
-            //TODO: inform that action completed successfully somehow differently
-            ModelState.AddModelError("", "Successfully exported");
-            return View("Export");
+            else
+            {
+                _itemManagementService.ExportAllItemsToFile(path, admin);
+            }
+            return View("Index", _itemQueryService.GetAllItems());      
         }
 
         // GET: Item/Details/5

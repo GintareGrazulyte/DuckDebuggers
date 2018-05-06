@@ -78,6 +78,7 @@ namespace BLL
                     }
                     finally
                     {
+                        //TODO: handle exceptions
                         _emailService.SendEmail(email);
                     }
                 }            
@@ -85,12 +86,26 @@ namespace BLL
             });
         }
 
-        public void ExportAllItemsToFile(string path)
+        public Task ExportAllItemsToFile(string path, Admin admin)
         {
             using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
             {
                 IEnumerable<Item> items = _itemRepository.GetAll();
-                _importService.ExportItemsToFile(items, path);
+                return _importService.ExportItemsToFile(items, path).ContinueWith( (task) =>
+                {
+                    var email = new Email()
+                    {
+                        ToName = admin.Name,
+                        ToAddress = admin.Email,
+                        Subject = "Export",
+                        Body = ""
+                    };
+
+                    email.Body = "All of the items were successfully exported";
+
+                    //TODO: handle exceptions
+                    _emailService.SendEmail(email);
+                });
             }   
         }
 
