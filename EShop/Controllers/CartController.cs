@@ -108,6 +108,10 @@ namespace EShop.Controllers
                 if (cartItemQuantity < 1)
                     return RedirectToAction("Index");
             }
+            catch (OverflowException)
+            {
+                return RedirectToAction("Index");
+            }
             catch(FormatException)
             {
                 return RedirectToAction("Index");
