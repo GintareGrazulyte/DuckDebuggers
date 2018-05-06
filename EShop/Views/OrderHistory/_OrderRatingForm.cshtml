@@ -1,9 +1,6 @@
 ﻿
 <link rel="stylesheet" type="text/css" href="~/Content/starability-all.min.css" />
 <div class="commentBox">
-    @*@using (Html.BeginForm("SetRating", "OrderHistory", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken() *@
         <div class="form-horizontal replaceable">
             <div class="form-group">
                 <label class="col-md-12">
@@ -44,12 +41,11 @@
                 </div>
             </div>
         </div>
-    @*}*@
 
 </div>
 <p></p>
 
-<div id="test"></div>
+<div id="OrderRatingTable"></div>
 
 <script type="text/javascript">
     function SubmitForm(form) {
@@ -63,8 +59,14 @@
             cache: false,
             dataType: 'html',
             success: function (response) {
-                var result = JSON.parse(response);
-                    @*$("#test").html(response);*@
+                try {
+                    var result = JSON.parse(response);
+                }
+                catch (e)
+                {
+                    document.getElementsByClassName("commentBox")[0].style.display = "none";
+                    $("#OrderRatingTable").html(response);
+                }   
             }
         });
     }

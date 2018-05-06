@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using BLL_API;
+using EShop.Models;
 
 namespace EShop.Controllers
 {
@@ -37,7 +38,7 @@ namespace EShop.Controllers
         {
             return View();
         }
-            
+
         [HttpPost]
         public ActionResult _OrderTable(FormCollection fc)
         {
@@ -50,20 +51,29 @@ namespace EShop.Controllers
             {
                 return Content("<html></html>");
             }
-            ViewBag.OrderId = orderID;
+
 
             int? currentCustomerId = (int)Session["AccountId"];
             if (currentCustomerId == null)
                 return Content("<html></html>");
 
+            OrderRating orderRating;
+            try
+            {
+                orderRating = _orderRatingService.GetOrderRatingByOrderId(orderID);
+                ViewBag.Rated = "true";
+            }
+            catch(ArgumentException)
+            {
+                orderRating = null;
+            }
+                
+
             Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
-            return View(order);
-        }
-
-        public ActionResult _OrderRatingForm()
-        {
-            return View();
+            ViewBag.OrderId = order.Id;
+            OrderViewModel ovm = new OrderViewModel { Order = order, OrderRating = orderRating };
+            return View(ovm);
         }
 
         [HttpPost]
@@ -72,6 +82,7 @@ namespace EShop.Controllers
             var comment = form["Comment"].ToString();
             var orderId = int.Parse(form["OrderId"]);
             var rating = int.Parse(form["rating"]);
+
 
             if (rating == 0)
                 return Json(new { Success = "false", ErrorMsg = "Please set a rating" });
@@ -84,8 +95,24 @@ namespace EShop.Controllers
             OrderRating orderRating = new OrderRating { Rating = rating, Comment = comment, Order = order};
             _orderRatingService.CreateOrderRating(orderRating, order);
 
-            return Json(new { Success = "true", Rating = Convert.ToString(rating), Comment = comment});
+            return PartialView("_OrderRatingTable", orderRating);
                 
+        }
+
+        public ActionResult GetRating(FormCollection fc)
+        {
+            int orderID = 0;
+            try
+            {
+                orderID = Convert.ToInt32(fc["OrderId"]);
+            }
+            catch (FormatException)
+            {
+                return Content("<html></html>");
+            }
+
+            OrderRating orderRating = _orderRatingService.GetOrderRatingByOrderId(orderID);
+            return PartialView("_OrderRatingTable", orderRating);
         }
     }
 }

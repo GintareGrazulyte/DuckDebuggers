@@ -193,6 +193,7 @@
     <Content Include="Views\Item\Import.cshtml" />
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
     <Content Include="Views\OrderHistory\_OrderRatingForm.cshtml" />
+    <Content Include="Views\OrderHistory\_OrderRatingTable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -225,6 +226,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
     <Compile Include="Models\UserListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

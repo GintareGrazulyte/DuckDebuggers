@@ -1,8 +1,8 @@
-﻿@model BOL.Orders.Order
+﻿@model EShop.Models.OrderViewModel
 @{
-    IEnumerable<BOL.Carts.CartItem> cartItems = Model.Cart.Items;
+    IEnumerable<BOL.Carts.CartItem> cartItems = Model.Order.Cart.Items;
     Layout = null;
-    var orderDateTime = Model.DateTime;
+    var orderDateTime = Model.Order.DateTime;
 }
 @using BOL.Orders
 <br />
@@ -67,7 +67,7 @@
             </tr>
                         }
 
-        @{var totalCost = Model.Cart.Cost / 100.0m; }
+        @{var totalCost = Model.Order.Cart.Cost / 100.0m; }
 
         <tr>
             <th>
@@ -85,18 +85,24 @@
 
     </table>
     <p>
-        Order status: @Model.OrderStatus.GetDescription()
-        @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
+        Order status: @Model.Order.OrderStatus.GetDescription()
+        @if (@Model.Order.OrderStatus == OrderStatus.waitingForPayment)
         {
-            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-warning", @style = "float:right; margin-right:50px;" })
+            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Order.Id }, new { @class = "btn btn-warning", @style = "float:right; margin-right:50px;" })
         }
         else
         {
-            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right; margin-right: 50px;" })
+            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Order.Id }, new { @class = "btn btn-primary", @style = "float:right; margin-right: 50px;" })
         }
     </p>
-    @*TODO: NEAISKU AR GERAI TAIP*@
-    <div id="OrderRating"></div>
-    @Html.Partial("_OrderRatingForm")
+
+    @if (Model.OrderRating != null)
+    {
+        @Html.Partial("_OrderRatingTable", Model.OrderRating)
+    }
+    else
+    {
+        @Html.Partial("_OrderRatingForm")
+    }
 
 </div>
