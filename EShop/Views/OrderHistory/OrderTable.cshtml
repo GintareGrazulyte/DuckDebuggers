@@ -88,7 +88,7 @@
         Order status: @Model.OrderStatus.GetDescription() 
         @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
         {
-            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", Model.Cart, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
         }
     </p>
     @Html.ActionLink("Repeat order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary" })

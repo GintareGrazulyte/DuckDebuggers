@@ -58,8 +58,10 @@ namespace EShop.Controllers
             Cart cart;
             if (Session["Cart"] == null)
             {
-                cart = new Cart();
-                cart.Items = new List<CartItem>();
+                cart = new Cart()
+                {
+                    Items = new List<CartItem>()
+                };
                 Session["Cart"] = cart;
             }
             else
@@ -74,10 +76,12 @@ namespace EShop.Controllers
             }
             else
             {
-                CartItem cartItem = new CartItem();
-                cartItem.Cart = (Cart)Session["Cart"];
-                cartItem.Item = item;
-                cartItem.Quantity = 1;
+                CartItem cartItem = new CartItem()
+                {
+                    Cart = (Cart)Session["Cart"],
+                    Item = item,
+                    Quantity = 1
+                };
                 cart.Items.Add(cartItem);
             }
 

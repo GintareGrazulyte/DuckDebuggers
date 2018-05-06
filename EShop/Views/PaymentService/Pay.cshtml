@@ -4,12 +4,14 @@
     ViewBag.Title = "Payment";
 }
 
+@using BOL.Orders;
+
 <h2>Information about payment</h2>
 
-<p>@Model.Status</p>
-@if (@Model.PaymentDetails != "")
+<p>@Model.PaymentInfo.OrderStatus.GetDescription()</p>
+@if (@Model.PaymentInfo.PaymentDetails != "")
 {
-    <p>Additional info: @Model.PaymentDetails</p>
+    <p>Additional info: @Model.PaymentInfo.PaymentDetails</p>
     <p>*Edit user info*</p>
 }
 @Html.ActionLink("Order History", "Index", "OrderHistory")

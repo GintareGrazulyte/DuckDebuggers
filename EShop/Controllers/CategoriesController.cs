@@ -42,7 +42,7 @@ namespace EShop.Controllers
                 var category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -81,7 +81,7 @@ namespace EShop.Controllers
                 Category category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -113,7 +113,7 @@ namespace EShop.Controllers
                 Category category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -129,7 +129,7 @@ namespace EShop.Controllers
                 _categoryService.DeleteCategory(id);
                 return RedirectToAction("Index");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
