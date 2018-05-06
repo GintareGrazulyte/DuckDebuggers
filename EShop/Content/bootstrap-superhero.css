@@ -9585,3 +9585,40 @@ label,
 .modal-header .close:hover, .modal-header .close:focus, .modal-footer .close:hover, .modal-footer .close:focus {
   opacity: 1;
 }
+
+/* MANUALLY ADDED STAR SYSTEM*/
+
+.commentBox {
+    background-color:#efefef;
+    padding:10px;
+    border-radius:10px;
+}
+
+.starFade{
+    background-image:url('/Images/StarFade.gif');
+    min-width:30px;
+    min-height:30px;
+    display:inline-block;
+    cursor:pointer;
+}
+
+.starFadeN{
+    background-image:url('/Images/StarFade.gif');
+    min-width:30px;
+    min-height:30px;
+    display:inline-block;
+}
+
+.starGlow{
+    background-image:url('/Images/starglow.gif');
+    min-width:30px;
+    min-height:30px;
+    display:inline-block;
+    cursor:pointer;
+}
+.starGlowN{
+    background-image:url('/Images/starglow.gif');
+    min-width:30px;
+    min-height:30px;
+    display:inline-block;
+}

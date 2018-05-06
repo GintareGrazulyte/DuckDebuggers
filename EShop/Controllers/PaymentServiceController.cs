@@ -1,4 +1,5 @@
 ﻿using BLL_API;
+using BOL;
 using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
@@ -21,7 +22,7 @@ namespace EShop.Controllers
 
         public ActionResult Index()
         {
-            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
+            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart Card);
             if (actionResult != null)
             {
                 return actionResult;

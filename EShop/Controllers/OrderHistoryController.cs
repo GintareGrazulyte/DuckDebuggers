@@ -41,7 +41,7 @@ namespace EShop.Controllers
         }
             
         [HttpPost]
-        public ActionResult OrderTable(FormCollection fc)
+        public ActionResult _OrderTable(FormCollection fc)
         {
             int orderID = 0;
             try
@@ -52,6 +52,7 @@ namespace EShop.Controllers
             {
                 return Content("<html></html>");
             }
+            ViewBag.OrderId = orderID;
 
             int? currentCustomerId = (int)Session["AccountId"];
             if (currentCustomerId == null)
@@ -60,6 +61,21 @@ namespace EShop.Controllers
             Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
             return View(order);
+        }
+
+        public ActionResult _OrderRating()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetRating(FormCollection form)
+        {
+            var comment = form["Comment"].ToString();
+            var orderId = int.Parse(form["OrderId"]);
+            var rating = int.Parse(form["Rating"]);
+
+            return RedirectToAction("Index");
         }
     }
 }
