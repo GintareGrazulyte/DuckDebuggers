@@ -61,7 +61,6 @@ namespace EShop.Controllers
             try
             {
                 orderRating = _orderRatingService.GetOrderRatingByOrderId(orderID);
-                ViewBag.Rated = "true";
             }
             catch(ArgumentException)
             {
