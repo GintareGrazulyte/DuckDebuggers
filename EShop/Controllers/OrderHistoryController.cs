@@ -73,9 +73,15 @@ namespace EShop.Controllers
         {
             var comment = form["Comment"].ToString();
             var orderId = int.Parse(form["OrderId"]);
-            var rating = int.Parse(form["Rating"]);
+            var rating = int.Parse(form["rating"]);
 
-            return RedirectToAction("Index");
+            if (rating == 0)
+                return Json(new { Success = "false", ErrorMsg = "Please set a rating" });
+            if (comment.Equals(""))
+                return Json(new { Success = "false", ErrorMsg = "Please enter a comment" });
+
+            return Json(new { Success = "true", Rating = Convert.ToString(rating), Comment = comment});
+                
         }
     }
 }

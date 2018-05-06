@@ -5,9 +5,9 @@ namespace BOL.Orders
 {
     public enum OrderStatus
     {
-        [Description("Waiting for payment")]
+        [Description("Waiting for Payment")]
         waitingForPayment,
-        [Description("Payment is accepted")]
+        [Description("Payment is Accepted")]
         approved,
         [Description("Collecting")]
         collecting,

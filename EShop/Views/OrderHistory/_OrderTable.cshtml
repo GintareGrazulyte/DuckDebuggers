@@ -88,15 +88,15 @@
         Order status: @Model.OrderStatus.GetDescription()
         @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
         {
-            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right;" })
+            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-warning", @style = "float:right; margin-right:50px;" })
         }
         else
         {
-            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right;" })
+            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right; margin-right: 50px;" })
         }
     </p>
+    @*TODO: NEAISKU AR GERAI TAIP*@
+    <div id="OrderRating"></div>
     @Html.Partial("_OrderRating")
 
-   
-    
 </div>
