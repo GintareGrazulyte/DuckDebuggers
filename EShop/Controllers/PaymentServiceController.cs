@@ -3,6 +3,7 @@ using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
 using EShop.Models;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
@@ -28,36 +29,45 @@ namespace EShop.Controllers
             return View(new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = false });
         }
 
-        public ActionResult IndexFormedOrder(Cart cart)
+        public ActionResult IndexFormedOrder(int orderId)
         {
             ActionResult actionResult = GetSessionCustomer(out Customer customer);
             if (actionResult != null)
             {
                 return actionResult;
             }
-            return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
+
+            Order order = customer.Orders.FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                //TODO handle
+            }
+
+            return View("Index", new PaymentViewModel() { Customer = customer, Cart = order.Cart, FormedOrder = true });
         }
 
-        public ActionResult PayFormedOrder()
+        public ActionResult PayFormedOrder(int cartId)
         {
-
-            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart); 
+            ActionResult actionResult = GetSessionCustomer(out Customer customer); 
 
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
+            Order order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cartId);
 
-            //TODO: is this needed?
-            Session["Cart"] = null;
-            Session["Count"] = 0;
+            if (order == null)
+            {
+                //TODO handle
+            }
 
-            return View("Pay", new PaymentViewModel() { PaymentDetails = paymentInfo.PaymentDetails, Status = paymentInfo.OrderStatus.GetDescription() });
+            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, order.Cart);
+
+            return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo });
         }
 
-        //TODO add attribute
         public ActionResult Pay()    
         {
             ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
@@ -72,7 +82,7 @@ namespace EShop.Controllers
             Session["Cart"] = null;
             Session["Count"] = 0;
 
-            return View(new PaymentViewModel() { PaymentDetails = paymentInfo.PaymentDetails, Status = paymentInfo.OrderStatus.GetDescription() });
+            return View(new PaymentViewModel() { PaymentInfo = paymentInfo });
         }
 
         private ActionResult GetSessionProperties(out Customer customer, out Cart cart)

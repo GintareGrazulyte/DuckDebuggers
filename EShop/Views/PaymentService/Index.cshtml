@@ -39,7 +39,7 @@
 
         @if (@Model.FormedOrder)
         {
-            @Html.ActionLink("Confirm and pay", "PayFormedOrder", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Confirm and pay", "PayFormedOrder", new { cartId = Model.Cart.Id }, new { @class = "btn btn-primary" })
         }
         else
         {

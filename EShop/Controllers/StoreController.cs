@@ -41,7 +41,7 @@ namespace EShop.Controllers
                 var category = _categoryService.GetCategory(categoryId.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -56,7 +56,7 @@ namespace EShop.Controllers
                 var item = _itemQueryService.GetItem(itemId.Value);
                 return View(item);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
