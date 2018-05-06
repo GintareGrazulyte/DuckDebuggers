@@ -50,6 +50,7 @@
     <Compile Include="Carts\CartItem.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="DeliveryAddress.cs" />
+    <Compile Include="Email.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Orders\Order.cs" />
     <Compile Include="Orders\OrderStatus.cs" />
