@@ -1,12 +1,13 @@
-﻿using BOL;
+﻿using BLL_API;
+using BOL;
 using System.Net;
 using System.Net.Mail;
 
 namespace BLL
 {
-    class EmailService
+    public class EmailService : IEmailService
     {
-        void SendEmail(Email email)
+        public void SendEmail(Email email)
         {
             var toAddress = new MailAddress(email.ToAddress, email.ToName);
             var fromAddress = new MailAddress("duckdebuggers@gmail.com", "Duck debuggers");

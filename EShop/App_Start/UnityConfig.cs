@@ -64,7 +64,9 @@ namespace EShop
             container.RegisterType<IItemManagementService, ItemManagementService>();
             container.RegisterType<ICustomerPaymentService, CustomerPaymentService>();
             container.RegisterType<ICartService, CartService>();
-            
+            container.RegisterType<IEmailService, EmailService>();
+
+
 
             container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());
             container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());

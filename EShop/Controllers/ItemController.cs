@@ -6,6 +6,7 @@ using EShop.Attributes;
 using BLL_API;
 using System.Collections.Generic;
 using System;
+using BOL.Accounts;
 
 namespace EShop.Controllers
 {
@@ -15,13 +16,15 @@ namespace EShop.Controllers
         private IItemQueryService _itemQueryService;
         private ICategoryService _categoryService;
         private IItemManagementService _itemManagementService;
+        private IAdminService _adminService;
 
         public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
-            IItemManagementService itemManagementService)
+            IItemManagementService itemManagementService, IAdminService adminService)
         {
             _itemQueryService = itemQueryService;
             _categoryService = categoryService;
             _itemManagementService = itemManagementService;
+            _adminService = adminService;
         }
 
         // GET: Item
@@ -43,9 +46,19 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ImportItemsFromFile(string path)
         {
+            //TODO check, smth is wrong
+            int? adminId = (int?)Session["AccountId"];
+
+            if (adminId == null)
+            {
+                //TODO handle
+            }
+
+            Admin admin = _adminService.GetAdmin((int)adminId);
+
             try
             {
-                _itemManagementService.ImportItemsFromFile(path);
+                _itemManagementService.ImportItemsFromFile(path, admin);
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@
 
 namespace BLL_API
 {
-    interface IEmailService
+    public interface IEmailService
     {
         void SendEmail(Email email);
     }

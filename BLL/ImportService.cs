@@ -4,70 +4,73 @@ using System.Collections.Generic;
 using BOL.Objects;
 using Bytescout.Spreadsheet;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace BLL
 {
     //TODO: find proper name
     public class ImportService : IImportService
     {
-
-        public IEnumerable<Item> ImportItemsFromFile(string path)
+        public Task<List<Item>> ImportItemsFromFile(string path)
         {
-            var document = new Spreadsheet();
+            return Task.Run(() =>
+           {
+               var document = new Spreadsheet();
 
-            try
-            {
-                document.LoadFromFile(path);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Equals("File not found"))
-                {
-                    throw new Exception("File <" + path + "> is not found");
-                }
-                if (ex.Message.Contains("The process cannot access the file"))
-                {
-                    throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
-                }
-                throw new Exception("Something went wrong, try again");
-            }
+               try
+               {
+                   document.LoadFromFile(path);
+               }
+               catch (Exception ex)
+               {
+                   if (ex.Message.Equals("File not found"))
+                   {
+                       throw new Exception("File <" + path + "> is not found");
+                   }
+                   if (ex.Message.Contains("The process cannot access the file"))
+                   {
+                       throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
+                   }
+                   throw new Exception("Something went wrong, try again");
+               }
 
-            
-            Worksheet worksheet = document.Workbook.Worksheets["Items"];
 
-            if (worksheet == null)
-            {
-                throw new Exception("Worksheet <Items> is missing");
-            }
+               Worksheet worksheet = document.Workbook.Worksheets["Items"];
 
-            int i = 1;
-            string name, description, imageUrl;
-            int price;
-            int? categoryId;
-            var items = new List<Item>();
+               if (worksheet == null)
+               {
+                   throw new Exception("Worksheet <Items> is missing");
+               }
 
-            while (IsValidRow(name = worksheet.Cell(i, 0).ValueAsString, 
-                             price = worksheet.Cell(i, 1).ValueAsInteger))
-            {
-                description = worksheet.Cell(i, 2).ValueAsString;
-                categoryId = worksheet.Cell(i, 3).ValueAsInteger;
-                imageUrl = worksheet.Cell(i, 4).ValueAsString;
+               int i = 1;
+               string name, description, imageUrl;
+               int price;
+               int? categoryId;
+               var items = new List<Item>();
 
-                CorrectValues(ref description, ref imageUrl, ref categoryId);
+               while (IsValidRow(name = worksheet.Cell(i, 0).ValueAsString,
+                                price = worksheet.Cell(i, 1).ValueAsInteger))
+               {
+                   description = worksheet.Cell(i, 2).ValueAsString;
+                   categoryId = worksheet.Cell(i, 3).ValueAsInteger;
+                   imageUrl = worksheet.Cell(i, 4).ValueAsString;
 
-                items.Add(new Item
-                {
-                    Name = name,
-                    Price = price,
-                    Description = description,
-                    CategoryId = categoryId,
-                    ImageUrl = imageUrl
-                });
-                i++;
-            }
+                   CorrectValues(ref description, ref imageUrl, ref categoryId);
 
-            document.Close();
-            return items;
+                   items.Add(new Item
+                   {
+                       Name = name,
+                       Price = price,
+                       Description = description,
+                       CategoryId = categoryId,
+                       ImageUrl = imageUrl
+                   });
+                   i++;
+               }
+
+               document.Close();
+               return items;
+           });
         }
 
         private bool IsValidRow(string name, int price)

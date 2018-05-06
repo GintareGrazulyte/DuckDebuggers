@@ -1,15 +1,12 @@
-﻿using BOL.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BOL.Accounts;
+using BOL.Objects;
 using System.Threading.Tasks;
 
 namespace BLL_API
 {
     public interface IItemManagementService
     {
-        void ImportItemsFromFile(string path);
+        Task ImportItemsFromFile(string path, Admin admin);
         void ExportAllItemsToFile(string path);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);
