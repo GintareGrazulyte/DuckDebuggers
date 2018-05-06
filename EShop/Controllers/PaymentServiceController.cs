@@ -22,11 +22,12 @@ namespace EShop.Controllers
 
         public ActionResult Index()
         {
-            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart Card);
+            ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
             if (actionResult != null)
             {
                 return actionResult;
             }
+
             return View(new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = false });
         }
 

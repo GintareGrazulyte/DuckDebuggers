@@ -35,7 +35,7 @@
         {
             decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
             decimal piecePrice = cartItem.BuyPrice / 100.0m;
-            
+
             <tr>
                 <td width="10%">
                     @{
@@ -47,7 +47,7 @@
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
-                    
+
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
@@ -65,7 +65,7 @@
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
             </tr>
-        }
+                        }
 
         @{var totalCost = Model.Cart.Cost / 100.0m; }
 
@@ -80,16 +80,23 @@
             <td>
                 @Html.DisplayFor(model => totalCost) Eur
             </td>
-            
+
         </tr>
 
     </table>
     <p>
-        Order status: @Model.OrderStatus.GetDescription() 
+        Order status: @Model.OrderStatus.GetDescription()
         @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
         {
-            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right;" })
+        }
+        else
+        {
+            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary", @style = "float:right;" })
         }
     </p>
-    @Html.ActionLink("Repeat order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
+    @Html.Partial("_OrderRating")
+
+   
+    
 </div>

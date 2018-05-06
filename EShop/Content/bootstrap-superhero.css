@@ -266,6 +266,7 @@ textarea {
   line-height: inherit;
 }
 
+
 button,
 input {
   overflow: visible;
@@ -9589,36 +9590,14 @@ label,
 /* MANUALLY ADDED STAR SYSTEM*/
 
 .commentBox {
-    background-color:#efefef;
-    padding:10px;
-    border-radius:10px;
+    background-color: #37526b;
+    padding: 10px;
+    width: 350px;
+    border-radius: 10px;
 }
 
-.starFade{
-    background-image:url('/Images/StarFade.gif');
-    min-width:30px;
-    min-height:30px;
-    display:inline-block;
-    cursor:pointer;
+textarea {
+    resize: none;
 }
 
-.starFadeN{
-    background-image:url('/Images/StarFade.gif');
-    min-width:30px;
-    min-height:30px;
-    display:inline-block;
-}
 
-.starGlow{
-    background-image:url('/Images/starglow.gif');
-    min-width:30px;
-    min-height:30px;
-    display:inline-block;
-    cursor:pointer;
-}
-.starGlowN{
-    background-image:url('/Images/starglow.gif');
-    min-width:30px;
-    min-height:30px;
-    display:inline-block;
-}
