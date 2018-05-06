@@ -1,4 +1,5 @@
 ﻿using BLL_API;
+using BOL;
 using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
@@ -26,6 +27,7 @@ namespace EShop.Controllers
             {
                 return actionResult;
             }
+
             return View(new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = false });
         }
 

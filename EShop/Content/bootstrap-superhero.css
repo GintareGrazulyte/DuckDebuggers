@@ -266,6 +266,7 @@ textarea {
   line-height: inherit;
 }
 
+
 button,
 input {
   overflow: visible;
@@ -2693,6 +2694,7 @@ fieldset:disabled a.btn {
   color: #212529;
   background-color: #f0ad4e;
   border-color: #f0ad4e;
+  min-width:75px;
 }
 
 .btn-warning:hover {
@@ -9585,3 +9587,18 @@ label,
 .modal-header .close:hover, .modal-header .close:focus, .modal-footer .close:hover, .modal-footer .close:focus {
   opacity: 1;
 }
+
+/* MANUALLY ADDED STAR SYSTEM*/
+
+.commentBox {
+    background-color: #37526b;
+    padding: 10px;
+    width: 350px;
+    border-radius: 10px;
+}
+
+textarea {
+    resize: none;
+}
+
+
