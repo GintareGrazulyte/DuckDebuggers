@@ -192,7 +192,7 @@
     <Content Include="Views\Item\Export.cshtml" />
     <Content Include="Views\Item\Import.cshtml" />
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
-    <Content Include="Views\OrderHistory\_OrderRating.cshtml" />
+    <Content Include="Views\OrderHistory\_OrderRatingForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,11 +1,7 @@
-﻿using DAL_API;
-using BOL.Accounts;
-using BOL.Carts;
+﻿using BOL.Accounts;
 using BOL.Orders;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BLL_API;
 
@@ -14,10 +10,12 @@ namespace EShop.Controllers
     public class OrderHistoryController : Controller
     {
         private ICustomerAccountService _customerAccountService;
+        private IOrderRatingService _orderRatingService;
 
-        public OrderHistoryController(ICustomerAccountService customerAccountService)
+        public OrderHistoryController(ICustomerAccountService customerAccountService, IOrderRatingService orderRatingService)
         {
             _customerAccountService = customerAccountService;
+            _orderRatingService = orderRatingService;
         }
 
         // GET: OrderHistory
@@ -63,7 +61,7 @@ namespace EShop.Controllers
             return View(order);
         }
 
-        public ActionResult _OrderRating()
+        public ActionResult _OrderRatingForm()
         {
             return View();
         }
@@ -79,6 +77,13 @@ namespace EShop.Controllers
                 return Json(new { Success = "false", ErrorMsg = "Please set a rating" });
             if (comment.Equals(""))
                 return Json(new { Success = "false", ErrorMsg = "Please enter a comment" });
+
+            int? currentCustomerId = (int)Session["AccountId"];
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
+            Order order = currentCustomer.Orders.SingleOrDefault(o => o.Id == orderId);
+            OrderRating orderRating = new OrderRating { Rating = rating, Comment = comment, Order = order};
+            _orderRatingService.CreateOrderRating(orderRating);
+
 
             return Json(new { Success = "true", Rating = Convert.ToString(rating), Comment = comment});
                 
