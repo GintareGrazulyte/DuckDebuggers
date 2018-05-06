@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using DAL_API;
 using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
-using System.Collections.Generic;
 using System;
 using BOL.Accounts;
 
