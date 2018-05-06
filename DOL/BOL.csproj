@@ -52,6 +52,7 @@
     <Compile Include="DeliveryAddress.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Orders\Order.cs" />
+    <Compile Include="Orders\OrderRating.cs" />
     <Compile Include="Orders\OrderStatus.cs" />
     <Compile Include="PaymentInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

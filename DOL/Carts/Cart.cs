@@ -16,9 +16,5 @@ namespace BOL.Carts
         public int Id { get; set; }
         public ICollection<CartItem> Items { get; set; }
         public int Cost { get; set; }
-
-        //TODO move to bussiness logics
-
-        
     }
 }
