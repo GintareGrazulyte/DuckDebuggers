@@ -6,7 +6,8 @@ namespace BLL_API
 {
     public interface IItemManagementService
     {
-        Task ImportItemsFromFile(string path, Admin admin);
+        void SetDocument(string path);
+        Task ImportItemsFromFile(Admin admin);
         void ExportAllItemsToFile(string path);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);

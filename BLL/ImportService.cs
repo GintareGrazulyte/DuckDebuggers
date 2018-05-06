@@ -11,49 +11,53 @@ namespace BLL
     //TODO: find proper name
     public class ImportService : IImportService
     {
-        public Task<List<Item>> ImportItemsFromFile(string path)
+        private Spreadsheet _document;
+        private Worksheet _worksheet;
+
+        public void SetDocument(string path)
+        {
+            _document = new Spreadsheet();
+            try
+            {
+                _document.LoadFromFile(path);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Equals("File not found"))
+                {
+                    throw new Exception("File <" + path + "> is not found");
+                }
+                if (ex.Message.Contains("The process cannot access the file"))
+                {
+                    throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
+                }
+                throw new Exception("Something went wrong, try again");
+            }
+
+            _worksheet = _document.Workbook.Worksheets["Items"];
+
+            if (_worksheet == null)
+            {
+                throw new Exception("Worksheet <Items> is missing");
+            }
+        }
+
+        public Task<List<Item>> ImportItemsFromFile()
         {
             return Task.Run(() =>
-           {
-               var document = new Spreadsheet();
-
-               try
-               {
-                   document.LoadFromFile(path);
-               }
-               catch (Exception ex)
-               {
-                   if (ex.Message.Equals("File not found"))
-                   {
-                       throw new Exception("File <" + path + "> is not found");
-                   }
-                   if (ex.Message.Contains("The process cannot access the file"))
-                   {
-                       throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
-                   }
-                   throw new Exception("Something went wrong, try again");
-               }
-
-
-               Worksheet worksheet = document.Workbook.Worksheets["Items"];
-
-               if (worksheet == null)
-               {
-                   throw new Exception("Worksheet <Items> is missing");
-               }
-
+            {
                int i = 1;
                string name, description, imageUrl;
                int price;
                int? categoryId;
                var items = new List<Item>();
 
-               while (IsValidRow(name = worksheet.Cell(i, 0).ValueAsString,
-                                price = worksheet.Cell(i, 1).ValueAsInteger))
+               while (IsValidRow(name = _worksheet.Cell(i, 0).ValueAsString,
+                                price = _worksheet.Cell(i, 1).ValueAsInteger))
                {
-                   description = worksheet.Cell(i, 2).ValueAsString;
-                   categoryId = worksheet.Cell(i, 3).ValueAsInteger;
-                   imageUrl = worksheet.Cell(i, 4).ValueAsString;
+                   description = _worksheet.Cell(i, 2).ValueAsString;
+                   categoryId = _worksheet.Cell(i, 3).ValueAsInteger;
+                   imageUrl = _worksheet.Cell(i, 4).ValueAsString;
 
                    CorrectValues(ref description, ref imageUrl, ref categoryId);
 
@@ -68,9 +72,9 @@ namespace BLL
                    i++;
                }
 
-               document.Close();
+                _document.Close();
                return items;
-           });
+            });
         }
 
         private bool IsValidRow(string name, int price)

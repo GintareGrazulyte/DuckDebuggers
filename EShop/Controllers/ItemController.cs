@@ -54,18 +54,21 @@ namespace EShop.Controllers
                 //TODO handle
             }
 
-            Admin admin = _adminService.GetAdmin((int)adminId);
-
             try
             {
-                _itemManagementService.ImportItemsFromFile(path, admin);
+                _itemManagementService.SetDocument(path);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError("", e.Message);
                 return View("Import");
             }
-            
+
+
+            Admin admin = _adminService.GetAdmin((int)adminId);
+
+            _itemManagementService.ImportItemsFromFile(admin);
+
             return View("Index", _itemQueryService.GetAllItems());
         }
 

@@ -11,7 +11,7 @@ namespace BLL
         {
             var toAddress = new MailAddress(email.ToAddress, email.ToName);
             var fromAddress = new MailAddress("duckdebuggers@gmail.com", "Duck debuggers");
-            const string fromPassword = "debuggers@";
+            const string fromPassword = "Debuggers123@";
 
             var smtp = new SmtpClient
             {

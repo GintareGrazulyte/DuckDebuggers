@@ -28,28 +28,61 @@ namespace BLL
             _emailService = emailService ?? throw new ArgumentNullException("emailService");
         }
 
-        public Task ImportItemsFromFile(string path, Admin admin)
+        public void SetDocument(string path)
         {
-            return _importService.ImportItemsFromFile(path).ContinueWith((items) =>
+            try
             {
+                _importService.SetDocument(path);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        public Task ImportItemsFromFile(Admin admin)
+        {
+            return _importService.ImportItemsFromFile().ContinueWith((itemsResult) =>
+            {
+                var email = new Email()
+                {
+                    ToName = admin.Name,
+                    ToAddress = admin.Email,
+                    Subject = "Import",
+                    Body = ""
+                };
+
+                List<Item> items = itemsResult.Result;
+
                 using (var dbContextScope = _dbContextScopeFactory.Create())
                 {
-                    foreach (var item in items.Result)
+                    int addedCount = 0;
+                    foreach (var item in items)
+                    {
+                        //TODO: check for category
                         _itemRepository.Add(item);
-
-                    dbContextScope.SaveChanges();
-                }
-
-                var email = new Email()
-                                {
-                                    ToName = admin.Name,
-                                    ToAddress = admin.Email,
-                                    Subject = "Import",
-                                    Body = "Items import completed successfully"
-                                };
-
-                _emailService.SendEmail(email);
-            });       
+                        //TODO message if not added
+                        email.Body += item.Name + " added " + Environment.NewLine;
+                        addedCount++;
+                    }
+                    email.Body += addedCount + "/" + items.Count + " items were successfully added";
+                      
+                    try
+                    {
+                        dbContextScope.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        email.Body = "Unable to save items to database. Exception message: " + e.Message;
+                    }
+                    finally
+                    {
+                        _emailService.SendEmail(email);
+                    }
+                }            
+               
+            });
         }
 
         public void ExportAllItemsToFile(string path)
