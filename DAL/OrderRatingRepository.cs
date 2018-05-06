@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BOL.Orders;
 using Mehdime.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace DAL
 {
@@ -36,6 +37,7 @@ namespace DAL
         public void Add(OrderRating orderRating)
         {
             DbContext.OrderRatings.Add(orderRating);
+            //DbContext.ObjectStateManager.ChangeObjectState();
         }
 
         public OrderRating FindById(int? id)

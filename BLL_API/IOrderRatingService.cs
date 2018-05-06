@@ -13,7 +13,7 @@ namespace BLL_API
         IEnumerable<OrderRating> GetAllOrderRatings();
         OrderRating GetOrderRating(int orderRatingId);
         OrderRating GetOrderRatingByOrderId(int orderId);
-        void CreateOrderRating(OrderRating orderRatingToCreate);
+        void CreateOrderRating(OrderRating orderRatingToCreate, Order order);
         void DeleteOrderRating(int orderRatingtoDelete);
     }
 }

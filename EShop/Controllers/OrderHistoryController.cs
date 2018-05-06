@@ -82,8 +82,7 @@ namespace EShop.Controllers
             Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
             Order order = currentCustomer.Orders.SingleOrDefault(o => o.Id == orderId);
             OrderRating orderRating = new OrderRating { Rating = rating, Comment = comment, Order = order};
-            _orderRatingService.CreateOrderRating(orderRating);
-
+            _orderRatingService.CreateOrderRating(orderRating, order);
 
             return Json(new { Success = "true", Rating = Convert.ToString(rating), Comment = comment});
                 

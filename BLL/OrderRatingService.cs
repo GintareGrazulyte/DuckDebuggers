@@ -1,14 +1,12 @@
 ﻿using BLL_API;
 using BOL.Accounts;
+using BOL.Carts;
 using BOL.Orders;
+using DAL;
 using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -17,7 +15,6 @@ namespace BLL
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IOrderRatingRepository _orderRatingRepository;
-        private readonly ICustomerRepository _customerRepository;
 
         public OrderRatingService(IDbContextScopeFactory dbContextScopeFactory, IOrderRatingRepository orderRatingRepository)
         {
@@ -25,7 +22,7 @@ namespace BLL
             _orderRatingRepository = orderRatingRepository ?? throw new ArgumentNullException("orderRatingRepository");
         }
 
-        public void CreateOrderRating(OrderRating orderRatingToCreate)
+        public void CreateOrderRating(OrderRating orderRatingToCreate, Order order)
         {
             if (orderRatingToCreate == null)
                 throw new ArgumentNullException("orderRatingToCreate");
@@ -39,8 +36,14 @@ namespace BLL
                     //TODO: OrderRatingAlreadyExistsException
                     throw new Exception();
                 }
-                
+
+                //NO HACK
+                var context = dbContextScope.DbContexts.Get<EShopDbContext>();
+                context.Orders.Attach(order);
+                orderRatingToCreate.Order = order;
+
                 _orderRatingRepository.Add(orderRatingToCreate);
+                
                 dbContextScope.SaveChanges();
             }
         }
