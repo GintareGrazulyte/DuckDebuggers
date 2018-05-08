@@ -194,6 +194,8 @@
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
     <Content Include="Views\OrderHistory\_OrderRatingForm.cshtml" />
     <Content Include="Views\OrderHistory\_OrderRatingTable.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

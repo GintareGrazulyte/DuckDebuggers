@@ -67,5 +67,33 @@ namespace BLL
                 return _customerRepository.FindById(customerId);
             }
         }
+
+        public void Modify(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customerToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCustomer = _customerRepository.FindById(customer.Id);
+                if (foundCustomer == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+
+                //TODO: copy everything here or Attach from DbContext
+                foundCustomer.Email = customer.Email;
+                foundCustomer.Password = customer.Password;
+                foundCustomer.Name = customer.Name;
+                foundCustomer.Surname = customer.Surname;
+                foundCustomer.Card = foundCustomer.Card;
+                foundCustomer.DeliveryAddress = customer.DeliveryAddress;
+
+                _customerRepository.Modify(foundCustomer);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }

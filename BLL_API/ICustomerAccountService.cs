@@ -12,5 +12,6 @@ namespace BLL_API
         void CreateCustomer(Customer customerToCreate);
         Customer LoginCustomer(Customer customerToLogin);
         Customer GetCustomer(int customerId);
+        void Modify(Customer customer);
     }
 }

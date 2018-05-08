@@ -18,7 +18,6 @@ namespace EShop.Controllers
         {
             _customerAccountService = customerAccountService;
         }
-        
 
         [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Index()
@@ -52,6 +51,31 @@ namespace EShop.Controllers
             return View(customer);
         }
 
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
+        public ActionResult Edit()
+        {
+            return View(_customerAccountService.GetCustomer((int)Session["AccountId"]));
+        }
+
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
+        public ActionResult Details()
+        {
+            return View(_customerAccountService.GetCustomer((int)Session["AccountId"]));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
+        public ActionResult Edit(Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                _customerAccountService.Modify(customer);
+                return RedirectToAction("Index");
+            }
+            return View(customer);
+        }
+
         public ActionResult Login()
         {
             return View();
@@ -79,6 +103,7 @@ namespace EShop.Controllers
             return View(foundCustomer);
         }
 
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
