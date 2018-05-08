@@ -58,7 +58,7 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(Customer customerToLogin)
+        public ActionResult Login(Customer customerToLogin, string returnUrl)
         {
             //TODO also check if admin email isn't reserved
             var foundCustomer = _customerAccountService.LoginCustomer(customerToLogin);
@@ -68,7 +68,11 @@ namespace EShop.Controllers
                 Session["AccountId"] = foundCustomer.Id;
                 Session["AccountEmail"] = foundCustomer.Email;
                 Session["IsAdminAccount"] = false;
-                return RedirectToAction("Index");
+                if (returnUrl == null || returnUrl == string.Empty)
+                {
+                    returnUrl = "Index";
+                }
+                return Redirect(returnUrl);
             }
 
             ModelState.AddModelError("", "Wrong email or password");
