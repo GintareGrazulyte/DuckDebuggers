@@ -21,7 +21,14 @@ namespace BLL
         public void CreateCustomer(Customer customerToCreate)
         {
             if (customerToCreate == null)
+            {
                 throw new ArgumentNullException("userToCreate");
+            }
+
+            if (!customerToCreate.IsConfirmPasswordCorrect())
+            {
+                throw new Exception("Password doesn't match");
+            }
 
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
@@ -30,11 +37,10 @@ namespace BLL
                 if (foundCustomer != null)
                 {
                     //TODO: UserAlreadyExistsException
-                    throw new Exception();
+                    throw new Exception("User already exists");
                 }
 
-                customerToCreate.Password = Encryption.SHA256(customerToCreate.Password);
-                customerToCreate.ConfirmPassword = Encryption.SHA256(customerToCreate.ConfirmPassword);
+                customerToCreate.HashPassword();
                 customerToCreate.IsActive = true;
 
                 _customerRepository.Add(customerToCreate);
@@ -50,7 +56,7 @@ namespace BLL
 
 
                 if (foundCustomer != null 
-                    && foundCustomer.Password == Encryption.SHA256(customerToLogin.Password) 
+                    && foundCustomer.IsCorrectPassword(customerToLogin.Password) 
                     && foundCustomer.IsActive)
                 {
                     return foundCustomer;
@@ -85,10 +91,9 @@ namespace BLL
 
                 //TODO: copy everything here or Attach from DbContext
                 foundCustomer.Email = customer.Email;
-                foundCustomer.Password = customer.Password;
                 foundCustomer.Name = customer.Name;
                 foundCustomer.Surname = customer.Surname;
-                foundCustomer.Card = foundCustomer.Card;
+                foundCustomer.Card = customer.Card;
                 foundCustomer.DeliveryAddress = customer.DeliveryAddress;
 
                 _customerRepository.Modify(foundCustomer);

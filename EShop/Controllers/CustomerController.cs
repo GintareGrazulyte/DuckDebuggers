@@ -7,6 +7,7 @@ using BOL.Utils;
 using BLL_API;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace EShop.Controllers
 {
@@ -45,7 +46,7 @@ namespace EShop.Controllers
                 catch(Exception ex)    //TODO: create separate exception to handle "Email already exists"
                 {
                     Debug.WriteLine(ex.Message);
-                    ModelState.AddModelError("", "Email already exists!");
+                    ModelState.AddModelError("", ex.Message);
                 }
             }
             return View(customer);
@@ -63,16 +64,27 @@ namespace EShop.Controllers
             return View(_customerAccountService.GetCustomer((int)Session["AccountId"]));
         }
 
+        //TODO add a separate action to change password
         [HttpPost]
         [ValidateAntiForgeryToken]
         [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Edit(Customer customer)
         {
+            ModelState.Remove("Password");
             if (ModelState.IsValid)
             {
-                _customerAccountService.Modify(customer);
-                return RedirectToAction("Index");
+                try
+                {
+                    _customerAccountService.Modify(customer);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    Debug.WriteLine(ex.Message);
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
+            //var errors = ModelState.Values.SelectMany(v => v.Errors);
             return View(customer);
         }
 
