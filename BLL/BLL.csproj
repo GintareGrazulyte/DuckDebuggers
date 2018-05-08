@@ -70,6 +70,7 @@
     <Compile Include="FileLoader.cs" />
     <Compile Include="ItemManagementService.cs" />
     <Compile Include="ItemQueryService.cs" />
+    <Compile Include="OrderRatingService.cs" />
     <Compile Include="PaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +78,10 @@
     <ProjectReference Include="..\BLL_API\BLL_API.csproj">
       <Project>{10ec616d-8f34-4b09-a0d2-f549ef1f306c}</Project>
       <Name>BLL_API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{ADBCDA71-58EF-47A8-937A-9C02D0ACEA50}</Project>
+      <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\DAL_API\DAL_API.csproj">
       <Project>{EC1749EB-DBC8-46EC-82FA-ADC48E93D649}</Project>

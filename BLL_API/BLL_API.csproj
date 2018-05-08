@@ -51,6 +51,7 @@
     <Compile Include="IFileLoader.cs" />
     <Compile Include="IItemManagementService.cs" />
     <Compile Include="IItemQueryService.cs" />
+    <Compile Include="IOrderRatingService.cs" />
     <Compile Include="IPaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

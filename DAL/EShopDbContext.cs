@@ -2,7 +2,7 @@
 using BOL.Objects;
 using BOL.Accounts;
 using System.Data.Entity;
-using BOL.Carts;
+using BOL.Orders;
 using System.Reflection;
 
 namespace DAL
@@ -21,6 +21,10 @@ namespace DAL
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
+
+        public DbSet<OrderRating> OrderRatings { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
