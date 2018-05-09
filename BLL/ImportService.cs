@@ -43,9 +43,9 @@ namespace BLL
             }
         }
 
-        public Task<List<Item>> ImportItemsFromFile()
+        public async Task<List<Item>> ImportItemsFromFile()
         {
-            return Task.Run(() =>
+            return await Task.Run(() =>
             {
                int i = 1;
                string name, description, imageUrl;
@@ -101,13 +101,13 @@ namespace BLL
             }
         }
 
-        public Task ExportItemsToFile(IEnumerable<Item> items, string path)
+        public async Task ExportItemsToFile(IEnumerable<Item> items, string path)
         {
             var document = new Spreadsheet();
 
             Worksheet worksheet = document.Workbook.Worksheets.Add("Items");
 
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 var columnNames = new List<string> { "Name", "Price", "Description", "CategoryId", "ImageUrl" };
                 for (int i = 0; i < columnNames.Count; i++)
