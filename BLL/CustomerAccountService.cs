@@ -100,5 +100,26 @@ namespace BLL
                 dbContextScope.SaveChanges();
             }
         }
+
+        public void UpdatePassword(int customerId, string newPassword)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCustomer = _customerRepository.FindById(customerId);
+                if (foundCustomer == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+
+                //TODO: copy everything here or Attach from DbContext
+                foundCustomer.Password = newPassword;
+                foundCustomer.HashPassword();
+
+                _customerRepository.Modify(foundCustomer);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace BLL_API
         Customer LoginCustomer(Customer customerToLogin);
         Customer GetCustomer(int customerId);
         void Modify(Customer customer);
+        void UpdatePassword(int customerId, string newPassword);
     }
 }

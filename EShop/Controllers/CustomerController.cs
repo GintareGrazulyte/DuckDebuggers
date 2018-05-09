@@ -7,7 +7,7 @@ using BOL.Utils;
 using BLL_API;
 using System;
 using System.Diagnostics;
-using System.Linq;
+using EShop.Models;
 
 namespace EShop.Controllers
 {
@@ -88,10 +88,40 @@ namespace EShop.Controllers
             return View(customer);
         }
 
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
+        public ActionResult ChangePassword(ChangePasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Customer customer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
+                if (!customer.IsCorrectPassword(model.OldPassword))
+                {
+                    ModelState.AddModelError("", "Wrong old password");
+                    return View(model);
+                }
+                if(!model.IsNewPasswordNew())
+                {
+                    ModelState.AddModelError("", "New password is the same as old one! Pick a new password");
+                    return View(model);
+                }
+                _customerAccountService.UpdatePassword(customer.Id, model.NewPassword);
+                return Redirect("Index");
+            }
+            return View(model);
+        }
+
         public ActionResult Login()
         {
             return View();
         }
+
 
         [HttpPost]
         public ActionResult Login(Customer customerToLogin, string returnUrl)
