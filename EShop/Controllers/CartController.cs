@@ -154,10 +154,15 @@ namespace EShop.Controllers
             foreach (var item in order.Cart.Items)
             {
                 itemToAdd = _itemQueryService.GetItem(item.Item.Id);
-
                 if (itemToAdd != null)
                 {
+                    FormCollection fc = new FormCollection
+                    {
+                        ["cartItem.Item.Id"] = Convert.ToString(itemToAdd.Id),
+                        ["cartItem.Quantity"] = Convert.ToString(item.Quantity)
+                    };
                     AddToCart(itemToAdd.Id);
+                    ChangeCartItemQuantity(fc);
                 }
             }
             return View("Index", (Cart)Session["Cart"]);

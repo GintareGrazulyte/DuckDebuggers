@@ -6,9 +6,11 @@ using BOL.Orders;
 using EShop.Models;
 using System.Linq;
 using System.Web.Mvc;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
+    [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
     public class PaymentServiceController : Controller
     {
         private ICustomerPaymentService _customerPaymentService;
@@ -112,12 +114,6 @@ namespace EShop.Controllers
             customer = null; 
 
             int? customerId = (int?)Session["AccountId"];
-
-            if (customerId == null)
-            {
-                return RedirectToAction("Login", "Customer");
-            }
-
             customer = _customerAccountService.GetCustomer((int)customerId);
             
             if(customer == null)
