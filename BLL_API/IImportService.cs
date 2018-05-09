@@ -8,7 +8,7 @@ namespace BLL_API
     public interface IImportService
     {
         void SetDocument(string path);
-        Task<List<Item>> ImportItemsFromFile();
-        Task ExportItemsToFile(IEnumerable<Item> items, string path);
+        List<Item> ImportItemsFromFile();
+        string ExportItemsToFile(IEnumerable<Item> items);
     }
 }

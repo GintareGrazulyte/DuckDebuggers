@@ -5,8 +5,5 @@
 
 <h2>Export</h2>
 <p>Right after finish of the export, an information about it will be sent to your email</p>
-@{ Html.BeginForm("ExportItemsToFile", "Item", FormMethod.Post);}
-@* TODO: use file explorer *@
-<p>File path @Html.TextBox("path", null, new { style = "width: 300px;" }) @Html.ValidationSummary(true, "", new { @class = "text-danger" })</p>
-<input type="submit" value="Export" class="btn btn-primary" />
-@{ Html.EndForm();}
+
+@Html.ActionLink("Export items", "ExportItemsToFile", "Item", null, new { @class = "btn btn-primary" })

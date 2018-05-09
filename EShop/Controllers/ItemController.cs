@@ -69,8 +69,7 @@ namespace EShop.Controllers
             return View("Index", _itemQueryService.GetAllItems());
         }
 
-        [HttpPost]
-        public ActionResult ExportItemsToFile(string path)
+        public ActionResult ExportItemsToFile()
         {
             int? adminId = (int?)Session["AccountId"];
 
@@ -79,18 +78,13 @@ namespace EShop.Controllers
                 //TODO handle
             }
 
-            Admin admin = _adminService.GetAdmin((int)adminId);
+            var admin = _adminService.GetAdmin(((int)adminId));
 
-            if (System.IO.File.Exists(path))
-            {
-                ModelState.AddModelError("", "File alredy exists");
-                
-            }
-            else
-            {
-                _itemManagementService.ExportAllItemsToFile(path, admin);
-            }
-            return View("Index", _itemQueryService.GetAllItems());      
+            var allItems = _itemQueryService.GetAllItems();
+
+            _itemManagementService.ExportAllItemsToFile(admin, allItems);
+            
+            return View("Index", allItems);      
         }
 
         // GET: Item/Details/5

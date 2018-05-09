@@ -23,12 +23,20 @@ namespace BLL
                 Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
             };
 
+           
+
             var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = email.Subject,
-                Body = email.Body
+                Body = email.Body        
             };
 
+            if (!string.IsNullOrEmpty(email.AttachmentPath))
+            {
+                var attachment = new Attachment(email.AttachmentPath);
+                message.Attachments.Add(attachment);
+            }
+           
             //TODO: handle exceptions
             smtp.Send(message);
         }

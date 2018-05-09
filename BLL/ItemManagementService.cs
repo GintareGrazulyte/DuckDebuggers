@@ -6,6 +6,7 @@ using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BLL
@@ -41,72 +42,76 @@ namespace BLL
 
         }
 
-        public Task ImportItemsFromFile(Admin admin)
+        public async Task ImportItemsFromFile(Admin admin)
         {
-            return _importService.ImportItemsFromFile().ContinueWith((itemsResult) =>
-            {
-                var email = new Email()
-                {
-                    ToName = admin.Name,
-                    ToAddress = admin.Email,
-                    Subject = "Import",
-                    Body = ""
-                };
 
-                List<Item> items = itemsResult.Result;
+        await Task.Run(() =>
+          {
+              var items = _importService.ImportItemsFromFile();
 
-                using (var dbContextScope = _dbContextScopeFactory.Create())
-                {
-                    int addedCount = 0;
-                    foreach (var item in items)
-                    {
+              var email = new Email()
+              {
+                  ToName = admin.Name,
+                  ToAddress = admin.Email,
+                  Subject = "Import",
+                  Body = "",
+                  AttachmentPath = ""
+              };
+
+              using (var dbContextScope = _dbContextScopeFactory.Create())
+              {
+                  int addedCount = 0;
+                  foreach (var item in items)
+                  {
                         //TODO: check for category
                         _itemRepository.Add(item);
                         //TODO message if not added
                         email.Body += item.Name + " added " + Environment.NewLine;
-                        addedCount++;
-                    }
-                    email.Body += addedCount + "/" + items.Count + " items were successfully added";
-                      
-                    try
-                    {
-                        dbContextScope.SaveChanges();
-                    }
-                    catch (Exception e)
-                    {
-                        email.Body = "Unable to save items to database. Exception message: " + e.Message;
-                    }
-                    finally
-                    {
-                        //TODO: handle exceptions
-                        _emailService.SendEmail(email);
-                    }
-                }            
-               
-            });
+                      addedCount++;
+                  }
+                  email.Body += addedCount + "/" + items.Count + " items were successfully added";
+
+                  try
+                  {
+                      dbContextScope.SaveChanges();
+                  }
+                  catch (Exception e)
+                  {
+                      email.Body = "Unable to save items to database. Exception message: " + e.Message;
+                  }
+
+                  _emailService.SendEmail(email);
+              }
+          });
         }
 
-        public Task ExportAllItemsToFile(string path, Admin admin)
+        public async Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> items)
         {
-            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            await Task.Run(() =>
             {
-                IEnumerable<Item> items = _itemRepository.GetAll();
-                return _importService.ExportItemsToFile(items, path).ContinueWith( (task) =>
+                using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
                 {
+                    var attachmentPath = _importService.ExportItemsToFile(items);
                     var email = new Email()
                     {
                         ToName = admin.Name,
                         ToAddress = admin.Email,
                         Subject = "Export",
-                        Body = ""
+                        Body = "",
+                        AttachmentPath = attachmentPath
                     };
 
                     email.Body = "All of the items were successfully exported";
 
                     //TODO: handle exceptions
                     _emailService.SendEmail(email);
-                });
-            }   
+
+                    if (File.Exists(attachmentPath))
+                    {
+                        File.Delete(attachmentPath);
+                    }
+                }
+            });
         }
 
         public void CreateItemWithImage(Item itemToCreate, string folderToImage)
