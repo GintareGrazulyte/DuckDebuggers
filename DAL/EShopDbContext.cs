@@ -34,6 +34,5 @@ namespace DAL
             // We're assuming that all our fluent mappings are declared in this assembly.
             modelBuilder.Configurations.AddFromAssembly(Assembly.GetAssembly(typeof(EShopDbContext)));
         }
-
     }
 }
