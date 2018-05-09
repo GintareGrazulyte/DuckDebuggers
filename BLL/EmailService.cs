@@ -37,7 +37,6 @@ namespace BLL
                 message.Attachments.Add(attachment);
             }
            
-            //TODO: handle exceptions
             smtp.Send(message);
         }
     }

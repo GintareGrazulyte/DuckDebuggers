@@ -89,28 +89,29 @@ namespace BLL
         {
             await Task.Run(() =>
             {
-                using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+                var attachmentPath = _importService.ExportItemsToFile(items);
+                var email = new Email()
                 {
-                    var attachmentPath = _importService.ExportItemsToFile(items);
-                    var email = new Email()
-                    {
-                        ToName = admin.Name,
-                        ToAddress = admin.Email,
-                        Subject = "Export",
-                        Body = "",
-                        AttachmentPath = attachmentPath
-                    };
+                    ToName = admin.Name,
+                    ToAddress = admin.Email,
+                    Subject = "Export",
+                    Body = "",
+                    AttachmentPath = attachmentPath
+                };
 
-                    email.Body = "All of the items were successfully exported";
+                email.Body = "All of the items were successfully exported";
 
-                    //TODO: handle exceptions
-                    _emailService.SendEmail(email);
+                _emailService.SendEmail(email);
 
-                    if (File.Exists(attachmentPath))
-                    {
-                        File.Delete(attachmentPath);
-                    }
+                //TODO: when temp file should be deleted?
+                try
+                {
+                    File.Delete(attachmentPath);
                 }
+                catch (IOException e)
+                {
+                    //file is in use or does not exist
+                }  
             });
         }
 
