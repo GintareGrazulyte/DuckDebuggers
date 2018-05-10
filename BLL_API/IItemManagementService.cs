@@ -13,7 +13,8 @@ namespace BLL_API
         void ExportAllItemsToFile(string path);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);
-        void UpdateItem(Item itemToUpdate, string folderToImage);
+        void UpdateItem(Item itemToUpdate);
         void DeleteItem(int itemId);
+        void UpdateItemImage(Item itemToUpdate, string folderToImage);
     }
 }

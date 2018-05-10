@@ -6,6 +6,7 @@ using EShop.Attributes;
 using BLL_API;
 using System.Collections.Generic;
 using System;
+using EShop.Models;
 
 namespace EShop.Controllers
 {
@@ -124,6 +125,7 @@ namespace EShop.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 
@@ -132,16 +134,37 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                _itemManagementService.UpdateItem(item, Server.MapPath("~/Uploads/Images"));
+                _itemManagementService.UpdateItem(item);
                 return RedirectToAction("Index");
             }
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
+        }
+
+        public ActionResult ChangeImage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Item item = _itemQueryService.GetItem(id.Value);
+            if (item == null)
+            {
+                return HttpNotFound();
+            }
+            return View(item);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeImage([Bind(Include="Id, Image")] Item model)
+        {
+            _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
+            return Redirect("Index");
         }
 
         // GET: Item/Delete/5
