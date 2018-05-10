@@ -5,6 +5,7 @@ using EShop.Attributes;
 using BLL_API;
 using BOL.Accounts;
 using System.Web;
+using System.IO;
 
 namespace EShop.Controllers
 {
@@ -39,6 +40,22 @@ namespace EShop.Controllers
         public ActionResult Export()
         {
             return View();
+        }
+
+        public ActionResult DownloadImportExample()
+        {
+            var fileName = "ExcelExample.xlsx";
+            HttpResponse response = System.Web.HttpContext.Current.Response;
+            response.ClearContent();
+            response.Clear();
+            response.ContentType = "text/plain";
+            response.AddHeader("Content-Disposition",
+                               "attachment; filename=" + fileName + ";");
+            response.TransmitFile(Path.Combine(Server.MapPath("~/Content/Downloads"), fileName));
+            response.Flush();
+            response.End();
+
+            return View("Import");
         }
 
         [HttpPost]
