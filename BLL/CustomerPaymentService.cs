@@ -47,9 +47,7 @@ namespace BLL
 
                 dbContextScope.SaveChanges();
                 return paymentInfo;
-            }
-            
-            
+            }        
         }
 
         public PaymentInfo PayFormedOrder(int customerId, Cart cart)

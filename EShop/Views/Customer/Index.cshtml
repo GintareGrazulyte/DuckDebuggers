@@ -6,5 +6,6 @@
 }
 <h2>Hello customer @customer</h2>
 
-@Html.ActionLink("Order History", "Index", "OrderHistory")
+<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "OrderHistory")'">Order History</button>
+<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Customer")'">Edit account information</button>
 

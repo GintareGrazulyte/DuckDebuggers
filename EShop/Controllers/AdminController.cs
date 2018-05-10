@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BOL.Accounts;
-using DAL_API;
+﻿using BOL.Accounts;
 using System.Web.Mvc;
 using System.Web.Security;
 using EShop.Attributes;

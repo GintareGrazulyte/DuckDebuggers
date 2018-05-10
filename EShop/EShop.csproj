@@ -154,7 +154,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Uploads\Images\ExcelExampleStructure.PNG" />
+    <Content Include="Content\Images\ExcelExampleStructure.PNG" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -221,7 +221,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
-    <Compile Include="Controllers\Item\ItemController.cs" />
+    <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
@@ -238,6 +238,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\Images\" />
+    <Folder Include="Uploads\Items\" />
     <Folder Include="Views\AdminViewModel\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
