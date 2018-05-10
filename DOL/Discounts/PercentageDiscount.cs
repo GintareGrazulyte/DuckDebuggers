@@ -9,5 +9,10 @@ namespace BOL.Discounts
     public class PercentageDiscount : Discount
     {
         public decimal Percentage { get; set; }
+
+        public override decimal CalculateDiscountedPrice(int itemPrice)
+        {
+            return itemPrice * Percentage;
+        }
     }
 }

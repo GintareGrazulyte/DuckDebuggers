@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BOL.Discounts
 {
-    public class Discount
+    public abstract class Discount
     {
         public Discount()
         {
@@ -26,5 +26,7 @@ namespace BOL.Discounts
         public DateTime EndDate { get; set; }
 
         public virtual ICollection<Item> Items { get; set; }
+
+        public abstract decimal CalculateDiscountedPrice(int itemPrice);
     }
 }

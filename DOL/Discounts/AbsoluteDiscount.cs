@@ -9,5 +9,13 @@ namespace BOL.Discounts
     public class AbsoluteDiscount : Discount
     {
         public int AbsoluteValue { get; set; }
+
+        public override decimal CalculateDiscountedPrice(int itemPrice)
+        {
+            if (itemPrice - AbsoluteValue < 0) throw new ArgumentException($"Negative price exception. " +
+                                                                        $"Can't apply absolute discount: {AbsoluteValue} " +
+                                                                        $"to item with price: {itemPrice}");
+            return itemPrice - AbsoluteValue;
+        }
     }
 }
