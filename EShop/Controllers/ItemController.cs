@@ -3,8 +3,8 @@ using System.Web.Mvc;
 using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
-using System;
 using BOL.Accounts;
+using System.Web;
 
 namespace EShop.Controllers
 {
@@ -42,43 +42,22 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportItemsFromFile(string path)
+        public ActionResult ImportItemsFromFile([Bind(Include = "file")] HttpPostedFileBase file)
         {
-            int? adminId = (int?)Session["AccountId"];
+            int adminId = (int)Session["AccountId"];
 
-            if (adminId == null)
-            {
-                //TODO handle
-            }
+            Admin admin = _adminService.GetAdmin(adminId);
 
-            try
-            {
-                _itemManagementService.SetDocument(path);
-            }
-            catch (Exception e)
-            {
-                ModelState.AddModelError("", e.Message);
-                return View("Import");
-            }
-
-
-            Admin admin = _adminService.GetAdmin((int)adminId);
-
-            _itemManagementService.ImportItemsFromFile(admin);
+            _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file);
 
             return View("Index", _itemQueryService.GetAllItems());
         }
 
         public ActionResult ExportItemsToFile()
         {
-            int? adminId = (int?)Session["AccountId"];
+            int adminId = (int)Session["AccountId"];
 
-            if (adminId == null)
-            {
-                //TODO handle
-            }
-
-            var admin = _adminService.GetAdmin(((int)adminId));
+            var admin = _adminService.GetAdmin(adminId);
 
             var allItems = _itemQueryService.GetAllItems();
 

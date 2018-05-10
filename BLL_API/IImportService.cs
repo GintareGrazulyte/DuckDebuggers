@@ -7,8 +7,7 @@ namespace BLL_API
     //TODO: find proper name
     public interface IImportService
     {
-        void SetDocument(string path);
-        List<Item> ImportItemsFromFile();
+        List<Item> ImportItemsFromFile(string path);
         string ExportItemsToFile(IEnumerable<Item> items);
     }
 }

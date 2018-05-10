@@ -11,40 +11,17 @@ namespace BLL
     //TODO: find proper name
     public class ImportService : IImportService
     {
-        //TODO: can it be class variables?
-        private Spreadsheet _document;
-        private Worksheet _worksheet;
-
-        public void SetDocument(string path)
+        public List<Item> ImportItemsFromFile(string path)
         {
-            _document = new Spreadsheet();
-            try
-            {
-                _document.LoadFromFile(path);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Equals("File not found"))
-                {
-                    throw new Exception("File <" + path + "> is not found");
-                }
-                if (ex.Message.Contains("The process cannot access the file"))
-                {
-                    throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
-                }
-                throw new Exception("Something went wrong, try again");
-            }
-
-            _worksheet = _document.Workbook.Worksheets["Items"];
+            var _document = new Spreadsheet();
+            _document.LoadFromFile(path);
+            var _worksheet = _document.Workbook.Worksheets["Items"];
 
             if (_worksheet == null)
             {
                 throw new Exception("Worksheet <Items> is missing");
             }
-        }
 
-        public List<Item> ImportItemsFromFile()
-        {
             int i = 1;
             string name, description, imageUrl;
             int price;

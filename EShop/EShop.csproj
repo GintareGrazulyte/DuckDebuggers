@@ -235,6 +235,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Uploads\Images\" />
+    <Folder Include="Uploads\Items\" />
     <Folder Include="Views\AdminViewModel\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>

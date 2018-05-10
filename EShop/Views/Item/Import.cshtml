@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Import";
 }
 
@@ -8,7 +7,7 @@
 <p>Required excel file structure with example values:</p>
 <p><img src="@Url.Content("~/Content/Images/ExcelExampleStructure.PNG")" alt="Example" style="height:100px; width:auto;" /></p>
 
-@{ Html.BeginForm("ImportItemsFromFile", "Item", FormMethod.Post);}
-   <p>File path @Html.TextBox("path", null,  new { type = "file" }) @Html.ValidationSummary(true, "", new { @class = "text-danger" })</p> 
-    <input type="submit" value="Import" class="btn btn-primary" />
+@{ Html.BeginForm("ImportItemsFromFile", "Item", FormMethod.Post, new { enctype = "multipart/form-data" });}
+<p>File name @Html.TextBox("file", null, new { type = "file" }) @Html.ValidationSummary(true, "", new { @class = "text-danger" })</p>
+<input type="submit" value="Import" class="btn btn-primary" />
 @{ Html.EndForm();}

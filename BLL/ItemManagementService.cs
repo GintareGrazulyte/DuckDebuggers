@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BLL
 {
@@ -29,60 +30,48 @@ namespace BLL
             _emailService = emailService ?? throw new ArgumentNullException("emailService");
         }
 
-        public void SetDocument(string path)
+        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file)
         {
-            try
+            await Task.Run(() =>
             {
-                _importService.SetDocument(path);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+                var fileName = _fileLoader.Load(folderToFile, file);
 
-        }
+                var items = _importService.ImportItemsFromFile(Path.Combine(folderToFile, fileName));
 
-        public async Task ImportItemsFromFile(Admin admin)
-        {
+                var email = new Email()
+                {
+                    ToName = admin.Name,
+                    ToAddress = admin.Email,
+                    Subject = "Import",
+                    Body = "",
+                    AttachmentPath = ""
+                };
 
-        await Task.Run(() =>
-          {
-              var items = _importService.ImportItemsFromFile();
-
-              var email = new Email()
-              {
-                  ToName = admin.Name,
-                  ToAddress = admin.Email,
-                  Subject = "Import",
-                  Body = "",
-                  AttachmentPath = ""
-              };
-
-              using (var dbContextScope = _dbContextScopeFactory.Create())
-              {
-                  int addedCount = 0;
-                  foreach (var item in items)
-                  {
+                using (var dbContextScope = _dbContextScopeFactory.Create())
+                {
+                    int addedCount = 0;
+                    foreach (var item in items)
+                    {
                         //TODO: check for category
                         _itemRepository.Add(item);
                         //TODO message if not added
                         email.Body += item.Name + " added " + Environment.NewLine;
-                      addedCount++;
-                  }
-                  email.Body += addedCount + "/" + items.Count + " items were successfully added";
+                        addedCount++;
+                    }
+                    email.Body += addedCount + "/" + items.Count + " items were successfully added";
 
-                  try
-                  {
-                      dbContextScope.SaveChanges();
-                  }
-                  catch (Exception e)
-                  {
-                      email.Body = "Unable to save items to database. Exception message: " + e.Message;
-                  }
+                    try
+                    {
+                        dbContextScope.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        email.Body = "Unable to save items to database. Exception message: " + e.Message;
+                    }
 
-                  _emailService.SendEmail(email);
-              }
-          });
+                    _emailService.SendEmail(email);
+                }
+            });
         }
 
         public async Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> items)
@@ -108,7 +97,7 @@ namespace BLL
                 {
                     File.Delete(attachmentPath);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     //file is in use or does not exist
                 }  
