@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using System.Linq;
 
 namespace BLL
 {
@@ -19,15 +20,18 @@ namespace BLL
         private readonly IFileLoader _fileLoader;
         private readonly IImportService _importService;
         private readonly IEmailService _emailService;
+        private readonly ICategoryService _categoryService;
 
         public ItemManagementService(IDbContextScopeFactory dbContextScopeFactory, IItemRepository itemRepository,
-                                    IImportService importService, IFileLoader fileLoader, IEmailService emailService)
+                                    IImportService importService, IFileLoader fileLoader, IEmailService emailService,
+                                    ICategoryService categoryService)
         {
             _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
             _itemRepository = itemRepository ?? throw new ArgumentNullException("itemRepository");
             _fileLoader = fileLoader ?? throw new ArgumentNullException("fileLoader");
             _importService = importService ?? throw new ArgumentNullException("importService");
             _emailService = emailService ?? throw new ArgumentNullException("emailService");
+            _categoryService = categoryService ?? throw new ArgumentNullException("categoryService");
         }
 
         public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file)
@@ -47,15 +51,21 @@ namespace BLL
                     AttachmentPath = ""
                 };
 
+                var categories = _categoryService.GetAllCategories();
+
                 using (var dbContextScope = _dbContextScopeFactory.Create())
                 {
                     int addedCount = 0;
-                    foreach (var item in items)
+                    for (int i = 0; i < items.Count; i++)
                     {
-                        //TODO: check for category
-                        _itemRepository.Add(item);
-                        //TODO message if not added
-                        email.Body += item.Name + " added " + Environment.NewLine;
+                        if (!categories.Any(c => c.Id == items[i].CategoryId))
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
+                                items[i].CategoryId + "> does not exist" + Environment.NewLine;
+                            continue;
+                        }
+
+                        _itemRepository.Add(items[i]);
                         addedCount++;
                     }
                     email.Body += addedCount + "/" + items.Count + " items were successfully added";
