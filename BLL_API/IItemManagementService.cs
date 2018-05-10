@@ -12,7 +12,7 @@ namespace BLL_API
         Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> allItems);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);
-        void UpdateItem(Item itemToUpdate);
+        void UpdateItem(Item itemToUpdate, string folderToImage);
         void DeleteItem(int itemId);
     }
 }

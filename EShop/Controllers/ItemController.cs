@@ -129,6 +129,7 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
@@ -142,13 +143,15 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
         {
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                _itemManagementService.UpdateItem(item);
+                _itemManagementService.UpdateItem(item, Server.MapPath("~/Uploads/Images"));
                 return RedirectToAction("Index");
             }
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 

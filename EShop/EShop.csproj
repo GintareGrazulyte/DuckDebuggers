@@ -194,6 +194,9 @@
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
     <Content Include="Views\OrderHistory\_OrderRatingForm.cshtml" />
     <Content Include="Views\OrderHistory\_OrderRatingTable.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Details.cshtml" />
+    <Content Include="Views\Customer\ChangePassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -226,6 +229,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
     <Compile Include="Models\UserListViewModel.cs" />

@@ -159,7 +159,7 @@ namespace BLL
             }
         }
 
-        public void UpdateItem(Item itemToUpdate)
+        public void UpdateItem(Item itemToUpdate, string folderToImage)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
@@ -173,6 +173,8 @@ namespace BLL
                     //TODO: CategoryNotFoundException
                     throw new Exception();
                 }
+
+                itemToUpdate.ImageUrl = _fileLoader.Load(folderToImage, itemToUpdate.Image);
 
                 //TODO: copy everything here or Attach from DbContext
                 foundItem.Name = itemToUpdate.Name;
