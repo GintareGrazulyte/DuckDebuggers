@@ -44,7 +44,7 @@ namespace EShop.Controllers
 
         public ActionResult DownloadImportExample()
         {
-            var fileName = "ExcelExample.xlsx";
+            var fileName = "ImportExample.xlsx";
             HttpResponse response = System.Web.HttpContext.Current.Response;
             response.ClearContent();
             response.Clear();
