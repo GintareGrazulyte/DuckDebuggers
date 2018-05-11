@@ -159,7 +159,35 @@ namespace BLL
             }
         }
 
-        public void UpdateItem(Item itemToUpdate, string folderToImage)
+        public void UpdateItem(Item itemToUpdate)
+        {
+            if (itemToUpdate == null)
+                throw new ArgumentNullException("itemToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundItem = _itemRepository.FindById(itemToUpdate.Id);
+                if (foundItem == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+                //TODO: copy everything here or Attach from DbContext
+                foundItem.Name = itemToUpdate.Name;
+                foundItem.Description = itemToUpdate.Description;
+                foundItem.Price = itemToUpdate.Price;
+                if (itemToUpdate.CategoryId != foundItem.CategoryId)
+                {
+                    foundItem.Category = itemToUpdate.Category;
+                    foundItem.CategoryId = itemToUpdate.CategoryId;
+                }
+                _itemRepository.Modify(foundItem);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void UpdateItemImage(Item itemToUpdate, string folderToImage)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
@@ -177,16 +205,8 @@ namespace BLL
                 itemToUpdate.ImageUrl = _fileLoader.Load(folderToImage, itemToUpdate.Image);
 
                 //TODO: copy everything here or Attach from DbContext
-                foundItem.Name = itemToUpdate.Name;
-                foundItem.Description = itemToUpdate.Description;
-                foundItem.Price = itemToUpdate.Price;
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
                 foundItem.Image = itemToUpdate.Image;
-                if (foundItem.CategoryId != itemToUpdate.CategoryId)
-                {
-                    foundItem.Category = itemToUpdate.Category;
-                    foundItem.CategoryId = itemToUpdate.CategoryId;
-                }
 
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();
