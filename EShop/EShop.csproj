@@ -134,6 +134,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\cartIcon.jpg" />
     <Content Include="Content\Images\ImportExample.PNG" />
+    <Content Include="Content\Images\panda404.png" />
+    <Content Include="Content\Images\panda404v2.png" />
     <Content Include="Content\Images\StarFade.gif" />
     <Content Include="Content\Images\StarGlow.gif" />
     <Content Include="Content\starability-all.min.css" />
@@ -203,6 +205,7 @@
     <Content Include="Views\Error\NotFoundError.cshtml" />
     <Content Include="Views\Error\DefaultError.cshtml" />
     <Content Include="Views\Error\InternalError.cshtml" />
+    <Content Include="Views\Shared\_ErrorLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
