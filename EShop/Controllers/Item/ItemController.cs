@@ -119,7 +119,6 @@ namespace EShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
@@ -136,13 +135,14 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
         {
-            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
+            //var selectList = ViewBag.CategoryId as SelectList;
+            //var selectedItem = selectList.SelectedValue;
             if (ModelState.IsValid)
             {
                 _itemManagementService.UpdateItem(item);
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 
