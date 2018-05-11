@@ -3,6 +3,7 @@ using BOL.Accounts;
 using BOL.Orders;
 using EShop.Attributes;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -25,6 +26,7 @@ namespace EShop.Controllers
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
 
             var word = Request["search"];
+            var order = Request["order"] == "Date" ? "date_desc" : "Date";
             var customers = _adminService.GetCustomers();
 
             if (!String.IsNullOrEmpty(word))
@@ -73,6 +75,31 @@ namespace EShop.Controllers
             Customer currentCustomer = (Session["Account"] as Customer);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
             return View(order);
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Admin admin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _adminService.CreateAdmin(admin);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    Debug.WriteLine(ex.Message);
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            return View(admin);
         }
     }
 }

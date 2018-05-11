@@ -55,14 +55,8 @@
     </table>
 </div>
 
-<div class="customers" id="grid">
-    @using (Html.BeginForm("Index", "UsersList", FormMethod.Get))
-    {
-        <p>
-            Find by name: @Html.TextBox("search", ViewBag.CurrentFilter as string)
-            <input type="submit" value="Search" id="btnTrigger" />
-        </p>
-    }
+<div class="customers grid">
+
 
     <table class="table">
         @if (Model.Customers.Count() == 0)
@@ -76,7 +70,18 @@
         else
         {
             <tr>
-                CUSTOMERS
+                <th>
+                    CUSTOMERS
+                </th>
+                <th>
+                        @using (Html.BeginForm("Index", "UsersList", FormMethod.Get))
+    {
+        <p>
+            Search user: @Html.TextBox("search", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" class="trigger" />
+        </p>
+    }
+                </th>
             </tr>
             <tr>
                 <th>
@@ -132,7 +137,7 @@
 </div>
 
 <script>
-    $("#grid").on("click", "#btnTrigger", function(e) {
+    $(".grid").on("click", ".trigger", function(e) {
         $.ajax({
             url: "/ProcessLogEntries",
             type: "post",
@@ -144,7 +149,7 @@
             }
         })
         .done(function(result) {
-            $("#grid").html(result);
+            $(".grid").html(result);
         });
      });
 </script>

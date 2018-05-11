@@ -13,5 +13,6 @@ namespace BLL_API
         List<Customer> GetCustomers(string keyWord);
         List<Admin> GetAdmins();
         void ChangeStatus(Customer account);
+        void CreateAdmin(Admin adminToCreate);
     }
 }

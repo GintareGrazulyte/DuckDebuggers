@@ -199,6 +199,7 @@
     <Content Include="Views\Customer\Details.cshtml" />
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Item\ChangeImage.cshtml" />
+    <Content Include="Views\UsersList\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
