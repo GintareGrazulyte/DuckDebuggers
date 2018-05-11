@@ -67,6 +67,9 @@ namespace EShop
             container.RegisterType<IOrderRatingRepository, OrderRatingRepository>();
             container.RegisterType<IOrderRatingService, OrderRatingService>();
             
+            container.RegisterType<IEmailService, EmailService>();
+
+
 
             container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());
             container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());

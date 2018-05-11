@@ -4,38 +4,20 @@ using System.Collections.Generic;
 using BOL.Objects;
 using Bytescout.Spreadsheet;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace BLL
 {
     //TODO: find proper name
     public class ImportService : IImportService
     {
-
-        public IEnumerable<Item> ImportItemsFromFile(string path)
+        public List<Item> ImportItemsFromFile(string path)
         {
-            var document = new Spreadsheet();
+            var _document = new Spreadsheet();
+            _document.LoadFromFile(path);
+            var _worksheet = _document.Workbook.Worksheets["Items"];
 
-            try
-            {
-                document.LoadFromFile(path);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Equals("File not found"))
-                {
-                    throw new Exception("File <" + path + "> is not found");
-                }
-                if (ex.Message.Contains("The process cannot access the file"))
-                {
-                    throw new Exception("Cannot import from file <" + path + "> as it is open somewhere else");
-                }
-                throw new Exception("Something went wrong, try again");
-            }
-
-            
-            Worksheet worksheet = document.Workbook.Worksheets["Items"];
-
-            if (worksheet == null)
+            if (_worksheet == null)
             {
                 throw new Exception("Worksheet <Items> is missing");
             }
@@ -46,12 +28,12 @@ namespace BLL
             int? categoryId;
             var items = new List<Item>();
 
-            while (IsValidRow(name = worksheet.Cell(i, 0).ValueAsString, 
-                             price = worksheet.Cell(i, 1).ValueAsInteger))
+            while (IsValidRow(name = _worksheet.Cell(i, 0).ValueAsString,
+                            price = _worksheet.Cell(i, 1).ValueAsInteger))
             {
-                description = worksheet.Cell(i, 2).ValueAsString;
-                categoryId = worksheet.Cell(i, 3).ValueAsInteger;
-                imageUrl = worksheet.Cell(i, 4).ValueAsString;
+                description = _worksheet.Cell(i, 2).ValueAsString;
+                categoryId = _worksheet.Cell(i, 3).ValueAsInteger;
+                imageUrl = _worksheet.Cell(i, 4).ValueAsString;
 
                 CorrectValues(ref description, ref imageUrl, ref categoryId);
 
@@ -66,7 +48,7 @@ namespace BLL
                 i++;
             }
 
-            document.Close();
+            _document.Close();
             return items;
         }
 
@@ -93,7 +75,7 @@ namespace BLL
             }
         }
 
-        public void ExportItemsToFile(IEnumerable<Item> items, string path)
+        public string ExportItemsToFile(IEnumerable<Item> items)
         {
             var document = new Spreadsheet();
 
@@ -121,8 +103,11 @@ namespace BLL
             }
 
             //TODO: remove additionaly created worksheet. 
-            document.SaveAs(path);
+            string temproraryAttachmentPath = System.IO.Path.GetTempPath() + "ExportedItems" + DateTime.Now.ToString().Replace(':', ' ') + ".xlsx";
+            document.SaveAs(temproraryAttachmentPath);
             document.Close();
+
+            return temproraryAttachmentPath;
         }
     }
 }

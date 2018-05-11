@@ -1,9 +1,7 @@
 ﻿using System.Web.Mvc;
 using BOL.Accounts;
-using DAL_API;
 using System.Web.Security;
 using EShop.Attributes;
-using BOL.Utils;
 using BLL_API;
 using System;
 using System.Diagnostics;
