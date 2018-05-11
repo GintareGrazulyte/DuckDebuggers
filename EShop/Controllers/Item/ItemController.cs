@@ -164,7 +164,7 @@ namespace EShop.Controllers
         public ActionResult ChangeImage([Bind(Include="Id, Image")] Item model)
         {
             _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
-            return Redirect("Index");
+            return RedirectToAction("Index");
         }
 
         // GET: Item/Delete/5
