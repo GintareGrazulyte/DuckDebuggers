@@ -200,6 +200,9 @@
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Item\ChangeImage.cshtml" />
     <Content Include="Views\UsersList\Create.cshtml" />
+    <Content Include="Views\Error\NotFoundError.cshtml" />
+    <Content Include="Views\Error\DefaultError.cshtml" />
+    <Content Include="Views\Error\InternalError.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -224,6 +227,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
