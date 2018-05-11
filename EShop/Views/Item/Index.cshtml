@@ -26,12 +26,13 @@
     </tr>
 
 @foreach (var item in Model) {
+    var itemPriceInEur = item.Price / 100.0m;
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Price)
+            @Html.DisplayFor(modelItem => itemPriceInEur) Eur
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Description)

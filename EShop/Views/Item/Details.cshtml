@@ -1,6 +1,7 @@
 ﻿@model BOL.Objects.Item
 
 @{
+    var itemPriceInEur = Model.Price / 100.0m;
     ViewBag.Title = "Details";
 }
 
@@ -23,7 +24,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => itemPriceInEur) Eur
         </dd>
 
         <dt>
@@ -41,13 +42,13 @@
         <dd>
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
-
-        <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+        @if (Model.ImageUrl != null)
+        {
+            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+        }
     </dl>
 </div>
 <p>
-    @*TODO: istrinti addtocart*@
-    @Html.ActionLink("AddToCart", "AddToCart", "Cart", new { id = Model.Id }, null) |
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
