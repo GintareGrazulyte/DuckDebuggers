@@ -182,8 +182,11 @@ namespace BLL
                 foundItem.Price = itemToUpdate.Price;
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
                 foundItem.Image = itemToUpdate.Image;
-                foundItem.Category = itemToUpdate.Category;
-                foundItem.CategoryId = itemToUpdate.CategoryId;
+                if (foundItem.CategoryId != itemToUpdate.CategoryId)
+                {
+                    foundItem.Category = itemToUpdate.Category;
+                    foundItem.CategoryId = itemToUpdate.CategoryId;
+                }
 
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();
