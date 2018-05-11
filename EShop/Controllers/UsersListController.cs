@@ -4,6 +4,7 @@ using BOL.Orders;
 using EShop.Attributes;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
@@ -18,14 +19,27 @@ namespace EShop.Controllers
             _adminService = adminService;
         }
 
-        // GET: OrderHistory
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string searchWord)
         {
-            var view = new UserListViewModel()
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            var word = Request["search"];
+            var customers = _adminService.GetCustomers();
+
+            if (!String.IsNullOrEmpty(word))
+            {
+                Regex good = new Regex(@"" + word + "", RegexOptions.IgnoreCase);
+                customers = customers.Where((x => good.IsMatch(x.Name) || good.IsMatch(x.Surname)
+                                                || good.IsMatch(x.Email))).Distinct().ToList();
+            }
+
+             var view = new UserListViewModel()
             {
                 Admins = _adminService.GetAdmins(),
-                Customers = _adminService.GetCustomers()
+                Customers = customers
             };
+
             return View(view);
         }
 

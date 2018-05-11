@@ -10,6 +10,7 @@ namespace BLL_API
         Admin GetAdmin(int id);
         Customer GetCustomer(int id);
         List<Customer> GetCustomers();
+        List<Customer> GetCustomers(string keyWord);
         List<Admin> GetAdmins();
         void ChangeStatus(Customer account);
     }

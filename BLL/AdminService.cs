@@ -88,5 +88,10 @@ namespace BLL
                 dbContextScope.SaveChanges();
             }
         }
+
+        public List<Customer> GetCustomers(string keyWord)
+        {
+            return _customerRepository.GetAll(keyWord);
+        }
     }
 }
