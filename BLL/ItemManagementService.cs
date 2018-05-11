@@ -177,9 +177,11 @@ namespace BLL
                 foundItem.Name = itemToUpdate.Name;
                 foundItem.Description = itemToUpdate.Description;
                 foundItem.Price = itemToUpdate.Price;
-                foundItem.Category = itemToUpdate.Category;
-                foundItem.CategoryId = itemToUpdate.CategoryId;
-
+                if (itemToUpdate.CategoryId != foundItem.CategoryId)
+                {
+                    foundItem.Category = itemToUpdate.Category;
+                    foundItem.CategoryId = itemToUpdate.CategoryId;
+                }
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();
             }
