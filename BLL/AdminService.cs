@@ -88,5 +88,40 @@ namespace BLL
                 dbContextScope.SaveChanges();
             }
         }
+
+        public List<Customer> GetCustomers(string keyWord)
+        {
+            return _customerRepository.GetAll(keyWord);
+        }
+
+        public void CreateAdmin(Admin adminToCreate)
+        {
+            if (adminToCreate == null)
+            {
+                throw new ArgumentNullException("userToCreate");
+            }
+
+            if (!adminToCreate.IsConfirmPasswordCorrect())
+            {
+                throw new Exception("Password doesn't match");
+            }
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCustomer = _adminRepository.FindByEmail(adminToCreate.Email);
+                if (foundCustomer != null)
+                {
+                    //TODO: UserAlreadyExistsException
+                    throw new Exception("User already exists");
+                }
+
+                adminToCreate.HashPassword();
+                adminToCreate.IsActive = true;
+
+                _adminRepository.Add(adminToCreate);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }

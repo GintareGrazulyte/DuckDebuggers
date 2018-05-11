@@ -3,7 +3,9 @@ using BOL.Accounts;
 using BOL.Orders;
 using EShop.Attributes;
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
@@ -18,14 +20,28 @@ namespace EShop.Controllers
             _adminService = adminService;
         }
 
-        // GET: OrderHistory
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string searchWord)
         {
-            var view = new UserListViewModel()
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            var word = Request["search"];
+            var order = Request["order"] == "Date" ? "date_desc" : "Date";
+            var customers = _adminService.GetCustomers();
+
+            if (!String.IsNullOrEmpty(word))
+            {
+                Regex good = new Regex(@"" + word + "", RegexOptions.IgnoreCase);
+                customers = customers.Where((x => good.IsMatch(x.Name) || good.IsMatch(x.Surname)
+                                                || good.IsMatch(x.Email))).Distinct().ToList();
+            }
+
+             var view = new UserListViewModel()
             {
                 Admins = _adminService.GetAdmins(),
-                Customers = _adminService.GetCustomers()
+                Customers = customers
             };
+
             return View(view);
         }
 
@@ -59,6 +75,31 @@ namespace EShop.Controllers
             Customer currentCustomer = (Session["Account"] as Customer);
             Order order = currentCustomer.Orders.FirstOrDefault(o => o.Id == orderID);
             return View(order);
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Admin admin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _adminService.CreateAdmin(admin);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    Debug.WriteLine(ex.Message);
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            return View(admin);
         }
     }
 }

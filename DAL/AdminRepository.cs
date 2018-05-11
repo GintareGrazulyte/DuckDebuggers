@@ -53,5 +53,10 @@ namespace DAL
         {
             return DbContext.Admins.ToList();
         }
+
+        public void Add(Admin admin)
+        {
+                DbContext.Admins.Add(admin);
+        }
     }
 }
