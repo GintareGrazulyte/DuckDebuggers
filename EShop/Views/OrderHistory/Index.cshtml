@@ -20,7 +20,7 @@
 
 <script type="text/javascript">
     function OptionChange() {
-        var url = '@Url.Action("OrderTable", "OrderHistory")';
+        var url = '@Url.Action("_OrderTable", "OrderHistory")';
 
         $.ajax({
             type: "POST",
@@ -29,9 +29,8 @@
             cache: false,
             dataType: 'html',
             success: function (response) {
-                    $("#OrderTable").html(response);
+                $("#OrderTable").html(response);
             }
         });
-
     }
 </script>

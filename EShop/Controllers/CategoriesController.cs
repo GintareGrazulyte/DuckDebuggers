@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using DAL;
 using BOL;
 using EShop.Attributes;
-using BOL.Accounts;
-using DAL_API;
 using BLL_API;
 
 namespace EShop.Controllers
@@ -42,7 +34,7 @@ namespace EShop.Controllers
                 var category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -81,7 +73,7 @@ namespace EShop.Controllers
                 Category category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -113,7 +105,7 @@ namespace EShop.Controllers
                 Category category = _categoryService.GetCategory(id.Value);
                 return View(category);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }
@@ -129,7 +121,7 @@ namespace EShop.Controllers
                 _categoryService.DeleteCategory(id);
                 return RedirectToAction("Index");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return HttpNotFound();
             }

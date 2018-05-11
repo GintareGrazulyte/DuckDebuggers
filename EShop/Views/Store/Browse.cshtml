@@ -2,12 +2,52 @@
 @{
     ViewBag.Title = "Browse";
 }
-<h2>Browsing Category:@Model.Name</h2>
-<ul>
+<h2>Browsing Category: @Model.Name</h2>
+
+<table class="table table-hover table-responsive">
+    <tr>
+        <th></th>
+        <th>
+            Name
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Price
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
     @foreach (var item in Model.Items)
     {
-    <li>
-        @Html.ActionLink(item.Name, "Details", new { itemId = item.Id })
-    </li>
+        decimal piecePrice = item.Price / 100.0m;
+
+    <tr>
+        <td width="10%">
+            @{
+            if (item.ImageUrl != null)
+            {
+                @:<img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:40px; width:auto;" />
+        }
+            }
+        </td>
+        <td style="vertical-align:middle;">
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td style="vertical-align:middle;">
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td style="vertical-align:middle;">
+            @Html.DisplayFor(modelItem => piecePrice) Eur/Piece
+        </td>
+        <td style="vertical-align:middle;">
+            <button type="button" id="addToCart" class="btn btn-primary" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = item.Id }, null)'">Add to cart</button>
+        </td>
+        <td style="vertical-align:middle;">
+            <button type="button" id="details" class="btn btn-secondary" onclick="location.href='@Url.Action("Details", "Store", new {  itemId = item.Id, categoryId = item.CategoryId }, null)'">View details</button>
+        </td>
+
+    </tr>
     }
-</ul>
+</table>

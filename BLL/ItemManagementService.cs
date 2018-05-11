@@ -1,9 +1,15 @@
 ﻿using BLL_API;
+using BOL;
+using BOL.Accounts;
 using BOL.Objects;
 using DAL_API;
 using Mehdime.Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Web;
+using System.Linq;
 
 namespace BLL
 {
@@ -13,36 +19,99 @@ namespace BLL
         private readonly IItemRepository _itemRepository;
         private readonly IFileLoader _fileLoader;
         private readonly IImportService _importService;
+        private readonly IEmailService _emailService;
+        private readonly ICategoryService _categoryService;
 
         public ItemManagementService(IDbContextScopeFactory dbContextScopeFactory, IItemRepository itemRepository,
-                                    IImportService importService, IFileLoader fileLoader)
+                                    IImportService importService, IFileLoader fileLoader, IEmailService emailService,
+                                    ICategoryService categoryService)
         {
             _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
             _itemRepository = itemRepository ?? throw new ArgumentNullException("itemRepository");
             _fileLoader = fileLoader ?? throw new ArgumentNullException("fileLoader");
             _importService = importService ?? throw new ArgumentNullException("importService");
+            _emailService = emailService ?? throw new ArgumentNullException("emailService");
+            _categoryService = categoryService ?? throw new ArgumentNullException("categoryService");
         }
 
-        public void ImportItemsFromFile(string path)
+        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file)
         {
-            IEnumerable<Item> items = _importService.ImportItemsFromFile(path);
-
-            using (var dbContextScope = _dbContextScopeFactory.Create())
+            await Task.Run(() =>
             {
-                foreach (var item in items)
-                    _itemRepository.Add(item);
+                var fileName = _fileLoader.Load(folderToFile, file);
 
-                dbContextScope.SaveChanges();
-            }
+                var items = _importService.ImportItemsFromFile(Path.Combine(folderToFile, fileName));
+
+                var email = new Email()
+                {
+                    ToName = admin.Name,
+                    ToAddress = admin.Email,
+                    Subject = "Import",
+                    Body = "",
+                    AttachmentPath = ""
+                };
+
+                var categories = _categoryService.GetAllCategories();
+
+                using (var dbContextScope = _dbContextScopeFactory.Create())
+                {
+                    int addedCount = 0;
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        if (!categories.Any(c => c.Id == items[i].CategoryId))
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
+                                items[i].CategoryId + "> does not exist" + Environment.NewLine;
+                            continue;
+                        }
+
+                        _itemRepository.Add(items[i]);
+                        addedCount++;
+                    }
+                    email.Body += addedCount + "/" + items.Count + " items were successfully added";
+
+                    try
+                    {
+                        dbContextScope.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        email.Body = "Unable to save items to database. Exception message: " + e.Message;
+                    }
+
+                    _emailService.SendEmail(email);
+                }
+            });
         }
 
-        public void ExportAllItemsToFile(string path)
+        public async Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> items)
         {
-            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            await Task.Run(() =>
             {
-                IEnumerable<Item> items = _itemRepository.GetAll();
-                _importService.ExportItemsToFile(items, path);
-            }   
+                var attachmentPath = _importService.ExportItemsToFile(items);
+                var email = new Email()
+                {
+                    ToName = admin.Name,
+                    ToAddress = admin.Email,
+                    Subject = "Export",
+                    Body = "",
+                    AttachmentPath = attachmentPath
+                };
+
+                email.Body = "All of the items were successfully exported";
+
+                _emailService.SendEmail(email);
+
+                //TODO: when temp file should be deleted?
+                try
+                {
+                    File.Delete(attachmentPath);
+                }
+                catch (IOException)
+                {
+                    //file is in use or does not exist
+                }  
+            });
         }
 
         public void CreateItemWithImage(Item itemToCreate, string folderToImage)
@@ -104,15 +173,38 @@ namespace BLL
                     //TODO: CategoryNotFoundException
                     throw new Exception();
                 }
-
                 //TODO: copy everything here or Attach from DbContext
                 foundItem.Name = itemToUpdate.Name;
                 foundItem.Description = itemToUpdate.Description;
                 foundItem.Price = itemToUpdate.Price;
-                foundItem.ImageUrl = itemToUpdate.ImageUrl;
-                foundItem.Image = itemToUpdate.Image;
                 foundItem.Category = itemToUpdate.Category;
                 foundItem.CategoryId = itemToUpdate.CategoryId;
+
+                _itemRepository.Modify(foundItem);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void UpdateItemImage(Item itemToUpdate, string folderToImage)
+        {
+            if (itemToUpdate == null)
+                throw new ArgumentNullException("itemToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundItem = _itemRepository.FindById(itemToUpdate.Id);
+                if (foundItem == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+
+                itemToUpdate.ImageUrl = _fileLoader.Load(folderToImage, itemToUpdate.Image);
+
+                //TODO: copy everything here or Attach from DbContext
+                foundItem.ImageUrl = itemToUpdate.ImageUrl;
+                foundItem.Image = itemToUpdate.Image;
 
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();

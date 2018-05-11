@@ -2,6 +2,7 @@
 using BOL;
 using BOL.Carts;
 using BOL.Orders;
+using DAL;
 using DAL_API;
 using Mehdime.Entity;
 using System;
@@ -39,16 +40,14 @@ namespace BLL
                 var paymentInfo = _paymentService.Payment(customer.Card, cart.Cost);
 
                 cart.Items.ToList().ForEach(x => x.Item = _itemQueryService.GetItem(x.Item.Id)); //TODO: remove hack
-                
+
                 var order = new Order { Cart = cart, DateTime = DateTime.Now, OrderStatus = paymentInfo.OrderStatus };
                 customer.Orders.Add(order);
                 _customerRepository.Modify(customer);
 
                 dbContextScope.SaveChanges();
                 return paymentInfo;
-            }
-            
-            
+            }        
         }
 
         public PaymentInfo PayFormedOrder(int customerId, Cart cart)

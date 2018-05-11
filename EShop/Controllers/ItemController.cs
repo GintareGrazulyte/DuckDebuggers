@@ -1,11 +1,14 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using DAL_API;
 using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
 using System.Collections.Generic;
 using System;
+using EShop.Models;
+using BOL.Accounts;
+using System.Web;
+using System.IO;
 
 namespace EShop.Controllers
 {
@@ -15,13 +18,15 @@ namespace EShop.Controllers
         private IItemQueryService _itemQueryService;
         private ICategoryService _categoryService;
         private IItemManagementService _itemManagementService;
+        private IAdminService _adminService;
 
         public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
-            IItemManagementService itemManagementService)
+            IItemManagementService itemManagementService, IAdminService adminService)
         {
             _itemQueryService = itemQueryService;
             _categoryService = categoryService;
             _itemManagementService = itemManagementService;
+            _adminService = adminService;
         }
 
         // GET: Item
@@ -40,36 +45,45 @@ namespace EShop.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult ImportItemsFromFile(string path)
+        public ActionResult DownloadImportExample()
         {
-            try
-            {
-                _itemManagementService.ImportItemsFromFile(path);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("Import");
-            }
-            
-            return View("Index", _itemQueryService.GetAllItems());
+            var fileName = "ImportExample.xlsx";
+            HttpResponse response = System.Web.HttpContext.Current.Response;
+            response.ClearContent();
+            response.Clear();
+            response.ContentType = "text/plain";
+            response.AddHeader("Content-Disposition",
+                               "attachment; filename=" + fileName + ";");
+            response.TransmitFile(Path.Combine(Server.MapPath("~/Content/Downloads"), fileName));
+            response.Flush();
+            response.End();
+
+            return View("Import");
         }
 
         [HttpPost]
-        public ActionResult ExportItemsToFile(string path)
+        public ActionResult ImportItemsFromFile([Bind(Include = "file")] HttpPostedFileBase file)
         {
-            if (System.IO.File.Exists(path))
-            {
-                ModelState.AddModelError("", "File alredy exists");
-                return View("Export");
-            }
+            int adminId = (int)Session["AccountId"];
 
-            _itemManagementService.ExportAllItemsToFile(path);
+            Admin admin = _adminService.GetAdmin(adminId);
 
-            //TODO: inform that action completed successfully somehow differently
-            ModelState.AddModelError("", "Successfully exported");
-            return View("Export");
+            _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file);
+
+            return View("Index", _itemQueryService.GetAllItems());
+        }
+
+        public ActionResult ExportItemsToFile()
+        {
+            int adminId = (int)Session["AccountId"];
+
+            var admin = _adminService.GetAdmin(adminId);
+
+            var allItems = _itemQueryService.GetAllItems();
+
+            _itemManagementService.ExportAllItemsToFile(admin, allItems);
+            
+            return View("Index", allItems);      
         }
 
         // GET: Item/Details/5
@@ -123,6 +137,7 @@ namespace EShop.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
         }
 
@@ -131,14 +146,38 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
         {
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
+            //var selectList = ViewBag.CategoryId as SelectList;
+            //var selectedItem = selectList.SelectedValue;
             if (ModelState.IsValid)
             {
                 _itemManagementService.UpdateItem(item);
                 return RedirectToAction("Index");
             }
             return View(item);
+        }
+
+        public ActionResult ChangeImage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Item item = _itemQueryService.GetItem(id.Value);
+            if (item == null)
+            {
+                return HttpNotFound();
+            }
+            return View(item);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeImage([Bind(Include="Id, Image")] Item model)
+        {
+            _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
+            return RedirectToAction("Index");
         }
 
         // GET: Item/Delete/5

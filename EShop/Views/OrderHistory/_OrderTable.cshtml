@@ -1,8 +1,8 @@
-﻿@model BOL.Orders.Order
+﻿@model EShop.Models.OrderViewModel
 @{
-    IEnumerable<BOL.Carts.CartItem> cartItems = Model.Cart.Items;
+    IEnumerable<BOL.Carts.CartItem> cartItems = Model.Order.Cart.Items;
     Layout = null;
-    var orderDateTime = Model.DateTime;
+    var orderDateTime = Model.Order.DateTime;
 }
 @using BOL.Orders
 <br />
@@ -35,7 +35,7 @@
         {
             decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
             decimal piecePrice = cartItem.BuyPrice / 100.0m;
-            
+
             <tr>
                 <td width="10%">
                     @{
@@ -47,7 +47,7 @@
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
-                    
+
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
@@ -65,9 +65,9 @@
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
             </tr>
-        }
+                        }
 
-        @{var totalCost = Model.Cart.Cost / 100.0m; }
+        @{var totalCost = Model.Order.Cart.Cost / 100.0m; }
 
         <tr>
             <th>
@@ -80,16 +80,29 @@
             <td>
                 @Html.DisplayFor(model => totalCost) Eur
             </td>
-            
+
         </tr>
 
     </table>
     <p>
-        Order status: @Model.OrderStatus.GetDescription() 
-        @if (@Model.OrderStatus == OrderStatus.waitingForPayment)
+        Order status: @Model.Order.OrderStatus.GetDescription()
+        @if (@Model.Order.OrderStatus == OrderStatus.waitingForPayment)
         {
-            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", Model.Cart, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Pay", "IndexFormedOrder", "PaymentService", new { orderId = Model.Order.Id }, new { @class = "btn btn-warning", @style = "float:right; margin-right:50px;" })
+        }
+        else
+        {
+            @Html.ActionLink("Repeat Order", "RepeatOrder", "Cart", new { orderId = Model.Order.Id }, new { @class = "btn btn-primary", @style = "float:right; margin-right: 50px;" })
         }
     </p>
-    @Html.ActionLink("Repeat order", "RepeatOrder", "Cart", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
+
+    @if (Model.OrderRating != null)
+    {
+        @Html.Partial("_OrderRatingTable", Model.OrderRating)
+    }
+    else
+    {
+        @Html.Partial("_OrderRatingForm")
+    }
+
 </div>

@@ -46,10 +46,12 @@
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ICustomerAccountService.cs" />
     <Compile Include="ICustomerPaymentService.cs" />
+    <Compile Include="IEmailService.cs" />
     <Compile Include="IImportService.cs" />
     <Compile Include="IFileLoader.cs" />
     <Compile Include="IItemManagementService.cs" />
     <Compile Include="IItemQueryService.cs" />
+    <Compile Include="IOrderRatingService.cs" />
     <Compile Include="IPaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

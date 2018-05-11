@@ -2,7 +2,7 @@
 using BOL.Objects;
 using BOL.Accounts;
 using System.Data.Entity;
-using BOL.Carts;
+using BOL.Orders;
 using System.Reflection;
 
 namespace DAL
@@ -22,6 +22,10 @@ namespace DAL
 
         public DbSet<Admin> Admins { get; set; }
 
+        public DbSet<OrderRating> OrderRatings { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,6 +34,5 @@ namespace DAL
             // We're assuming that all our fluent mappings are declared in this assembly.
             modelBuilder.Configurations.AddFromAssembly(Assembly.GetAssembly(typeof(EShopDbContext)));
         }
-
     }
 }

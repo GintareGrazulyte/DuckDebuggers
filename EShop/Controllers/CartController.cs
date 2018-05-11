@@ -1,5 +1,4 @@
-﻿using BOL.Accounts;
-using BOL.Carts;
+﻿using BOL.Carts;
 using BOL.Objects;
 using BOL.Orders;
 using System;
@@ -58,8 +57,10 @@ namespace EShop.Controllers
             Cart cart;
             if (Session["Cart"] == null)
             {
-                cart = new Cart();
-                cart.Items = new List<CartItem>();
+                cart = new Cart()
+                {
+                    Items = new List<CartItem>()
+                };
                 Session["Cart"] = cart;
             }
             else
@@ -74,10 +75,12 @@ namespace EShop.Controllers
             }
             else
             {
-                CartItem cartItem = new CartItem();
-                cartItem.Cart = (Cart)Session["Cart"];
-                cartItem.Item = item;
-                cartItem.Quantity = 1;
+                CartItem cartItem = new CartItem()
+                {
+                    Cart = (Cart)Session["Cart"],
+                    Item = item,
+                    Quantity = 1
+                };
                 cart.Items.Add(cartItem);
             }
 
@@ -103,6 +106,10 @@ namespace EShop.Controllers
                 cartItemQuantity = Convert.ToInt32(fc["cartItem.Quantity"]);
                 if (cartItemQuantity < 1)
                     return RedirectToAction("Index");
+            }
+            catch (OverflowException)
+            {
+                return RedirectToAction("Index");
             }
             catch(FormatException)
             {
@@ -146,10 +153,15 @@ namespace EShop.Controllers
             foreach (var item in order.Cart.Items)
             {
                 itemToAdd = _itemQueryService.GetItem(item.Item.Id);
-
                 if (itemToAdd != null)
                 {
+                    FormCollection fc = new FormCollection
+                    {
+                        ["cartItem.Item.Id"] = Convert.ToString(itemToAdd.Id),
+                        ["cartItem.Quantity"] = Convert.ToString(item.Quantity)
+                    };
                     AddToCart(itemToAdd.Id);
+                    ChangeCartItemQuantity(fc);
                 }
             }
             return View("Index", (Cart)Session["Cart"]);

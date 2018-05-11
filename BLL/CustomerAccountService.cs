@@ -21,7 +21,14 @@ namespace BLL
         public void CreateCustomer(Customer customerToCreate)
         {
             if (customerToCreate == null)
+            {
                 throw new ArgumentNullException("userToCreate");
+            }
+
+            if (!customerToCreate.IsConfirmPasswordCorrect())
+            {
+                throw new Exception("Password doesn't match");
+            }
 
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
@@ -30,11 +37,10 @@ namespace BLL
                 if (foundCustomer != null)
                 {
                     //TODO: UserAlreadyExistsException
-                    throw new Exception();
+                    throw new Exception("User already exists");
                 }
 
-                customerToCreate.Password = Encryption.SHA256(customerToCreate.Password);
-                customerToCreate.ConfirmPassword = Encryption.SHA256(customerToCreate.ConfirmPassword);
+                customerToCreate.HashPassword();
                 customerToCreate.IsActive = true;
 
                 _customerRepository.Add(customerToCreate);
@@ -50,7 +56,7 @@ namespace BLL
 
 
                 if (foundCustomer != null 
-                    && foundCustomer.Password == Encryption.SHA256(customerToLogin.Password) 
+                    && foundCustomer.IsCorrectPassword(customerToLogin.Password) 
                     && foundCustomer.IsActive)
                 {
                     return foundCustomer;
@@ -65,6 +71,54 @@ namespace BLL
             using (_dbContextScopeFactory.CreateReadOnly())
             {
                 return _customerRepository.FindById(customerId);
+            }
+        }
+
+        public void Modify(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customerToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCustomer = _customerRepository.FindById(customer.Id);
+                if (foundCustomer == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+
+                //TODO: copy everything here or Attach from DbContext
+                foundCustomer.Email = customer.Email;
+                foundCustomer.Name = customer.Name;
+                foundCustomer.Surname = customer.Surname;
+                foundCustomer.Card = customer.Card;
+                foundCustomer.DeliveryAddress = customer.DeliveryAddress;
+
+                _customerRepository.Modify(foundCustomer);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void UpdatePassword(int customerId, string newPassword)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCustomer = _customerRepository.FindById(customerId);
+                if (foundCustomer == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+
+                //TODO: copy everything here or Attach from DbContext
+                foundCustomer.Password = newPassword;
+                foundCustomer.HashPassword();
+
+                _customerRepository.Modify(foundCustomer);
+                dbContextScope.SaveChanges();
             }
         }
     }
