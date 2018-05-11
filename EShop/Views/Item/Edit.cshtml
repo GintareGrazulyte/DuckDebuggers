@@ -43,9 +43,8 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Image, new { type = "file" })
-            </div>
+            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ChangeImage", "Item", new { id = Model.Id })'">Change image</button>
         </div>
 
         <div class="form-group">
