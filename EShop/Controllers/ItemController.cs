@@ -65,6 +65,12 @@ namespace EShop.Controllers
 
             Admin admin = _adminService.GetAdmin(adminId);
 
+            if (file == null)
+            {
+                ModelState.AddModelError("", "Choose a file to import");
+                return View("Import");
+            }
+
             _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file, 
                 Server.MapPath("~/Uploads/Images"));
 
