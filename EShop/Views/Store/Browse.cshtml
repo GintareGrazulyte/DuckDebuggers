@@ -8,7 +8,6 @@
     @foreach (var item in Model.Items)
     {
         decimal piecePrice = item.Price / 100.0m;
-
         <div class="card d-inline-block m-1" style="width:30%; min-width:300px">
             <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
             <div class="card-body">
