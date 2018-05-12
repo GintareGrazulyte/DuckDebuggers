@@ -45,7 +45,12 @@
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                 </td>
                 <td style="vertical-align:middle;">
-                    @Html.ActionLink(cartItem.Item.Category.Name, "Browse", "Store", new { categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                     @{
+                         if (cartItem.Item.CategoryId != null)
+                         {
+                        @Html.ActionLink(cartItem.Item.Category.Name, "Browse", "Store", new { categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                         }
+                      }
                 </td>
 
                 <td style="vertical-align:middle;" width="25%">

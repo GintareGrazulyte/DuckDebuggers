@@ -44,7 +44,16 @@
 
 <div class="fb-comments" data-width="230" data-numposts="5"/>
 <p>
-    @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id }) |
+@{
+    if (Model.Category != null)
+    {
+        @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id })
+    }
+    else
+    {
+        @Html.ActionLink("Back to browsing", "Browse", new { categoryId = 0 })
+    }
+}
 
 </p>
 
