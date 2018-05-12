@@ -15,15 +15,17 @@ namespace EShop.Controllers
     public class DiscountsController : Controller
     {
         private ICategoryService _categoryService;
+        private IDiscountManagementService _discountManagementService;
 
-        public DiscountsController(ICategoryService categoryService)
+        public DiscountsController(ICategoryService categoryService, IDiscountManagementService discountManagementService)
         {
             _categoryService = categoryService;
+            _discountManagementService = discountManagementService;
         }
         // GET: Discounts
         public ActionResult Index()
         {
-            return View();
+            return View(_discountManagementService.GetAllDiscounts());
         }
 
 
@@ -31,7 +33,7 @@ namespace EShop.Controllers
         public ActionResult Create()
         {
             ViewData["Categories"] = _categoryService.GetAllCategories();
-            return View(new DiscountViewModel());
+            return View(new DiscountViewModel() { BeginDate = DateTime.Now, EndDate = DateTime.Now });
         }
 
         // POST: Discounts/Create
@@ -44,16 +46,31 @@ namespace EShop.Controllers
             if (ModelState.IsValid)
             {
                 discount.ItemIds = discount.Items.Split(',').Select(x => int.Parse(x)).ToList();
-               // _categoryService.CreateCategory(discount);
+                Discount discountToCreate = null;
+                if(discount.DiscountType == DiscountType.Absolute)
+                {
+                    discountToCreate = new AbsoluteDiscount()
+                    {
+                        AbsoluteValue = (int)discount.Value,
+                        BeginDate = discount.BeginDate,
+                        EndDate = discount.EndDate
+                    };
+                }
+                else
+                {
+                    discountToCreate = new PercentageDiscount()
+                    {
+                        Percentage = discount.Value,
+                        BeginDate = discount.BeginDate,
+                        EndDate = discount.EndDate
+                    };
+                }
+                _discountManagementService.CreateDiscount(discountToCreate, discount.ItemIds);
+
                 return RedirectToAction("Index");
             }
 
-            return View(discount);
-        }
-
-        public ActionResult ChooseItems(string[] items)
-        {
-            return View();
+            return View("Index");
         }
 
     }

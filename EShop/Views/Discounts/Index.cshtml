@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BOL.Discounts.Discount>
+@using BOL.Discounts
 
 @{
     ViewBag.Title = "Index";
@@ -19,4 +20,29 @@
         </th>
         <th></th>
     </tr>
+
+    @foreach (var discount in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => discount.BeginDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => discount.EndDate)
+        </td>
+        @if (discount is AbsoluteDiscount absoulte)
+        {
+            var priceInEur = absoulte.AbsoluteValue / 100.0m;
+            <td>
+                @Html.DisplayFor(modelItem => priceInEur) Eur
+            </td>
+        }
+        else if (discount is PercentageDiscount percentage)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => percentage.Percentage)%
+            </td>
+        }
+        </tr>
+    }
 </table>
