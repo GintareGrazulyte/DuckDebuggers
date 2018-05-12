@@ -3,9 +3,6 @@ using System.Web.Mvc;
 using BOL.Objects;
 using EShop.Attributes;
 using BLL_API;
-using System.Collections.Generic;
-using System;
-using EShop.Models;
 using BOL.Accounts;
 using System.Web;
 using System.IO;
@@ -68,7 +65,14 @@ namespace EShop.Controllers
 
             Admin admin = _adminService.GetAdmin(adminId);
 
-            _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file);
+            if (file == null)
+            {
+                ModelState.AddModelError("", "Choose a file to import");
+                return View("Import");
+            }
+
+            _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file, 
+                Server.MapPath("~/Uploads/Images"));
 
             return View("Index", _itemQueryService.GetAllItems());
         }
