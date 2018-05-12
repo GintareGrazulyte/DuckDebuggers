@@ -48,9 +48,13 @@
                      @{
                          if (cartItem.Item.CategoryId != null)
                          {
-                        @Html.ActionLink(cartItem.Item.Category.Name, "Browse", "Store", new { categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                         @Html.ActionLink(cartItem.Item.Category.Name, "Browse", "Store", new { categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                          }
-                      }
+                         else
+                         {
+                         @Html.ActionLink("No category", "Browse", "Store", new { categoryId = 0 }, new { @style = "color:#f25e09;text-decoration:none;" })
+                         }
+                    }
                 </td>
 
                 <td style="vertical-align:middle;" width="25%">
