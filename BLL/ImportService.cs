@@ -87,7 +87,7 @@ namespace BLL
 
         public string ExportItemsToFile(IEnumerable<Item> items)
         {
-            string temproraryAttachmentPath = Path.GetTempPath() + "ExportedItems" + DateTime.Now.ToString().Replace(':', ' ') + ".xlsx";
+            string temproraryAttachmentPath = Path.GetTempPath() + "ExportedItems" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
 
             var newFile = new FileInfo(temproraryAttachmentPath);
             using (ExcelPackage excelPackage = new ExcelPackage(newFile))
