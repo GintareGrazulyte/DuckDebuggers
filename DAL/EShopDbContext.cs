@@ -4,6 +4,7 @@ using BOL.Accounts;
 using System.Data.Entity;
 using BOL.Orders;
 using System.Reflection;
+using BOL.Discounts;
 
 namespace DAL
 {
@@ -25,6 +26,8 @@ namespace DAL
         public DbSet<OrderRating> OrderRatings { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Discount> Discounts { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

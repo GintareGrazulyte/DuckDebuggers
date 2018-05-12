@@ -1,0 +1,48 @@
+﻿@model IEnumerable<BOL.Discounts.Discount>
+@using BOL.Discounts
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BeginDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var discount in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => discount.BeginDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => discount.EndDate)
+        </td>
+        @if (discount is AbsoluteDiscount absoulte)
+        {
+            var priceInEur = absoulte.AbsoluteValue / 100.0m;
+            <td>
+                @Html.DisplayFor(modelItem => priceInEur) Eur
+            </td>
+        }
+        else if (discount is PercentageDiscount percentage)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => percentage.Percentage)%
+            </td>
+        }
+        </tr>
+    }
+</table>

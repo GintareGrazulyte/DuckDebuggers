@@ -1,0 +1,130 @@
+﻿@model EShop.Models.DiscountViewModel
+@using EShop.Models
+@using BOL
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@{
+    var categories = (List<Category>)ViewData["Categories"];
+}
+<h2>View</h2>
+<link href="~/Content/jsTree/themes/default/style.min.css" rel="stylesheet" />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Discount</h4>
+    <hr />
+
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DiscountType, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EnumDropDownListFor(model => model.DiscountType, null, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.BeginDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.BeginDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BeginDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div id="jstree">
+            @(Html.TreeView(categories)
+                    .EmptyContent("Items")
+                    .Children(m => m.Items)
+                    .HtmlAttributes(new { id = "tree" })
+                    .ChildrenHtmlAttributes(new { @class = "subItem" })
+                    .ItemText()
+                    .RootTemplate(@<text><a class="text-primary">@item</a></text>)
+                    .CategoryTemplate(@<text><a class="text-primary">@item.Name</a></text>)
+                    .ItemTemplate(@<text><a class="text-primary">@item.Name</a></text>))
+        </div>
+    </div>
+        
+        @Html.Hidden("Items", Model.Items)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" onclick="create()">Create</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section scripts
+{
+        <script src="~/Scripts/jsTree3/jstree.min.js"></script>
+        <script>
+
+            function create() {
+                var selectedItems = [];
+                var selectedCategories = [];
+                var selectedElms = $('#jstree').jstree("get_checked", true);
+                $.each(selectedElms, function () {
+                    if (this.li_attr.hasOwnProperty('categoryid'))
+                        selectedCategories.push(this.li_attr.categoryid)
+                    else if (this.li_attr.hasOwnProperty('itemid'))
+                        selectedItems.push(this.li_attr.itemid);
+                });
+
+
+                document.getElementById('Items').value = selectedItems;
+            }
+
+            $(function () {
+                var selectedData;
+                $('#jstree').jstree({
+                    "core": {
+                        "multiple": true,
+                        "check_callback": false,
+                        'themes': {
+                            "responsive": true,
+                            'variant': 'larg',
+                            'stripes': false,
+                            'dots': false
+                        }
+                    },
+                    "types": {
+                        "default": {
+                            "icon": "fa fa-folder icon-state-warning icon-lg"
+                        },
+                        "file": {
+                            "icon": "fa fa-file icon-state-warning icon-lg"
+                        }
+                    },
+                    "plugins": ["dnd", "state", "types", "sort", "checkbox"]
+                });
+            });
+        </script>
+    }

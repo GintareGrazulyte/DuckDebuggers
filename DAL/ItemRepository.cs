@@ -56,5 +56,9 @@ namespace DAL
             DbContext.Items.Remove(item);
         }
 
+        public List<Item> GetByIds(IEnumerable<int> ids)
+        {
+            return DbContext.Items.Include("Category").Where(t => ids.Contains(t.Id)).ToList();
+        }
     }
 }

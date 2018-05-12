@@ -68,6 +68,7 @@
     <Compile Include="CategoryService.cs" />
     <Compile Include="CustomerAccountService.cs" />
     <Compile Include="CustomerPaymentService.cs" />
+    <Compile Include="DiscountManagementService.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="ImportService.cs" />
     <Compile Include="FileLoader.cs" />

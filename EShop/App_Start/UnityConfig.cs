@@ -65,8 +65,10 @@ namespace EShop
             container.RegisterType<ICustomerPaymentService, CustomerPaymentService>();
             container.RegisterType<ICartService, CartService>();
             container.RegisterType<IOrderRatingRepository, OrderRatingRepository>();
+            container.RegisterType<IDiscountRepository, DiscountRepository>();
             container.RegisterType<IOrderRatingService, OrderRatingService>();
-            
+            container.RegisterType<IDiscountManagementService, DiscountManagementService>();
+
             container.RegisterType<IEmailService, EmailService>();
 
 
