@@ -13,21 +13,15 @@
         width: 30%;
         min-width: 300px;
         max-width: 300px;
-        /*    background-color: #2196F3;
-        color: #ffffff;
-        width: 100px;
-        line-height: 100px;
-        text-align: center; */
+        max-height: 500px;
         margin: 0.1%;
-        display: none; /* Hidden by default */
+        display: none;
     }
 
-    /* The "show" class is added to the filtered elements */
     .show {
         display: block;
     }
 
-    /* Add a dark background to the active button */
     .btn.active {
         background-color: #666;
         color: white;
@@ -44,12 +38,11 @@
             count += category.Items.Count;
         }
     }
-    <button class="btn active badge-pill" onclick="filterSelection('all')"> Show all <span class="badge badge-primary badge-pill">(@count)</span></button>
     @foreach (var category in Model)
     {
         @*@Html.ActionLink(category.Name, "Browse", new { categoryId = category.Id })
             <span class="badge badge-primary badge-pill">(@category.Items.Count)</span>*@
-        <button class="btn badge-pill" onclick="filterSelection('@category.Name')"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
+        <button class="btn badge-pill active" onclick="filterSelection('@category.Name')"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
     }
 </div>
 
@@ -65,6 +58,7 @@
             <div class="card d-inline-block m-1">
                 <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
                 <div class="card-body">
+                <h6 class="card-subtitle text-muted">@category.Name</h6>
                 </div>
                 @{
                     if (item.ImageUrl != null)
@@ -101,8 +95,20 @@
         if (c == "all") c = "";
         // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
         for (i = 0; i < x.length; i++) {
-            w3RemoveClass(x[i], "show");
-            if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+            if (x[i].className.indexOf(c) > -1)
+            {
+                if (c != "" && (x[i].className).indexOf("show") > -1)
+                {
+                    w3RemoveClass(x[i], "show");
+                }
+                else
+                {
+                    if (c == "" && (x[i].className).indexOf("show") <= -1 || c != "")
+                    {
+                        w3AddClass(x[i], "show");
+                    }
+                }
+            }
         }
     }
 
@@ -136,9 +142,14 @@
     var btns = btnContainer.getElementsByClassName("btn");
     for (var i = 0; i < btns.length; i++) {
         btns[i].addEventListener("click", function () {
-            var current = document.getElementsByClassName("active");
-            current[0].className = current[0].className.replace(" active", "");
+            if (this.className.indexOf("active") > -1)
+            {
+            this.className = this.className.replace(" active", "");
+            }
+            else
+            {
             this.className += " active";
+            }
         });
     }
 </script>
