@@ -7,19 +7,39 @@
 <div class="form-body">
     <div id="jstree">
         @(Html.TreeView(Model).EmptyContent("Items")
-                              .Children(m => m.Items)
-                              .HtmlAttributes(new { id = "tree" })
-                              .ChildrenHtmlAttributes(new { @class = "subItem" })
-                              .ItemText()
-                              .RootTemplate(@<text><a class="text-primary">@item</a></text>)
-                              .CategoryTemplate(@<text><a class="text-primary">@item.Name</a></text>)
-                              .ItemTemplate(@<text><a class="text-primary">@item.Name</a></text>))
+                                      .Children(m => m.Items)
+                                      .HtmlAttributes(new { id = "tree" })
+                                      .ChildrenHtmlAttributes(new { @class = "subItem" })
+                                      .ItemText()
+                                      .RootTemplate(@<text><a class="text-primary">@item</a></text>)
+                                        .CategoryTemplate(@<text><a class="text-primary">@item.Name</a></text>)
+                                            .ItemTemplate(@<text><a class="text-primary">@item.Name</a></text>))
     </div>
+
+    <button id="btnsave" onclick="fncsave()">Save</button>
 </div>
 @section scripts
 {
     <script src="~/Scripts/jsTree3/jstree.min.js"></script>
     <script>
+
+        function fncsave() {
+            var selectedItems = [];
+            var selectedCategories = [];
+            var selectedElms = $('#jstree').jstree("get_checked", true);
+            $.each(selectedElms, function () {
+                if (this.li_attr.hasOwnProperty('categoryid'))
+                    selectedCategories.push(this.li_attr.categoryid)
+                else if (this.li_attr.hasOwnProperty('itemid'))
+                    selectedItems.push(this.li_attr.itemid);
+            });
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                url: "../Discounts/ChooseItems",
+                data: { items: selectedItems}
+            });
+        }
 
         $(function () {
             var selectedData;

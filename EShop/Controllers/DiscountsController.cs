@@ -55,6 +55,10 @@ namespace EShop.Controllers
             return View(_categoryService.GetAllCategories());
         }
 
+        public ActionResult ChooseItems(string[] items)
+        {
+            return View();
+        }
 
     }
 }

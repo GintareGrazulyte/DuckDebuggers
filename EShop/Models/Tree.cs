@@ -246,7 +246,7 @@ namespace EShop.Models
             foreach (PropertyInfo prop in props)
             {
                 if (prop.Name.ToLower() == "id")
-                    li.MergeAttribute("id", prop.GetValue(category, null).ToString());
+                    li.MergeAttribute("categoryId", prop.GetValue(category, null).ToString());
                 // Do something with propValue
                 if (prop.Name.ToLower() == "sortorder")
                     li.MergeAttribute("priority", prop.GetValue(category, null).ToString());
