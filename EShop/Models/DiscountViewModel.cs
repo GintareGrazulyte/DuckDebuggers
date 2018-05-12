@@ -14,7 +14,8 @@ namespace EShop.Models
         public DateTime EndDate { get; set; }
         public decimal Value { get; set; }
         public DiscountType DiscountType { get; set; }
-        IEnumerable<int> Items { get; set; }
+        public IEnumerable<int> ItemIds { get; set; }
+        public string Items { get; set; }
     }
 
     public enum DiscountType

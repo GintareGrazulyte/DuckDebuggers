@@ -30,7 +30,8 @@ namespace EShop.Controllers
         // GET: Discounts/Create
         public ActionResult Create()
         {
-            return View();
+            ViewData["Categories"] = _categoryService.GetAllCategories();
+            return View(new DiscountViewModel());
         }
 
         // POST: Discounts/Create
@@ -38,21 +39,16 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "BeginDate,EndDate,DiscountType,Value")] DiscountViewModel discount)
+        public ActionResult Create([Bind(Include = "BeginDate,EndDate,DiscountType,Value,Items")] DiscountViewModel discount)
         {
             if (ModelState.IsValid)
             {
+                discount.ItemIds = discount.Items.Split(',').Select(x => int.Parse(x)).ToList();
                // _categoryService.CreateCategory(discount);
                 return RedirectToAction("Index");
             }
 
             return View(discount);
-        }
-
-
-        public ActionResult TreeView()
-        {
-            return View(_categoryService.GetAllCategories());
         }
 
         public ActionResult ChooseItems(string[] items)
