@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using BOL.Accounts;
+using DAL_API;
+using Mehdime.Entity;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using DAL_API;
-using BOL.Accounts;
-using System;
-using Mehdime.Entity;
+using System.Text.RegularExpressions;
 
 namespace DAL
 {
@@ -57,9 +58,20 @@ namespace DAL
             return DbContext.Customers.Include("Orders.Cart.Items.Item.Category").ToList();
         }
 
+        public List<Customer> GetAll(string keyWord)
+        {
+            if (keyWord == null)
+            {
+                return new List<Customer>();
+            }
+            Regex good = new Regex(@"" + keyWord + "", RegexOptions.IgnoreCase);
+            return DbContext.Customers.Where((x => good.IsMatch(x.Name) || good.IsMatch(x.Surname)
+                                            || good.IsMatch(x.Email))).Distinct().ToList();
+        }
+
         public void Modify(Customer customer)
         {
-            DbContext.Entry(customer).State = EntityState.Modified;          
+            DbContext.Entry(customer).State = EntityState.Modified;
         }
 
         public void UpdateCustomerOrder(Customer customer)

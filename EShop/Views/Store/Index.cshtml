@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Store";
 }
+
 <h2>Browse Category</h2>
 <p>
     Select from @Model.Count()
@@ -10,6 +11,9 @@
 <ul>
     @foreach (var category in Model)
     {
-        <li>@Html.ActionLink(category.Name, "Browse", new { categoryId = category.Id }) (@category.Items.Count)</li>
+        <li>
+            @Html.ActionLink(category.Name, "Browse", new { categoryId = category.Id })
+            <span class="badge badge-primary badge-pill">(@category.Items.Count)</span>
+        </li>
     }
 </ul>

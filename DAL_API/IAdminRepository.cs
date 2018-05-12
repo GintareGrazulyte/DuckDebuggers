@@ -10,5 +10,6 @@ namespace DAL_API
         Admin FindById(int id);
         void Modify(Admin admin);
         List<Admin> GetAll();
+        void Add(Admin admin);
     }
 }

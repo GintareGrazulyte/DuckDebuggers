@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "PageNotFound";
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+}
+<hr />
+<div class="jumbotron">
+    <h1 class="text-center ">Where is the page?</h1>
+    <img src="~/Content/Images/panda404v2.png" class="img" />
+    <br />
+    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Store")'">Accept apologies and go home</button>
+</div>

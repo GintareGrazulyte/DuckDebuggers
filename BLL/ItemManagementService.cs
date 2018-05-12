@@ -34,7 +34,8 @@ namespace BLL
             _categoryService = categoryService ?? throw new ArgumentNullException("categoryService");
         }
 
-        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file)
+        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
+            string imagesFolder)
         {
             await Task.Run(() =>
             {
@@ -58,10 +59,22 @@ namespace BLL
                     int addedCount = 0;
                     for (int i = 0; i < items.Count; i++)
                     {
-                        if (!categories.Any(c => c.Id == items[i].CategoryId))
+                        if (items[i].Price <= 0)
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as price <" +
+                                items[i].Price + "> is not valid" + Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].CategoryId != null && !categories.Any(c => c.Id == items[i].CategoryId))
                         {
                             email.Body += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
                                 items[i].CategoryId + "> does not exist" + Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as image <" +
+                                items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
                             continue;
                         }
 
@@ -78,8 +91,10 @@ namespace BLL
                     {
                         email.Body = "Unable to save items to database. Exception message: " + e.Message;
                     }
-
-                    _emailService.SendEmail(email);
+                    finally
+                    {
+                        _emailService.SendEmail(email);
+                    }
                 }
             });
         }
@@ -159,7 +174,35 @@ namespace BLL
             }
         }
 
-        public void UpdateItem(Item itemToUpdate, string folderToImage)
+        public void UpdateItem(Item itemToUpdate)
+        {
+            if (itemToUpdate == null)
+                throw new ArgumentNullException("itemToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundItem = _itemRepository.FindById(itemToUpdate.Id);
+                if (foundItem == null)
+                {
+                    //TODO: CategoryNotFoundException
+                    throw new Exception();
+                }
+                //TODO: copy everything here or Attach from DbContext
+                foundItem.Name = itemToUpdate.Name;
+                foundItem.Description = itemToUpdate.Description;
+                foundItem.Price = itemToUpdate.Price;
+                if (itemToUpdate.CategoryId != foundItem.CategoryId)
+                {
+                    foundItem.Category = itemToUpdate.Category;
+                    foundItem.CategoryId = itemToUpdate.CategoryId;
+                }
+                _itemRepository.Modify(foundItem);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void UpdateItemImage(Item itemToUpdate, string folderToImage)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
@@ -177,13 +220,8 @@ namespace BLL
                 itemToUpdate.ImageUrl = _fileLoader.Load(folderToImage, itemToUpdate.Image);
 
                 //TODO: copy everything here or Attach from DbContext
-                foundItem.Name = itemToUpdate.Name;
-                foundItem.Description = itemToUpdate.Description;
-                foundItem.Price = itemToUpdate.Price;
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
                 foundItem.Image = itemToUpdate.Image;
-                foundItem.Category = itemToUpdate.Category;
-                foundItem.CategoryId = itemToUpdate.CategoryId;
 
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();

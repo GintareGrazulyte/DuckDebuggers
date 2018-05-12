@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BOL.Utils;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BOL.Accounts
@@ -19,5 +20,23 @@ namespace BOL.Accounts
         [Required]
         public string Surname { get; set; }
         public bool IsActive { get; set; }
+        [DataType(DataType.Password)]
+        [NotMapped]
+        public string ConfirmPassword { get; set; }
+
+        public bool IsConfirmPasswordCorrect()
+        {
+            return Password == ConfirmPassword;
+        }
+
+        public bool IsCorrectPassword(string unhashedPassword)
+        {
+            return Password == Encryption.SHA256(unhashedPassword);
+        }
+
+        public void HashPassword()
+        {
+            Password = Encryption.SHA256(Password);
+        }
     }
 }
