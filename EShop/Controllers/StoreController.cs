@@ -1,4 +1,6 @@
 ﻿using BLL_API;
+using BOL;
+using BOL.Objects;
 using DAL_API;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,10 @@ namespace EShop.Controllers
         public ActionResult Index()
         {
             var categories = _categoryService.GetAllCategories();
+
+            var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
+            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "No category" } };
+            categories = categories.Concat(noCategory);
             return View(categories);
         }
         [ChildActionOnly]
@@ -36,6 +42,13 @@ namespace EShop.Controllers
         {
             if (categoryId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (categoryId == 0)
+            {
+                var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
+                var noCategory = new Category { Id = 0, Items = items, Name = "No category" };
+                return View(noCategory);
+            }
             try
             { 
                 var category = _categoryService.GetCategory(categoryId.Value);
