@@ -5,6 +5,7 @@ namespace BOL
     public class Card
     {
         //All the card data should be hashed
+        [Key]
         [Required(ErrorMessage = "Card number is required!")]
         [StringLength(16, MinimumLength = 16, ErrorMessage = "Incorrect card number")]
         public string Number { get; set; }
