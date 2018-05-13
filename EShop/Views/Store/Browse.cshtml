@@ -24,7 +24,17 @@
                 }
             }
             <div class="card-body">
-                <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
+                @{
+                    if (true) //TODO: If has discount
+                    {
+                        decimal discountPrice = 12.15m; //TODO: set actual discount
+                        <p class="card-text text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
+                    }
+                    else
+                    {
+                        <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
+                    }
+                }
             </div>
             <div class="card-body">
                 <div>
