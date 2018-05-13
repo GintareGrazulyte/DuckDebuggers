@@ -21,11 +21,19 @@
             </table>
 
             @{
-                decimal price = Model.Price / 100.0m;
-                <p class="lead">@Html.DisplayFor(model => price) Eur</p>
+                decimal piecePrice = Model.Price / 100.0m;
+                if (true) //TODO: If has discount
+                {
+                    decimal discountPrice = 12.15m; //TODO: set actual discount
+                    <p class="lead text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
+                }
+                else
+                {
+                    <p class="lead text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
+                }
             }
             
-            <button type="button" id="addToCart" class="btn btn-primary" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = Model.Id }, null)'">Add to cart</button>
+            <button type="button" id="addToCart" class="btn btn-primary text-lg-right" style="float: right" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = Model.Id }, null)'">Add to cart</button>
             <div id="msg"></div>
         </div>
     </div>
