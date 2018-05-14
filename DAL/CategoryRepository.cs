@@ -37,13 +37,13 @@ namespace DAL
 
         public Category FindById(int? id)
         {
-            return DbContext.Categories.Include("Items")
+            return DbContext.Categories.Include("Items.Discounts")
                     .SingleOrDefault(c => c.Id == id);
         }
 
         public List<Category> GetAll()
         {
-            return DbContext.Categories.Include("Items").ToList();
+            return DbContext.Categories.Include("Items.Discounts").ToList();
         }
 
         public void Modify(Category category)
@@ -58,7 +58,7 @@ namespace DAL
 
         public Category FindByName(string name)
         {
-            return DbContext.Categories.Include("Items")
+            return DbContext.Categories.Include("Items.Discounts")
                     .Where(c => c.Name == name)
                     .SingleOrDefault();
         }

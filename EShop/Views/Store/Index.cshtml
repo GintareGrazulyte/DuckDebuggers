@@ -72,9 +72,9 @@
                 }
                 <div class="card-body">
                     @{
-                        if (true) //TODO: If has discount
+                        if (item.HasDiscount)
                         {
-                            decimal discountPrice = 12.15m; //TODO: set actual discount
+                            decimal discountPrice = item.GetPriceWithDiscount() / 100.0m;
                             <p class="card-text text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
                         }
                         else
