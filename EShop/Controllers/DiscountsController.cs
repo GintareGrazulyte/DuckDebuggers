@@ -70,7 +70,9 @@ namespace EShop.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View("Index");
+            var view = View(discount);
+            view.ViewData["Categories"] = _categoryService.GetAllCategories();
+            return view;
         }
 
     }
