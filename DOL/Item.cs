@@ -1,8 +1,10 @@
 ﻿using BOL.Discounts;
+using MoreLinq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web;
 
 namespace BOL.Objects
@@ -31,5 +33,23 @@ namespace BOL.Objects
         public string ImageUrl { get; set; }
 
         public virtual ICollection<Discount> Discounts { get; set; }
+
+        [NotMapped]
+        public bool HasDiscount
+        {
+            get { return Discounts.Count != 0; }
+        }
+       
+        public decimal GetPriceWithDiscount()
+        {
+            return GetAppliedDiscount()?.CalculateDiscountedPrice(Price) ?? Price;
+        }
+
+        public Discount GetAppliedDiscount()
+        {
+            return HasDiscount ? Discounts.MinBy(x => x.CalculateDiscountedPrice(Price)) : null;
+        }
+
+
     }
 }
