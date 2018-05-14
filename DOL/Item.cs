@@ -1,5 +1,6 @@
 ﻿using BOL.Discounts;
 using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -37,7 +38,7 @@ namespace BOL.Objects
         [NotMapped]
         public bool HasDiscount
         {
-            get { return Discounts.Count != 0; }
+            get { return Discounts.Where(x => x.EndDate <= DateTime.Now).Count() != 0; }
         }
        
         public decimal GetPriceWithDiscount()
@@ -47,7 +48,7 @@ namespace BOL.Objects
 
         public Discount GetAppliedDiscount()
         {
-            return HasDiscount ? Discounts.MinBy(x => x.CalculateDiscountedPrice(Price)) : null;
+            return HasDiscount ? Discounts.Where(x => x.EndDate <= DateTime.Now).MinBy(x => x.CalculateDiscountedPrice(Price)) : null;
         }
 
 
