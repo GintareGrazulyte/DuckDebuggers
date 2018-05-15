@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web.Mvc;
 using BLL_API;
 using EShop.Models;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
+    [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
     public class OrderHistoryController : Controller
     {
         private ICustomerAccountService _customerAccountService;
