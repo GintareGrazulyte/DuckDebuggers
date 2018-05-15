@@ -8,7 +8,8 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") | 
+    @Html.ActionLink("Expired discounts", "Expirations")
 </p>
 <table class="table">
     <tr>
@@ -18,6 +19,7 @@
         <th>
             @Html.DisplayNameFor(model => model.EndDate)
         </th>
+        <th>Discount value</th>
         <th></th>
     </tr>
 
@@ -43,6 +45,9 @@
                 @Html.DisplayFor(modelItem => percentage.Percentage)%
             </td>
         }
-        </tr>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = discount.Id })
+        </td>    
+    </tr>
     }
 </table>

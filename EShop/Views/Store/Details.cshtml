@@ -22,9 +22,9 @@
 
             @{
                 decimal piecePrice = Model.Price / 100.0m;
-                if (true) //TODO: If has discount
+                if (Model.HasDiscount)
                 {
-                    decimal discountPrice = 12.15m; //TODO: set actual discount
+                    decimal discountPrice = Model.GetPriceWithDiscount() / 100.0m;
                     <p class="lead text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
                 }
                 else

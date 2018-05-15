@@ -223,6 +223,8 @@
     <Content Include="Views\Discounts\Index.cshtml" />
     <Content Include="Views\Shared\_jsTreeDemo.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Card.cshtml" />
+    <Content Include="Views\Discounts\Expirations.cshtml" />
+    <Content Include="Views\Discounts\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
