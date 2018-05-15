@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web.Mvc;
 using BLL_API;
 using EShop.Models;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
+    [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
     public class OrderHistoryController : Controller
     {
         private ICustomerAccountService _customerAccountService;
@@ -22,18 +24,13 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            int? currentCustomerId = (int)Session["AccountId"];
-            if (currentCustomerId == null)
-                return RedirectToAction("Index", "Store");
-
-            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
-            if (currentCustomer == null)
-                return RedirectToAction("Index", "Store");
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
 
             if (currentCustomer.Orders.Count == 0)
                 return RedirectToAction("NoOrders");
             return View(currentCustomer.Orders);
         }
+
         public ActionResult NoOrders()
         {
             return View();

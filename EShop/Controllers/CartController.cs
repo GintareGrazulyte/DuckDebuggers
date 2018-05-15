@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BLL_API;
+using EShop.Attributes;
 
 namespace EShop.Controllers
 {
@@ -126,22 +127,10 @@ namespace EShop.Controllers
             return RedirectToAction("Index");
         }
 
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult RepeatOrder(int orderId)
         {
-            int? customerId = (int?)Session["AccountId"];
-
-            if (customerId == null)
-            {
-                return RedirectToAction("Login", "Customer");
-            }
-
-            var customer = _customerAccountService.GetCustomer((int)customerId);
-
-            if (customer == null)
-            {
-                return RedirectToAction("Register", "Customer");
-            }
-
+            var customer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
             Order order = customer.Orders.FirstOrDefault(o => o.Id == orderId);
 
             if (order == null)
