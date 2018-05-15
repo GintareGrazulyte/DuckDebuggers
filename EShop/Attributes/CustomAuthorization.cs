@@ -10,7 +10,7 @@ namespace EShop.Attributes
 
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
+            if (!filterContext.HttpContext.User.IsInRole(Roles))
             {
                 var returnUrl = filterContext.HttpContext.Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.SafeUnescaped);
                 filterContext.HttpContext.Response.Redirect(LoginPage + "?ReturnUrl=" + returnUrl);
