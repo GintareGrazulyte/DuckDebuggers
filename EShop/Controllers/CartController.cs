@@ -45,12 +45,15 @@ namespace EShop.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult AddToCart(int? id)
+        [HttpPost]
+        public ActionResult AddToCart(FormCollection fc)
         {
-            if(id == null)          //TODO: error handling
-                return RedirectToAction("Index");
+            int id = Convert.ToInt32(fc[0]);
+            //int id = Convert.ToInt32(fc["ItemId"]);
+            /*if(id == null)          //TODO: error handling
+                return RedirectToAction("Index"); */
 
-            Item item = _itemQueryService.GetItem(id.Value);
+            Item item = _itemQueryService.GetItem(id);
 
             if(item == null)        //TODO: error handling
                 return RedirectToAction("Index");
@@ -88,7 +91,7 @@ namespace EShop.Controllers
             cart.Cost = cart.CountCartPrice(cart.Items);
             
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            return Redirect(Request.UrlReferrer.PathAndQuery);
+            return Json(new { message = item.Name + " was Added to Cart", itemCount = Session["Count"] });
         }
 
         public ActionResult ChangeCartItemQuantity(FormCollection fc)
@@ -147,7 +150,8 @@ namespace EShop.Controllers
                         ["cartItem.Item.Id"] = Convert.ToString(itemToAdd.Id),
                         ["cartItem.Quantity"] = Convert.ToString(item.Quantity)
                     };
-                    AddToCart(itemToAdd.Id);
+                    //TODO gal ne fc?
+                    AddToCart(fc);
                     ChangeCartItemQuantity(fc);
                 }
             }

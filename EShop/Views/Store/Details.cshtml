@@ -4,6 +4,7 @@
 }
 <head>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
 </head>
 <div class="jumbotron">
     <h1 class="display-3">@Model.Name</h1>
@@ -26,7 +27,10 @@
                 {
                     //apvalinimas. jei i parduotuves puse, istrint (int)
                     decimal discountPrice = (int)Model.GetPriceWithDiscount() / 100.0m;
-                    <p class="lead text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @Html.DisplayFor(modelItem => discountPrice) Eur/Piece</p>
+                    <p class="lead text-lg-right">
+                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</del> 
+                        <br /> 
+                        @Html.DisplayFor(modelItem => discountPrice) Eur/Piece</p>
                 }
                 else
                 {
@@ -34,8 +38,7 @@
                 }
             }
             
-            <button type="button" id="addToCart" class="btn btn-primary text-lg-right" style="float: right" onclick="location.href='@Url.Action("AddToCart", "Cart", new { id = Model.Id }, null)'">Add to cart</button>
-            <div id="msg"></div>
+            <button type="button" id="addToCart" class="btn btn-primary text-lg-right" style="float: right" onClick="AddItem(@Model.Id)">Add to cart</button>
         </div>
     </div>
 
@@ -47,7 +50,7 @@
             <p class="card-text">@Html.DisplayFor(model => model.Description)</p>
         </div>
     </div>
-
+    <div id="snackbar">Item was Added to Cart</div>
 </div>
 
 
@@ -67,9 +70,25 @@
 </p>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#addToCart").click(function () {
-            $("#msg").html('Item was added to Cart').delay(1000).fadeOut(200);
+
+    function AddItem(itemID) {
+
+        var url = '@Url.Action("AddToCart", "Cart")';
+        //$("#AddMessage" + itemID).html("").show();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { itemId: itemID },
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                var result = JSON.parse(response);
+                $("#CartBox").html(result.itemCount);
+                var x = document.getElementById("snackbar");
+                x.innerHTML = result.message;
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 1300);
+            }
         });
-    });
+    }
     </script>
