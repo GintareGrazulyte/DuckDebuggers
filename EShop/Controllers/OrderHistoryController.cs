@@ -24,18 +24,13 @@ namespace EShop.Controllers
         // GET: OrderHistory
         public ActionResult Index()
         {
-            int? currentCustomerId = (int)Session["AccountId"];
-            if (currentCustomerId == null)
-                return RedirectToAction("Index", "Store");
-
-            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
-            if (currentCustomer == null)
-                return RedirectToAction("Index", "Store");
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
 
             if (currentCustomer.Orders.Count == 0)
                 return RedirectToAction("NoOrders");
             return View(currentCustomer.Orders);
         }
+
         public ActionResult NoOrders()
         {
             return View();

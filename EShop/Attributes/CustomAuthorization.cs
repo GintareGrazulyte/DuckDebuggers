@@ -10,6 +10,7 @@ namespace EShop.Attributes
 
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
+            //TODO make method so that is would work with multiple roles
             if (!filterContext.HttpContext.User.IsInRole(Roles))
             {
                 var returnUrl = filterContext.HttpContext.Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.SafeUnescaped);
