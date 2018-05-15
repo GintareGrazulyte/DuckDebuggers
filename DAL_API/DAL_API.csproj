@@ -46,6 +46,7 @@
     <Compile Include="IDiscountRepository.cs" />
     <Compile Include="IItemRepository.cs" />
     <Compile Include="IOrderRatingRepository.cs" />
+    <Compile Include="IOrderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
