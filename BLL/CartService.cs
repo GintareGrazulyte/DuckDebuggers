@@ -19,17 +19,7 @@ namespace BLL
             }
             return count;
         }
-        public int CountCartPrice(ICollection<CartItem> Items)
-        {
-            if (Items == null)
-                return 0;
-            int price = 0;
-            foreach (var cartItem in Items)
-            {
-                price += cartItem.BuyPrice * cartItem.Quantity;
-            }
-            return price;
-        }
+
 
         public void RemoveItem(ICollection<CartItem> Items, int? cartItemId)
         {

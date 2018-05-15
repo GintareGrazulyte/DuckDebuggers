@@ -30,6 +30,13 @@
         @foreach (var cartItem in cartItems)
         {
             decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
+            decimal discountTotalPrice = 0;
+            if (cartItem.Item.HasDiscount)
+            {
+                //apvalinimas
+                discountTotalPrice = ((int)cartItem.Item.GetPriceWithDiscount() * cartItem.Quantity) / 100.0m;
+            }
+
             decimal piecePrice = cartItem.Item.Price / 100.0m;
 
             <tr>
@@ -65,11 +72,33 @@
                 </td>
                 
                 <td style="vertical-align:middle;">
-                    @Html.DisplayFor(modelItem => piecePrice) Eur/Piece
+                    @if (cartItem.Item.HasDiscount)
+                    {
+                        //apvalinimas
+                        decimal discountPrice = (int)cartItem.Item.GetPriceWithDiscount() / 100.0m;
+                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
+                        <br />
+                        @Html.DisplayFor(modelItem => discountPrice)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => piecePrice)
+                    }
+                     Eur / Piece
                 </td>
 
                 <td style="vertical-align:middle;">
-                    @Html.DisplayFor(modelItem => price) Eur
+                    @if (cartItem.Item.HasDiscount)
+                    {
+                        <del class="text-primary">@Html.DisplayFor(modelItem => price) Eur</del>
+                        <br />
+                        @Html.DisplayFor(modelItem => discountTotalPrice)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => price)
+                    }
+                     Eur
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.ActionLink("Remove", "RemoveFromCart", new { cartItemId = cartItem.Id })
@@ -77,7 +106,7 @@
             </tr>
         }
 
-        @{var totalCost = Model.Cost / 100.0m; }
+        @{var totalCost = Model.CountCartPrice(Model.Items) / 100.0m; }
 
         <tr>
             <th>

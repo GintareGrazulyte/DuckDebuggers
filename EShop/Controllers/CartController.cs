@@ -41,7 +41,7 @@ namespace EShop.Controllers
             Cart cart = (Cart)Session["Cart"];
             _cartService.RemoveItem(cart.Items, cartItemId);
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             return RedirectToAction("Index");
         }
 
@@ -85,9 +85,7 @@ namespace EShop.Controllers
                 cart.Items.Add(cartItem);
             }
 
-            cart.Items.Where(x => x.Item.Id == id).ToList()
-                .ForEach(y => y.BuyPrice = y.Item.Price);
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
             return Redirect(Request.UrlReferrer.PathAndQuery);
@@ -122,7 +120,7 @@ namespace EShop.Controllers
             if (item != null)
                 item.Quantity = cartItemQuantity;
 
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
             return RedirectToAction("Index");
         }

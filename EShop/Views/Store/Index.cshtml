@@ -74,12 +74,17 @@
                     @{
                         if (item.HasDiscount)
                         {
-                            decimal discountPrice = item.GetPriceWithDiscount() / 100.0m;
-                            <p class="card-text text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
+                            //apvalinimas. jei i parduotuves puse, istrint (int)
+                            decimal discountPrice = (int)item.GetPriceWithDiscount() / 100.0m;                        
+                            <p class="card-text text-lg-right">
+                                <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del> 
+                                <br />
+                                @Html.DisplayFor(modelItem => discountPrice) Eur/Piece
+                            </p>
                         }
                         else
                         {
-                            <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
+                            <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</p>
                         }
                     }
                 </div>

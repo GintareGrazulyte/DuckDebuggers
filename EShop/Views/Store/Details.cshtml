@@ -24,8 +24,9 @@
                 decimal piecePrice = Model.Price / 100.0m;
                 if (Model.HasDiscount)
                 {
-                    decimal discountPrice = Model.GetPriceWithDiscount() / 100.0m;
-                    <p class="lead text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @discountPrice Eur/Piece</p>
+                    //apvalinimas. jei i parduotuves puse, istrint (int)
+                    decimal discountPrice = (int)Model.GetPriceWithDiscount() / 100.0m;
+                    <p class="lead text-lg-right"><del class="text-primary">@Html.DisplayFor(modelItem => piecePrice)</del> @Html.DisplayFor(modelItem => discountPrice) Eur/Piece</p>
                 }
                 else
                 {
