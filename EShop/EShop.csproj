@@ -222,8 +222,6 @@
     <Content Include="Views\Discounts\Create.cshtml" />
     <Content Include="Views\Discounts\Index.cshtml" />
     <Content Include="Views\Shared\_jsTreeDemo.cshtml" />
-    <Content Include="Views\jsTree3\Demo.cshtml" />
-    <Content Include="Views\jsTree3\AJAXDemo.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Card.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -252,7 +250,6 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\DiscountsController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
-    <Compile Include="Controllers\jsTree3Controller.cs" />
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
