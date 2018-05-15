@@ -50,5 +50,17 @@ namespace BLL
                 return _discountRepository.GetAll();
             }
         }
+
+        public Discount GetDiscount(int id)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            {
+                var foundDiscount = _discountRepository.FindById(id);
+                if (foundDiscount == null)
+                    throw new Exception($"Discount with id {id} not found.");
+
+                return foundDiscount;
+            }
+        }
     }
 }
