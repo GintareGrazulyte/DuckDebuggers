@@ -1,0 +1,64 @@
+﻿@model BOL.Discounts.Discount
+@using BOL.Discounts
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Discount</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BeginDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BeginDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt>Discount value</dt>
+        @if (Model is AbsoluteDiscount absoulte)
+        {
+            var valueInEur = absoulte.AbsoluteValue / 100.0m;
+            <dd>Absolute: @Html.DisplayFor(model => valueInEur) Eur</dd>
+            
+        }
+        else if (Model is PercentageDiscount percentage)
+        {
+            <dd>Percentage: @Html.DisplayFor(model => percentage.Percentage)%</dd>
+        }
+    </dl>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Price with discount</th>
+        </tr>
+
+        @foreach (var item in Model.Items)
+        {
+            var priceWithDiscount = Model.CalculateDiscountedPrice(item.Price) / 100.0m;
+            var price = item.Price / 100.0m;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => price) Eur
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => priceWithDiscount) Eur
+                </td>
+            </tr>
+        }
+    </table>
+</div>
