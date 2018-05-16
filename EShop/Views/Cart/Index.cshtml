@@ -4,6 +4,11 @@
     var cartItems = Model.Items;
 }
 
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/quantityBox.css" rel="stylesheet" />
+</head>
+
 <h2>Cart</h2>
 <div class="col-xs-1">
     <table class="table table-hover">
@@ -15,7 +20,7 @@
             <th>
                 Category
             </th>
-            <th>
+            <th style="position:relative; left:33px;">
                 Quantity
             </th>
             <th>
@@ -30,10 +35,17 @@
         @foreach (var cartItem in cartItems)
         {
             decimal price = (cartItem.Item.Price * cartItem.Quantity) / 100.0m;
+            decimal discountTotalPrice = 0;
+            if (cartItem.Item.HasDiscount)
+            {
+                //apvalinimas
+                discountTotalPrice = ((int)cartItem.Item.GetPriceWithDiscount() * cartItem.Quantity) / 100.0m;
+            }
+
             decimal piecePrice = cartItem.Item.Price / 100.0m;
 
             <tr>
-                <td width="10%">
+                <td style="vertical-align:middle;" width="10%">
                     @{
                         if (cartItem.Item.ImageUrl != null)
                         {
@@ -58,18 +70,49 @@
                 </td>
 
                 <td style="vertical-align:middle;" width="25%">
-                    @{ Html.BeginForm("ChangeCartItemQuantity", "Cart", new { id = "myForm" }); }
-                    @Html.HiddenFor(modelItem => cartItem.Item.Id)
-                    @Html.TextBoxFor(modelItem => cartItem.Quantity, new { OnChange = "this.form.submit();", type = "number", min = "1" })
-                    @{ Html.EndForm();}
+                    <div class="quantity">  
+                        <button class="minus-btn" type="button" name="button">
+                            <img src="~/Content/Images/minus.svg" alt="" />
+                        </button>
+                        <form id="myForm">
+                            @Html.HiddenFor(modelItem => cartItem.Item.Id)
+                            <input class="quantityBox" type="text" name="quantityBox" value="@cartItem.Quantity" @*onchange="UpdateTable(this.form)" *@>
+                        </form>
+                        <button class="plus-btn" type="button" name="button">
+                            <img src="~/Content/Images/plus.svg" alt="" />
+                        </button>
+
+                    </div>       
                 </td>
                 
                 <td style="vertical-align:middle;">
-                    @Html.DisplayFor(modelItem => piecePrice) Eur/Piece
+                    @if (cartItem.Item.HasDiscount)
+                    {
+                        //apvalinimas
+                        decimal discountPrice = (int)cartItem.Item.GetPriceWithDiscount() / 100.0m;
+                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
+                        <br />
+                        @Html.DisplayFor(modelItem => discountPrice)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => piecePrice)
+                    }
+                     Eur / Piece
                 </td>
 
-                <td style="vertical-align:middle;">
-                    @Html.DisplayFor(modelItem => price) Eur
+                <td style="vertical-align:middle;" id="@("totalPriceOf"+@cartItem.Item.Id)">
+                    @if (cartItem.Item.HasDiscount)
+                    {
+                        <del class="text-primary">@Html.DisplayFor(modelItem => price) Eur</del>
+                        <br />
+                        @Html.DisplayFor(modelItem => discountTotalPrice)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => price)
+                    }
+                     Eur
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.ActionLink("Remove", "RemoveFromCart", new { cartItemId = cartItem.Id })
@@ -77,7 +120,7 @@
             </tr>
         }
 
-        @{var totalCost = Model.Cost / 100.0m; }
+        @{var totalCost = Model.CountCartPrice(Model.Items) / 100.0m; }
 
         <tr>
             <th>
@@ -87,7 +130,7 @@
             <th></th>
             <th></th>
             <th></th>
-            <td>
+            <td id="totalCartCost">
                 @Html.DisplayFor(model => totalCost) Eur
             </td>
             <th></th>
@@ -97,8 +140,75 @@
     @Html.ActionLink("Pay","Index", "PaymentService", null,  new { @class = "btn btn-primary" })
 </div>
 
-<script type="text/javascript" src="~/scripts/jquery-1.10.2.js">
-$( document ).ready(function() {
-    console.log( "ready!" );
-});
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.quantityBox').on('change', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $quantity = $this.closest('div').find('.quantityBox');
+            var $itemId = $this.closest('div').find('#cartItem_Item_Id');
+            var quantityInt = parseInt($quantity.val());
+            var itemIdInt = parseInt($itemId.val());
+            if (isNaN(quantityInt) || quantityInt < 1) {
+                $quantity.val(1).trigger('change');
+                return;
+            }
+            var url = '@Url.Action("ChangeCartItemQuantity", "Cart")';
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    "itemId": itemIdInt,
+                    "quantity": quantityInt
+                },
+                cache: false,
+                dataType: 'html',
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    //changing number at cart icon
+                    $("#CartBox").html(result.itemCount);
+                    var newItemCost = result.itemCost.toFixed(2);
+                    var newCartCost = result.cartCost.toFixed(2);
+                    var hasDiscount = result.hasDiscount;
+                    if (hasDiscount) {
+                        var discountCost = result.discountCost;
+                        $("#totalPriceOf" + itemIdInt).html('<del class="text-primary">' + newItemCost
+                            + ' Eur</del><br />' + discountCost + ' Eur');
+                    }
+                    else
+                        $("#totalPriceOf" + itemIdInt).html(newItemCost + ' Eur');
+                    $("#totalCartCost").html(newCartCost + ' Eur');
+                }
+
+            });
+        });
+
+        $('.minus-btn').on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('.quantityBox');
+            var value = parseInt($input.val());
+
+            if (value > 1) {
+                value = value - 1;
+            }
+            $input.val(value).trigger('change');
+        });
+
+        $('.plus-btn').on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('.quantityBox');
+            var value = parseInt($input.val());
+
+            if (value < 100000) {
+                value = value + 1;
+            }
+            $input.val(value).trigger('change');
+        });
+
+    });
 </script>

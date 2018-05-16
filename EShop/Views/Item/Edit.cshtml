@@ -43,14 +43,17 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
-            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+            <div class="col-md-10">
+                <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+            
             <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ChangeImage", "Item", new { id = Model.Id })'">Change image</button>
+            </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CategoryId", null, "-- Choose Category --",htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("CategoryId", null, "No Category",htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
             </div>
         </div> 

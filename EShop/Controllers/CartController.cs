@@ -41,16 +41,28 @@ namespace EShop.Controllers
             Cart cart = (Cart)Session["Cart"];
             _cartService.RemoveItem(cart.Items, cartItemId);
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             return RedirectToAction("Index");
         }
 
-        public ActionResult AddToCart(int? id)
+        [HttpPost]
+        public ActionResult AddToCart(FormCollection fc)
         {
-            if(id == null)          //TODO: error handling
-                return RedirectToAction("Index");
+            int id = Convert.ToInt32(fc["itemId"]);
+            int quantity = 0;
+            try
+            {
+                quantity = Convert.ToInt32(fc["quantity"]);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                quantity = 1;
+            }
+            //int id = Convert.ToInt32(fc["ItemId"]);
+            /*if(id == null)          //TODO: error handling
+                return RedirectToAction("Index"); */
 
-            Item item = _itemQueryService.GetItem(id.Value);
+            Item item = _itemQueryService.GetItem(id);
 
             if(item == null)        //TODO: error handling
                 return RedirectToAction("Index");
@@ -72,7 +84,7 @@ namespace EShop.Controllers
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
                 cart.Items.Where(x => x.Item.Id == id).ToList()
-                    .ForEach(y => y.Quantity += 1);
+                    .ForEach(y => y.Quantity += quantity);
             }
             else
             {
@@ -80,19 +92,19 @@ namespace EShop.Controllers
                 {
                     Cart = (Cart)Session["Cart"],
                     Item = item,
-                    Quantity = 1
+                    Quantity = quantity
                 };
                 cart.Items.Add(cartItem);
             }
 
-            cart.Items.Where(x => x.Item.Id == id).ToList()
-                .ForEach(y => y.BuyPrice = y.Item.Price);
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            return Redirect(Request.UrlReferrer.PathAndQuery);
+
+            return Json(new { message = item.Name + "(" + quantity + ")" + " was Added to Cart", itemCount = Session["Count"] });
         }
 
+        [HttpPost]
         public ActionResult ChangeCartItemQuantity(FormCollection fc)
         {
             if ((Cart)Session["Cart"] == null)
@@ -103,8 +115,8 @@ namespace EShop.Controllers
 
             try
             {
-                cartItemId = Convert.ToInt32(fc["cartItem.Item.Id"]);
-                cartItemQuantity = Convert.ToInt32(fc["cartItem.Quantity"]);
+                cartItemId = Convert.ToInt32(fc["itemId"]);
+                cartItemQuantity = Convert.ToInt32(fc["quantity"]);
                 if (cartItemQuantity < 1)
                     return RedirectToAction("Index");
             }
@@ -121,10 +133,19 @@ namespace EShop.Controllers
             CartItem item = cart.Items.FirstOrDefault(x => x.Item.Id == cartItemId);
             if (item != null)
                 item.Quantity = cartItemQuantity;
+            else
+                return RedirectToAction("Index");
 
-            cart.Cost = _cartService.CountCartPrice(cart.Items);
+            cart.Cost = cart.CountCartPrice(cart.Items);
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                cartCost = (cart.Cost / 100.0m),
+                itemCount = Session["Count"],
+                itemCost = (item.Item.Price*cartItemQuantity)/100.0m,
+                hasDiscount = item.Item.HasDiscount,
+                discountCost = ((int)item.Item.GetPriceWithDiscount()/100.0m)*cartItemQuantity,
+            });
         }
 
         [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
@@ -146,10 +167,10 @@ namespace EShop.Controllers
                 {
                     FormCollection fc = new FormCollection
                     {
-                        ["cartItem.Item.Id"] = Convert.ToString(itemToAdd.Id),
-                        ["cartItem.Quantity"] = Convert.ToString(item.Quantity)
+                        ["itemId"] = Convert.ToString(itemToAdd.Id),
+                        ["quantity"] = Convert.ToString(item.Quantity)
                     };
-                    AddToCart(itemToAdd.Id);
+                    AddToCart(fc);
                     ChangeCartItemQuantity(fc);
                 }
             }

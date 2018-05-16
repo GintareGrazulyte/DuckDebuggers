@@ -10,7 +10,7 @@
     <div class="ml-auto">
         <button class="btn btn-outline-primary" onclick="location.href='@Url.Action("Index","Cart")'">
             <img src="~/Content/Images/cartIcon.jpg" height="40" width="40" />
-            <span class="badge badge-secondary badge-pill">@Session["Count"]</span>
+            <span class="badge badge-secondary badge-pill" id="CartBox">@Session["Count"]</span>
         </button>
 
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation" style="">
