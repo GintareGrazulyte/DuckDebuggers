@@ -94,6 +94,7 @@ namespace EShop.Controllers
             return Json(new { message = item.Name + " was Added to Cart", itemCount = Session["Count"] });
         }
 
+        [HttpPost]
         public ActionResult ChangeCartItemQuantity(FormCollection fc)
         {
             if ((Cart)Session["Cart"] == null)
@@ -122,10 +123,19 @@ namespace EShop.Controllers
             CartItem item = cart.Items.FirstOrDefault(x => x.Item.Id == cartItemId);
             if (item != null)
                 item.Quantity = cartItemQuantity;
+            else
+                return RedirectToAction("Index");
 
             cart.Cost = cart.CountCartPrice(cart.Items);
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                cartCost = (cart.Cost / 100.0m),
+                itemCount = Session["Count"],
+                itemCost = (item.Item.Price*cartItemQuantity)/100.0m,
+                hasDiscount = item.Item.HasDiscount,
+                discountCost = ((int)item.Item.GetPriceWithDiscount()/100.0m)*cartItemQuantity,
+            });
         }
 
         [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]

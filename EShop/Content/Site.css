@@ -16,6 +16,7 @@ textarea {
     max-width: 280px;
 }
 
+/* SNACKBAR WHEN ITEM ADDED TO CART*/
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -32,11 +33,13 @@ textarea {
     font-size: 17px;
 }
 
-    #snackbar.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+
 
 @-webkit-keyframes fadein {
     from {
@@ -85,3 +88,5 @@ textarea {
         opacity: 0;
     }
 }
+
+
