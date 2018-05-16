@@ -2,7 +2,6 @@
 /*CUSTOM QUANTITY IN CART*/
 
 .quantity, .quantity form {
-    padding-top: 20px;
     vertical-align: middle;
     display: inline;
     white-space: nowrap;

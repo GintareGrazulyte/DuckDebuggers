@@ -120,7 +120,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: { itemId: itemID },
+            data: { itemId: itemID, quantity: 1 },
             cache: false,
             dataType: 'html',
             success: function (response) {

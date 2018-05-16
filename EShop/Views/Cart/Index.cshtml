@@ -6,7 +6,7 @@
 
 <head>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <link href="~/Content/test.css" rel="stylesheet" />
+    <link href="~/Content/quantityBox.css" rel="stylesheet" />
 </head>
 
 <h2>Cart</h2>
@@ -161,8 +161,8 @@
                 type: "POST",
                 url: url,
                 data: {
-                    "cartItem.Item.Id": itemIdInt,
-                    "cartItem.Quantity": quantityInt
+                    "itemId": itemIdInt,
+                    "quantity": quantityInt
                 },
                 cache: false,
                 dataType: 'html',

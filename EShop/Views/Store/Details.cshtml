@@ -5,6 +5,7 @@
 <head>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/quantityBox.css" rel="stylesheet" />
 </head>
 <div class="jumbotron">
     <h1 class="display-3">@Model.Name</h1>
@@ -38,7 +39,34 @@
                 }
             }
             
-            <button type="button" id="addToCart" class="btn btn-primary text-lg-right" style="float: right" onClick="AddItem(@Model.Id)">Add to cart</button>
+            <div class="quantity" style="float:right;">
+                <p class="lead text-lg-right" style="display:inline"> Quantity:</p>
+                <button class="minus-btn" type="button" name="button">
+                    <img src="~/Content/Images/minus.svg" alt="" />
+                </button>
+                <form id="myForm">
+                    @Html.HiddenFor(modelItem => Model.Id)
+                    <input class="quantityBox" type="text" name="quantityBox" value="1" @*onchange="UpdateTable(this.form)" *@>
+                </form>
+                <button class="plus-btn" type="button" name="button">
+                    <img src="~/Content/Images/plus.svg" alt="" />
+                </button>
+                @if (Model.HasDiscount)
+                {
+                    <p class="lead text-lg-right" id="totalPrice">@("Total Price: " + (int)Model.GetPriceWithDiscount() / 100.0m) Eur</p>
+                }
+                else
+                {
+                    <p class="lead text-lg-right" id="totalPrice">@("Total Price: " + Model.Price / 100.0m) Eur</p>
+                }
+
+
+            </div>
+            @*TODO: PANAIKINKIT KAS NORS SITUOS BR PLS*@
+            <br /><br /><br /><br />
+            <button type="button" id="addToCart" class="btn btn-primary text-lg-right" style="float: right;" onClick="AddItem(@Model.Id)">Add to cart</button>
+
+           
         </div>
     </div>
 
@@ -73,17 +101,24 @@
 
     function AddItem(itemID) {
 
+        var quantity = $(".quantityBox");
+        var quantityInt = parseInt(quantity.val());
+        if (isNaN(quantityInt) || quantityInt < 1) {
+            quantity.val(1);
+            return;
+        }
+
         var url = '@Url.Action("AddToCart", "Cart")';
-        //$("#AddMessage" + itemID).html("").show();
         $.ajax({
             type: "POST",
             url: url,
-            data: { itemId: itemID },
+            data: { itemId: itemID, quantity: quantityInt},
             cache: false,
             dataType: 'html',
             success: function (response) {
                 var result = JSON.parse(response);
                 $("#CartBox").html(result.itemCount);
+                $(".totalPrice").html(result.totalPrice);
                 var x = document.getElementById("snackbar");
                 x.innerHTML = result.message;
                 x.className = "show";
@@ -91,4 +126,62 @@
             }
         });
     }
+
+     $(document).ready(function () {
+
+         $('.quantityBox').on('change', function (e) {
+             e.preventDefault();
+             var $quantity = $(".quantityBox");
+             var quantityInt = parseInt($quantity.val());
+             var isDiscounted = "@Model.HasDiscount" == "True";
+             if (isNaN(quantityInt) || quantityInt < 1) {
+                 $quantity.val(1);
+                 if (isDiscounted) {
+                     var price = (@((int)Model.GetPriceWithDiscount()  / 100.0m)).toFixed(2);
+                     $("#totalPrice").html("Total Price: " + price + " Eur");
+                 }
+                 else {
+                     var price = (@(Model.Price  / 100.0m)).toFixed(2);
+                     $("#totalPrice").html("Total Price: " + price + " Eur");
+                 }
+                 return;
+             }
+             else {
+                 if (isDiscounted) {
+                     var price = (@((int)Model.GetPriceWithDiscount()  / 100.0m) * quantityInt).toFixed(2);
+                     $("#totalPrice").html("Total Price: " + price + " Eur");
+                 }
+                 else {
+                     var price = (@(Model.Price  / 100.0m) * quantityInt).toFixed(2);
+                     $("#totalPrice").html("Total Price: " + price + " Eur");
+                 }
+
+             }
+         });
+
+        $('.minus-btn').on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('.quantityBox');
+            var value = parseInt($input.val());
+
+            if (value > 1) {
+                value = value - 1;
+            }
+            $input.val(value).trigger('change');
+        });
+
+        $('.plus-btn').on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('.quantityBox');
+            var value = parseInt($input.val());
+
+            if (value < 100000) {
+                value = value + 1;
+            }
+            $input.val(value).trigger('change');
+        });
+
+    });
     </script>

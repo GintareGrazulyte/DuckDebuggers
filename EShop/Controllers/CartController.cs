@@ -48,7 +48,16 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult AddToCart(FormCollection fc)
         {
-            int id = Convert.ToInt32(fc[0]);
+            int id = Convert.ToInt32(fc["itemId"]);
+            int quantity = 0;
+            try
+            {
+                quantity = Convert.ToInt32(fc["quantity"]);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                quantity = 1;
+            }
             //int id = Convert.ToInt32(fc["ItemId"]);
             /*if(id == null)          //TODO: error handling
                 return RedirectToAction("Index"); */
@@ -75,7 +84,7 @@ namespace EShop.Controllers
             if ((cart.Items.FirstOrDefault(i => i.Item.Id == id) != null))
             {
                 cart.Items.Where(x => x.Item.Id == id).ToList()
-                    .ForEach(y => y.Quantity += 1);
+                    .ForEach(y => y.Quantity += quantity);
             }
             else
             {
@@ -83,7 +92,7 @@ namespace EShop.Controllers
                 {
                     Cart = (Cart)Session["Cart"],
                     Item = item,
-                    Quantity = 1
+                    Quantity = quantity
                 };
                 cart.Items.Add(cartItem);
             }
@@ -91,7 +100,8 @@ namespace EShop.Controllers
             cart.Cost = cart.CountCartPrice(cart.Items);
             
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
-            return Json(new { message = item.Name + " was Added to Cart", itemCount = Session["Count"] });
+
+            return Json(new { message = item.Name + "(" + quantity + ")" + " was Added to Cart", itemCount = Session["Count"] });
         }
 
         [HttpPost]
@@ -105,8 +115,8 @@ namespace EShop.Controllers
 
             try
             {
-                cartItemId = Convert.ToInt32(fc["cartItem.Item.Id"]);
-                cartItemQuantity = Convert.ToInt32(fc["cartItem.Quantity"]);
+                cartItemId = Convert.ToInt32(fc["itemId"]);
+                cartItemQuantity = Convert.ToInt32(fc["quantity"]);
                 if (cartItemQuantity < 1)
                     return RedirectToAction("Index");
             }
@@ -157,10 +167,9 @@ namespace EShop.Controllers
                 {
                     FormCollection fc = new FormCollection
                     {
-                        ["cartItem.Item.Id"] = Convert.ToString(itemToAdd.Id),
-                        ["cartItem.Quantity"] = Convert.ToString(item.Quantity)
+                        ["itemId"] = Convert.ToString(itemToAdd.Id),
+                        ["quantity"] = Convert.ToString(item.Quantity)
                     };
-                    //TODO gal ne fc?
                     AddToCart(fc);
                     ChangeCartItemQuantity(fc);
                 }
