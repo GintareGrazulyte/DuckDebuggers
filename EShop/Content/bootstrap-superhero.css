@@ -3153,14 +3153,14 @@ fieldset:disabled a.btn {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
   line-height: 1.5;
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .btn-block {
@@ -3254,7 +3254,7 @@ input[type="button"].btn-block {
   background-color: #4E5D6C;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .dropdown-menu-right {
@@ -3689,7 +3689,7 @@ input[type="button"].btn-block {
   white-space: nowrap;
   background-color: #4E5D6C;
   border: 1px solid #ced4da;
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .input-group-text input[type="radio"],
@@ -3794,7 +3794,7 @@ input[type="button"].btn-block {
 }
 
 .custom-checkbox .custom-control-label::before {
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
@@ -3848,7 +3848,7 @@ input[type="button"].btn-block {
   background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
   background-size: 8px 10px;
   border: 1px solid #ced4da;
-  border-radius: 0;
+  border-radius: 5px;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -3938,7 +3938,7 @@ input[type="button"].btn-block {
   color: #495057;
   background-color: #fff;
   border: 1px solid #ced4da;
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .custom-file-label::after {
@@ -3955,7 +3955,7 @@ input[type="button"].btn-block {
   content: "Browse";
   background-color: #4E5D6C;
   border-left: 1px solid #ced4da;
-  border-radius: 0 0 0 0;
+  border-radius: 5px;
 }
 
 .custom-range {
@@ -4633,7 +4633,7 @@ input[type="button"].btn-block {
   background-color: #4E5D6C;
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .card > hr {
