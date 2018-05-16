@@ -21,10 +21,10 @@ namespace BOL.Discounts
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime BeginDate { get; set; }
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime EndDate { get; set; }
 
         public virtual ICollection<Item> Items { get; set; }

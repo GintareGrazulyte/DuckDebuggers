@@ -12,7 +12,7 @@ namespace BOL.Discounts
 
         public override decimal CalculateDiscountedPrice(int itemPrice)
         {
-            return itemPrice * Percentage / 100;
+            return itemPrice * (1 - (Percentage / 100));
         }
     }
 }
