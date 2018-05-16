@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web.Mvc;
 using BLL_API;
 using EShop.Models;
+using EShop.Attributes;
+using System.Net;
 
 namespace EShop.Controllers
 {
@@ -12,34 +14,34 @@ namespace EShop.Controllers
     {
         private ICustomerAccountService _customerAccountService;
         private IOrderRatingService _orderRatingService;
+        private IOrderService _orderService;
 
-        public OrderHistoryController(ICustomerAccountService customerAccountService, IOrderRatingService orderRatingService)
+        public OrderHistoryController(ICustomerAccountService customerAccountService, IOrderRatingService orderRatingService, IOrderService orderService)
         {
             _customerAccountService = customerAccountService;
             _orderRatingService = orderRatingService;
+            _orderService = orderService;
         }
 
         // GET: OrderHistory
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Index()
         {
-            int? currentCustomerId = (int)Session["AccountId"];
-            if (currentCustomerId == null)
-                return RedirectToAction("Index", "Store");
-
-            Customer currentCustomer = _customerAccountService.GetCustomer((int)currentCustomerId);
-            if (currentCustomer == null)
-                return RedirectToAction("Index", "Store");
+            Customer currentCustomer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
 
             if (currentCustomer.Orders.Count == 0)
                 return RedirectToAction("NoOrders");
             return View(currentCustomer.Orders);
         }
+
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult NoOrders()
         {
             return View();
         }
 
         [HttpPost]
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult _OrderTable(FormCollection fc)
         {
             int orderID = 0;
@@ -76,6 +78,7 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult SetRating(FormCollection form)
         {
             var comment = form["Comment"].ToString();
@@ -98,6 +101,7 @@ namespace EShop.Controllers
                 
         }
 
+        [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult GetRating(FormCollection fc)
         {
             int orderID = 0;
@@ -112,6 +116,35 @@ namespace EShop.Controllers
 
             OrderRating orderRating = _orderRatingService.GetOrderRatingByOrderId(orderID);
             return PartialView("_OrderRatingTable", orderRating);
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult AdminView()
+        {
+            return View(_orderService.GetAllOrders());
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult ChangeOrderStatus(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Order order = _orderService.GetOrder(id.Value);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+            return View(order);
+        }
+
+        [HttpPost]
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult ChangeOrderStatus([Bind(Include = "Id, OrderStatus")] Order order)
+        {
+            _orderService.UpdateStatus(order.Id, order.OrderStatus);
+            return RedirectToAction("AdminView");
         }
     }
 }

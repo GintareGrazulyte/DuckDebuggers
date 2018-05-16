@@ -1,12 +1,22 @@
-﻿using System.ComponentModel;
+﻿using BOL.Discounts;
+using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web;
 
 namespace BOL.Objects
 {
     public class Item
     {
+        public Item()
+        {
+            Discounts = new HashSet<Discount>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -22,5 +32,25 @@ namespace BOL.Objects
         public int? CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public string ImageUrl { get; set; }
+
+        public virtual ICollection<Discount> Discounts { get; set; }
+
+        [NotMapped]
+        public bool HasDiscount
+        {
+            get { return Discounts.Where(x => x.EndDate >= DateTime.Now).Count() != 0; }
+        }
+       
+        public decimal GetPriceWithDiscount()
+        {
+            return GetAppliedDiscount()?.CalculateDiscountedPrice(Price) ?? Price;
+        }
+
+        public Discount GetAppliedDiscount()
+        {
+            return HasDiscount ? Discounts.Where(x => x.EndDate >= DateTime.Now).MinBy(x => x.CalculateDiscountedPrice(Price)) : null;
+        }
+
+
     }
 }

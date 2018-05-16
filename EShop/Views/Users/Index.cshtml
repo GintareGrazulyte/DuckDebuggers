@@ -61,7 +61,9 @@
 </style>
 
 <div class="customers grid">
-
+    
+    <b>Customers</b>
+    <br/>
     <form autocomplete="off">
         <div class="autocomplete" style="width: 300px;">
 
@@ -69,14 +71,19 @@
         </div>
         <input type="submit" value="Search" class="trigger">
     </form>
-
-    <table class="table">
-        <tr>
-            <th>
-                CUSTOMERS
-            </th>
-        </tr>
-
+    <br/>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Is active?</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
         @if (!Model.FoundCustomers.Any())
         {
             <tr>
@@ -87,56 +94,34 @@
         }
         else
         {
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Surname
-                </th>
-                <th>
-                    Email
-                </th>
-                <th>
-                    IsActive
-                </th>
-                <th></th>
-            </tr>
-
             foreach (var item in Model.FoundCustomers)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Surname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsActive)
-                    </td>
-                    <td>
-                        @if (item.IsActive)
-                        {
-                            @Html.ActionLink("Disable User", "ChangeStatus", new {id = item.Id}, null)
+             {
+                 <tr>
+                     <td>@item.Id</td>
+                     <td>@item.Name</td>
+                     <td>@item.Surname</td>
+                     <td>@item.Email</td>
+                     <td>@item.IsActive</td>
+                     <td>
+                         @if (item.IsActive)
+                         {
+                             @Html.ActionLink("Disable User", "ChangeStatus", new {id = item.Id}, null)
 
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Enable User", "ChangeStatus", new {id = item.Id}, null)
-                        }
-                    </td>
-                </tr>
-            }
+                         }
+                         else
+                         {
+                             @Html.ActionLink("Enable User", "ChangeStatus", new {id = item.Id}, null)
+                         }
+                     </td>
+                 </tr>
+             }
             <tr>
                 <td>
                     Ammount of users: @Model.FoundCustomers.Count
                 </td>
             </tr>
         }
+        </tbody>
     </table>
 </div>
 

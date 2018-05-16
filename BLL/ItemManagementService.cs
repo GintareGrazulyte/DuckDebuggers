@@ -34,7 +34,8 @@ namespace BLL
             _categoryService = categoryService ?? throw new ArgumentNullException("categoryService");
         }
 
-        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file)
+        public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
+            string imagesFolder)
         {
             await Task.Run(() =>
             {
@@ -58,10 +59,22 @@ namespace BLL
                     int addedCount = 0;
                     for (int i = 0; i < items.Count; i++)
                     {
-                        if (!categories.Any(c => c.Id == items[i].CategoryId))
+                        if (items[i].Price <= 0)
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as price <" +
+                                items[i].Price + "> is not valid" + Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].CategoryId != null && !categories.Any(c => c.Id == items[i].CategoryId))
                         {
                             email.Body += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
                                 items[i].CategoryId + "> does not exist" + Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
+                        {
+                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as image <" +
+                                items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
                             continue;
                         }
 
@@ -78,8 +91,10 @@ namespace BLL
                     {
                         email.Body = "Unable to save items to database. Exception message: " + e.Message;
                     }
-
-                    _emailService.SendEmail(email);
+                    finally
+                    {
+                        _emailService.SendEmail(email);
+                    }
                 }
             });
         }

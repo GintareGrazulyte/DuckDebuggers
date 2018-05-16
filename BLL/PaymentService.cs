@@ -49,6 +49,7 @@ namespace BLL
             return json;
         }
 
+
         public PaymentInfo Payment(Card card, int cost)
         {
             HttpResponseMessage paymentResult = Pay(card, cost).Result;

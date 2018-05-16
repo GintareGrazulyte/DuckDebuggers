@@ -43,8 +43,10 @@
     <Compile Include="IAdminRepository.cs" />
     <Compile Include="ICategoryRepository.cs" />
     <Compile Include="ICustomerRepository.cs" />
+    <Compile Include="IDiscountRepository.cs" />
     <Compile Include="IItemRepository.cs" />
     <Compile Include="IOrderRatingRepository.cs" />
+    <Compile Include="IOrderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

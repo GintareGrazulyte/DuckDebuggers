@@ -10,5 +10,6 @@ namespace DAL_API
         void Remove(Item item);
         void Add(Item item);
         void Modify(Item item);
+        List<Item> GetByIds(IEnumerable<int> ids);
     }
 }

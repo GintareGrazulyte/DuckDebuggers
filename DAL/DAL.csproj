@@ -70,9 +70,11 @@
     <Compile Include="AdminRepository.cs" />
     <Compile Include="CategoryRepository.cs" />
     <Compile Include="CustomerRepository.cs" />
+    <Compile Include="DiscountRepository.cs" />
     <Compile Include="EShopDbContext.cs" />
     <Compile Include="ItemRepository.cs" />
     <Compile Include="OrderRatingRepository.cs" />
+    <Compile Include="OrderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

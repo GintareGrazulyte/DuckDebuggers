@@ -13,7 +13,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-            <h4>Customer</h4>
+            <h3>Customer</h3>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
@@ -57,22 +57,20 @@
             </div>
 
             <hr class="my-4">
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Card, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Card, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Card, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="form-group w-50">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Card, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Card, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <hr class="my-4">
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.DeliveryAddress, htmlAttributes: new { @class = "control-label col-md-2 display-8" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.DeliveryAddress, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.DeliveryAddress, "", new { @class = "text-danger" })
+                <div class="form-group w-50">
+                    @Html.LabelFor(model => model.DeliveryAddress, htmlAttributes: new { @class = "control-label col-md-2 display-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeliveryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DeliveryAddress, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
 
