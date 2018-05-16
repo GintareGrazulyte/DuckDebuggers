@@ -43,6 +43,22 @@ namespace BLL
             }
         }
 
+        public void DeleteExpiredDiscounts()
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var expiredDiscounts = _discountRepository.GetAll().Where(x => x.EndDate < DateTime.Now).ToArray();
+
+                if (expiredDiscounts.Count() == 0)
+                    return;
+
+                foreach (var discount in expiredDiscounts)
+                    _discountRepository.Remove(discount);
+
+                dbContextScope.SaveChanges();
+            }
+        }
+
         public List<Discount> GetAllDiscounts()
         {
             using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())

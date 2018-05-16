@@ -5,9 +5,7 @@
     ViewBag.Title = "Expirations";
 }
 
-<h2>Expirations</h2>
-
-<h4>Expired discounts:</h4>
+<h2>Expired discounts</h2>
 <!--TODO-->
 <table class="table">
     <tr>
@@ -49,3 +47,9 @@
         </tr>
     }
 </table>
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("DeleteExpired", "Discounts", new { discounts = Model })'">Delete expired discounts</button>
+    </div>
+</div>
