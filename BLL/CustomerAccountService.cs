@@ -1,9 +1,9 @@
 ﻿using BLL_API;
 using BOL.Accounts;
-using BOL.Utils;
 using DAL_API;
 using Mehdime.Entity;
 using System;
+using System.Collections.Generic;
 
 namespace BLL
 {
@@ -55,8 +55,8 @@ namespace BLL
                 var foundCustomer = _customerRepository.FindByEmail(customerToLogin.Email);
 
 
-                if (foundCustomer != null 
-                    && foundCustomer.IsCorrectPassword(customerToLogin.Password) 
+                if (foundCustomer != null
+                    && foundCustomer.IsCorrectPassword(customerToLogin.Password)
                     && foundCustomer.IsActive)
                 {
                     return foundCustomer;
@@ -71,6 +71,14 @@ namespace BLL
             using (_dbContextScopeFactory.CreateReadOnly())
             {
                 return _customerRepository.FindById(customerId);
+            }
+        }
+
+        public List<Customer> GetCustomers()
+        {
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return _customerRepository.GetAll();
             }
         }
 
@@ -118,6 +126,20 @@ namespace BLL
                 foundCustomer.HashPassword();
 
                 _customerRepository.Modify(foundCustomer);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void ChangeStatus(Customer account)
+        {
+            if (account == null)
+                throw new ArgumentNullException("accountStatusToChange");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var foundAccount = _customerRepository.FindById(account.Id);
+                foundAccount.IsActive = !account.IsActive;
+                _customerRepository.Modify(foundAccount);
                 dbContextScope.SaveChanges();
             }
         }

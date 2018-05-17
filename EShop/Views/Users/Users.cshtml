@@ -1,21 +1,13 @@
-﻿@using System.Net.Mime
-@using BOL.Accounts
-@using System.Collections.Generic;
-@using EShop.Models
-@model EShop.Models.UserViewModel
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<br/>
+@Html.Action("ListAdmins", "Admin")
+<br/>
 
-
-@Html.Action("ListAdmins")
-
-<br />
-
-@Html.Action("ListCustomers")
+@Html.Action("ListCustomers", "Customer")
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script>

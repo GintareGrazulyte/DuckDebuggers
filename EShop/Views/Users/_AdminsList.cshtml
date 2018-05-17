@@ -1,8 +1,9 @@
 ﻿@model List<BOL.Accounts.Admin>
 
 <div class="admins grid">
+
     <b>Admins</b>
-    <br />
+    <br/>
 
     <table class="table table-striped">
         <thead>
@@ -29,7 +30,14 @@
         }
         <tr>
             <td>
-                Ammount of users: @Model.Count
+                Amount of users: @Model.Count
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                @Html.ActionLink("Create new admin", "Create", "Admin")
             </td>
         </tr>
         </tbody>

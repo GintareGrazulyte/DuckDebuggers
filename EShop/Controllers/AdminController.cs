@@ -1,8 +1,12 @@
-﻿using BOL.Accounts;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BOL.Accounts;
 using System.Web.Mvc;
 using System.Web.Security;
 using EShop.Attributes;
 using BLL_API;
+using System;
+using System.Diagnostics;
 
 namespace EShop.Controllers
 {
@@ -66,5 +70,43 @@ namespace EShop.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult ListAdmins()
+        {
+            List<Admin> allAdmins = _adminService.GetAdmins()
+                .Select(x => new Admin { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                .Distinct().ToList();
+            return PartialView("../Users/_AdminsList", allAdmins);
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult Create() => View("../Users/Create");
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Admin admin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _adminService.CreateAdmin(admin);
+                    return RedirectToAction("Users", "Admin");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+
+            return View();
+        }
+
+        [Route("Users")]
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult Users() => View("../Users/Users");
     }
 }

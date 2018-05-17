@@ -13,7 +13,7 @@ namespace EShop.Controllers
 {
     public class CustomerController : Controller
     {
-        private ICustomerAccountService _customerAccountService;
+        private readonly ICustomerAccountService _customerAccountService;
 
         public CustomerController(ICustomerAccountService customerAccountService)
         {
@@ -153,6 +153,59 @@ namespace EShop.Controllers
             Session["AccountEmail"] = null;
             Session["IsAdminAccount"] = null;
             return RedirectToAction("Login");
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult GetAllCustomers()
+        {
+            List<Customer> allCustomers = _customerAccountService.GetCustomers()
+                .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                .Distinct().ToList();
+            return PartialView("../Users/_Search", allCustomers);
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult ListCustomers(string Search)
+        {
+            var searchTerm = Search;
+            List<Customer> allCustomers = _customerAccountService.GetCustomers()
+                .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                .Distinct().ToList();
+
+            List<Customer> foundCustomers;
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                foundCustomers = allCustomers;
+            }
+            else
+            {
+                searchTerm = searchTerm.ToUpper();
+                foundCustomers = allCustomers.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Surname.ToUpper().Contains(searchTerm) || x.Email.ToUpper().Contains(searchTerm) || (x.Name.ToUpper() + " " + x.Surname.ToUpper()).Contains(searchTerm))
+                    .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                    .Distinct().ToList();
+            }
+
+            return PartialView("../Users/_CustomersList", foundCustomers);
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult ChangeStatus(int id)
+        {
+            var account = _customerAccountService.GetCustomer(id);
+            if (ModelState.IsValid)
+            {
+                if (account != null)
+                {
+                    _customerAccountService.ChangeStatus(account);
+                }
+            }
+            return RedirectToAction("Users");
+        }
+
+        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
+        public ActionResult Users()
+        {
+            return View("../Users/Index");
         }
     }
 }

@@ -206,7 +206,7 @@
     <Content Include="Views\OrderHistory\NoOrders.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
     <Content Include="Views\Shared\_GoBackButton.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Users.cshtml" />
     <Content Include="Views\Item\Export.cshtml" />
     <Content Include="Views\Item\Import.cshtml" />
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
@@ -263,7 +263,6 @@
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -273,7 +272,6 @@
     <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
     <Compile Include="Models\StoreViewModel.cs" />
-    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Models\Tree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleProviders\SiteRole.cs" />
