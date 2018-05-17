@@ -100,5 +100,13 @@ namespace EShop.Controllers
         {
             return View(_discountManagementService.GetAllDiscounts().Where(x => x.EndDate < DateTime.Now).ToList());
         }
+        
+
+        public ActionResult DeleteExpired()
+        {
+            _discountManagementService.DeleteExpiredDiscounts();
+
+            return RedirectToAction("Index");
+        }
     }
 }

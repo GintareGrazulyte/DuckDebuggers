@@ -8,9 +8,9 @@ namespace EShop.Models
 {
     public class DiscountViewModel
     {
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime BeginDate { get; set; }
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime EndDate { get; set; }
         public decimal Value { get; set; }
         public DiscountType DiscountType { get; set; }

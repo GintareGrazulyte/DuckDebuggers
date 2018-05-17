@@ -81,6 +81,7 @@
     <Compile Include="ItemManagementService.cs" />
     <Compile Include="ItemQueryService.cs" />
     <Compile Include="OrderRatingService.cs" />
+    <Compile Include="OrderService.cs" />
     <Compile Include="PaymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

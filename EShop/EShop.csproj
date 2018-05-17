@@ -226,6 +226,8 @@
     <Content Include="Views\Shared\EditorTemplates\Card.cshtml" />
     <Content Include="Views\Discounts\Expirations.cshtml" />
     <Content Include="Views\Discounts\Details.cshtml" />
+    <Content Include="Views\OrderHistory\AdminView.cshtml" />
+    <Content Include="Views\OrderHistory\ChangeOrderStatus.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -12,5 +12,6 @@ namespace BLL_API
         void CreateDiscount(Discount discount, IEnumerable<int> itemIds);
         List<Discount> GetAllDiscounts();
         Discount GetDiscount(int id);
+        void DeleteExpiredDiscounts();
     }
 }
