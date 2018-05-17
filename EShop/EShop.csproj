@@ -217,7 +217,6 @@
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Item\ChangeImage.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Shared\_ProductsSearch.cshtml" />
     <Content Include="Views\Error\NotFoundError.cshtml" />
     <Content Include="Views\Error\DefaultError.cshtml" />
     <Content Include="Views\Error\InternalError.cshtml" />
@@ -230,6 +229,7 @@
     <Content Include="Views\Discounts\Details.cshtml" />
     <Content Include="Views\OrderHistory\AdminView.cshtml" />
     <Content Include="Views\OrderHistory\ChangeOrderStatus.cshtml" />
+    <Content Include="Views\Store\_Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -269,6 +269,7 @@
     <Compile Include="Models\jsTree3Node.cs" />
     <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
+    <Compile Include="Models\StoreViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Models\Tree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
