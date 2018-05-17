@@ -230,6 +230,9 @@
     <Content Include="Views\OrderHistory\AdminView.cshtml" />
     <Content Include="Views\OrderHistory\ChangeOrderStatus.cshtml" />
     <Content Include="Views\Store\_Search.cshtml" />
+    <Content Include="Views\Users\_Search.cshtml" />
+    <Content Include="Views\Users\_AdminsList.cshtml" />
+    <Content Include="Views\Users\_CustomersList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

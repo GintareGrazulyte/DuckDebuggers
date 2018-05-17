@@ -1,255 +1,31 @@
-﻿@model EShop.Models.UserViewModel
+﻿@using System.Net.Mime
+@using BOL.Accounts
+@using System.Collections.Generic;
+@using EShop.Models
+@model EShop.Models.UserViewModel
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
-    body {
-        font: 16px Arial;  
-    }
-    .autocomplete {
-        /*the container must be positioned relative:*/
-        position: relative;
-        display: inline-block;
-        color: #2b3e50;
-    }
-    input {
-        border: 1px solid transparent;
-        background-color: #f1f1f1;
-        padding: 10px;
-        font-size: 16px;
-    }
-    input[type=text] {
-        background-color: #f1f1f1;
-        width: 100%;
-    }
-        input[type=submit] {
-            background-color: #df691a;
-            color: #fff;
-            cursor: pointer;
-        }
-    .autocomplete-items {
-        position: absolute;
-        border: 1px solid #d4d4d4;
-        border-bottom: none;
-        border-top: none;
-        z-index: 99;
-        /*position the autocomplete items to be the same width as the container:*/
-        top: 100%;
-        left: 0;
-        right: 0;
-    }
-    .autocomplete-items div {
-        padding: 10px;
-        cursor: pointer;
-        background-color: #fff; 
-        border-bottom: 1px solid #d4d4d4; 
-    }
-        .autocomplete-items div:hover {
-            /*when hovering an item:*/
-            background-color: #df691a;
-        }
-    .autocomplete-active {
-        /*when navigating through the items using the arrow keys:*/
-        background-color: #df691a !important;
-        color: #ffffff;
-    }
-</style>
 
-<div class="admins grid">
-    <b>Admins</b>
-    <br/>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Is active?</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.AllAdmins)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Surname</td>
-                <td>@item.Email</td>
-                <td>@item.IsActive</td>
-                <td>
-                </td>
-            </tr>
-        }
-        <tr>
-            <td>
-                Ammount of users: @Model.AllAdmins.Count
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+@Html.Action("ListAdmins")
 
-<br/>
+<br />
 
-<div class="customers grid">
-    <b>Customers</b>
-    <br/>
-    <form autocomplete="off">
-        <div class="autocomplete" style="width: 300px;">
-            <input id="myInput" class="text-input" type="text" name="Search" placeholder="Search">
-        </div>
-        <input type="submit" value="Search" class="trigger">
-    </form>
-
-    <br/>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Email</th>
-                <th>Is active?</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @if (!Model.FoundCustomers.Any())
-        {
-            <tr>
-                <td colspan="4">
-                    No records match search criteria.
-                </td>
-            </tr>
-        }
-        else
-        {
-            foreach (var item in Model.FoundCustomers)
-             {
-                 <tr>
-                     <td>@item.Id</td>
-                     <td>@item.Name</td>
-                     <td>@item.Surname</td>
-                     <td>@item.Email</td>
-                     <td>@item.IsActive</td>
-                     <td>
-                         @if (item.IsActive)
-                         {
-                             @Html.ActionLink("Disable User", "ChangeStatus", new {id = item.Id}, null)
-
-                         }
-                         else
-                         {
-                             @Html.ActionLink("Enable User", "ChangeStatus", new {id = item.Id}, null)
-                         }
-                     </td>
-                 </tr>
-             }
-            <tr>
-                <td>
-                    Ammount of users: @Model.FoundCustomers.Count
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+@Html.Action("ListCustomers")
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script>
-    $(".grid").on("click", ".trigger", function() {
+    $(".grid").on("click", ".trigger", function () {
         $.ajax({
-                url: "/ProcessLogEntries",
-                type: "post"
-            })
+            url: "/ProcessLogEntries",
+            type: "post"
+        })
             .done(function (result) {
                 $(".grid").html(result);
             });
     });
-</script>
-
-<script>
-    function autocomplete(inp, arr) {
-        var currentFocus;
-        inp.addEventListener("input", function (e) {
-            var a, b, i, val = this.value;
-            closeAllLists();
-            if (!val) { return false; }
-            currentFocus = -1;
-            a = document.createElement("DIV");
-            a.setAttribute("id", this.id + "autocomplete-list");
-            a.setAttribute("class", "autocomplete-items");
-            this.parentNode.appendChild(a);
-            for (i = 0; i < arr.length; i++) {
-                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                    b = document.createElement("DIV");
-                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                    b.innerHTML += arr[i].substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                    b.addEventListener("click", function (e) {
-                        inp.value = this.getElementsByTagName("input")[0].value;
-                        closeAllLists();
-                    });
-                    a.appendChild(b);
-                }
-            }
-        });
-        inp.addEventListener("keydown", function (e) {
-            var x = document.getElementById(this.id + "autocomplete-list");
-            if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
-                currentFocus++;
-                addActive(x);
-            } else if (e.keyCode == 38) {
-                currentFocus--;
-                addActive(x);
-            } else if (e.keyCode == 13) {
-                e.preventDefault();
-                if (currentFocus > -1) {
-                    if (x) x[currentFocus].click();
-                }
-            }
-        });
-        function addActive(x) {
-            if (!x) return false;
-            removeActive(x);
-            if (currentFocus >= x.length) currentFocus = 0;
-            if (currentFocus < 0) currentFocus = (x.length - 1);
-            x[currentFocus].classList.add("autocomplete-active");
-        }
-        function removeActive(x) {
-            for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("autocomplete-active");
-            }
-        }
-        function closeAllLists(elmnt) {
-            var x = document.getElementsByClassName("autocomplete-items");
-            for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
-                    x[i].parentNode.removeChild(x[i]);
-                }
-            }
-        }
-        document.addEventListener("click", function (e) {
-            closeAllLists(e.target);
-        });
-    }
-
-    var myArray = [];
-
-    @foreach (var item in Model.AllCUstomers)
-    {
-        @:myArray.push("@item.Name" + " " + "@item.Surname");
-    }
-
-    autocomplete(document.getElementById("myInput"), myArray);
 </script>

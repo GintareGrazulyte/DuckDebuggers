@@ -22,15 +22,34 @@ namespace EShop.Controllers
 
         public ActionResult Index()
         {
-            var searchTerm = Request["search"];
+            return View();
+        }
 
-            List<UserViewModel.User> allCustomers = _adminService.GetCustomers()
-                .Select(x => new UserViewModel.User { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+        public ActionResult GetAllCustomers()
+        {
+            List<Customer> allCustomers = _adminService.GetCustomers()
+                .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
                 .Distinct().ToList();
-            List<UserViewModel.User> allAdmins = _adminService.GetAdmins()
-                .Select(x => new UserViewModel.User { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+            return PartialView("_Search", allCustomers);
+        }
+
+        public ActionResult ListAdmins()
+        {
+            List<Admin> allAdmins = _adminService.GetAdmins()
+                .Select(x => new Admin { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
                 .Distinct().ToList();
-            List<UserViewModel.User> foundCustomers;
+            return PartialView("_AdminsList", allAdmins);
+        }
+
+        public ActionResult ListCustomers(string Search)
+        {
+            //var searchTerm = Request["search"];
+            var searchTerm = Search;
+            List<Customer> allCustomers = _adminService.GetCustomers()
+                .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                .Distinct().ToList();
+
+            List<Customer> foundCustomers;
             if (string.IsNullOrEmpty(searchTerm))
             {
                 foundCustomers = allCustomers;
@@ -39,17 +58,11 @@ namespace EShop.Controllers
             {
                 searchTerm = searchTerm.ToUpper();
                 foundCustomers = allCustomers.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Surname.ToUpper().Contains(searchTerm) || x.Email.ToUpper().Contains(searchTerm) || (x.Name.ToUpper() + " " + x.Surname.ToUpper()).Contains(searchTerm))
-                    .Select(x => new UserViewModel.User { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
+                    .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
                     .Distinct().ToList();
             }
 
-            var view = new UserViewModel()
-            {
-                AllAdmins = allAdmins,
-                AllCUstomers = allCustomers,
-                FoundCustomers = foundCustomers
-            };
-            return View(view);
+            return PartialView("_CustomersList",foundCustomers);
         }
 
         public ActionResult ChangeStatus(int id)

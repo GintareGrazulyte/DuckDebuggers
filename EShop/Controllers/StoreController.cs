@@ -30,7 +30,7 @@ namespace EShop.Controllers
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.ToUpper();
-                items = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Description.ToUpper().Contains(searchTerm))
+                items = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Description.ToUpper().Contains(searchTerm) || x.Category.Name.ToUpper().Contains(searchTerm))
                     .Distinct().ToList();
             }
 
