@@ -1,14 +1,12 @@
 ﻿using BLL_API;
 using BOL;
 using BOL.Objects;
-using DAL_API;
+using EShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using EShop.Models;
 
 namespace EShop.Controllers
 {
@@ -27,7 +25,6 @@ namespace EShop.Controllers
         {
             var searchTerm = Request["Search"];
             List<Item> allItems = _itemQueryService.GetAllItems().ToList();
-            List<Category> allCategories = _categoryService.GetAllCategories().ToList();
             List<Item> items = null;
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -37,9 +34,12 @@ namespace EShop.Controllers
                     .Distinct().ToList();
             }
 
+            var noCategoryItems = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
             var categories = _categoryService.GetAllCategories();
-            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "No category" } };
+            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = noCategoryItems, Name = "No category" } };
             categories = categories.Concat(noCategory);
+            List<Category> allCategories = categories.ToList();
+
             var view = new StoreViewModel
             {
                 AllItems = allItems,
@@ -67,7 +67,7 @@ namespace EShop.Controllers
                 return View(noCategory);
             }
             try
-            { 
+            {
                 var category = _categoryService.GetCategory(categoryId.Value);
                 return View(category);
             }
