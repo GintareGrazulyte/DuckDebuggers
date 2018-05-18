@@ -73,10 +73,18 @@ namespace EShop.Controllers
             }
         }
 
-        public ActionResult ListProducts()
+        public ActionResult ListProducts(string Search)
         {
-            var items = _itemQueryService.GetAllItems();
-            return PartialView("_Products", items);
+            var searchTerm = Search;
+            var allItems = _itemQueryService.GetAllItems();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToUpper();
+                var selectedItems = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Category.Name.ToUpper().Contains(searchTerm))
+                    .Distinct().ToList();
+                return PartialView("_Products", selectedItems);
+            }
+            return PartialView("_Products", allItems);
         }
     }
 }
