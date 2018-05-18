@@ -205,7 +205,6 @@
     <Content Include="Views\Store\Details.cshtml" />
     <Content Include="Views\OrderHistory\NoOrders.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
-    <Content Include="Views\Shared\_GoBackButton.cshtml" />
     <Content Include="Views\Users\Users.cshtml" />
     <Content Include="Views\Item\Export.cshtml" />
     <Content Include="Views\Item\Import.cshtml" />

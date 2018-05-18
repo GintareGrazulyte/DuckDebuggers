@@ -28,19 +28,21 @@
                 {
                     //apvalinimas. jei i parduotuves puse, istrint (int)
                     decimal discountPrice = (int)Model.GetPriceWithDiscount() / 100.0m;
-                    <p class="lead text-lg-right">
-                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</del> 
-                        <br /> 
+                    <p class="lead text-lg-right itemPrice">
+                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</del>
+                        @* JEI TRINSIT SITA BR PASAKYKIT EDGARUI, NES SULUS KODAS VIENOJ VIETOJ ISTRINUS*@
+                        <br />
+            
                         @Html.DisplayFor(modelItem => discountPrice) Eur/Piece</p>
                 }
                 else
                 {
-                    <p class="lead text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
+                    <p class="lead text-lg-right itemPrice">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</p>
                 }
             }
             
             <div class="quantity" style="float:right;">
-                <p class="lead text-lg-right" style="display:inline"> Quantity:</p>
+                <p class="lead text-lg-right" style="display: inline"> Quantity:</p>
                 <button class="minus-btn" type="button" name="button">
                     <img src="~/Content/Images/minus.svg" alt="" />
                 </button>
@@ -134,28 +136,45 @@
              var $quantity = $(".quantityBox");
              var quantityInt = parseInt($quantity.val());
              var isDiscounted = "@Model.HasDiscount" == "True";
+             var isDecimalComma = $(".itemPrice").html().split("<br>");
+             if (isDecimalComma[1] == undefined)
+                 isDecimalComma = isDecimalComma[0]
+             else
+                 isDecimalComma = isDecimalComma[1];
+
+             if (isDecimalComma == isDecimalComma.replace(".", ","))
+                 var localeString = 'de-DE';
+             else
+                 var localeString = 'en-US';
+
              if (isNaN(quantityInt) || quantityInt < 1) {
                  $quantity.val(1);
                  if (isDiscounted) {
-                     var price = (@((int)Model.GetPriceWithDiscount()  / 100.0m)).toFixed(2);
+                     var priceInFloat = (parseFloat(@((int)Model.GetPriceWithDiscount())) / 100).toLocaleString(localeString);
+                     var price = (priceInFloat).toLocaleString(localeString, { minimumFractionDigits: 2 });
                      $("#totalPrice").html("Total Price: " + price + " Eur");
                  }
                  else {
-                     var price = (@(Model.Price  / 100.0m)).toFixed(2);
+                     var priceInFloat = parseFloat(@Model.Price) / 100;
+                     var price = (priceInFloat).toLocaleString(localeString, { minimumFractionDigits: 2 });
                      $("#totalPrice").html("Total Price: " + price + " Eur");
                  }
                  return;
              }
+             else if(quantityInt > 99999) {
+                 $quantity.val(99999);
+                 quantityInt = 99999;
+             }
+             if (isDiscounted) {
+                 var priceInFloat = parseFloat(@((int)Model.GetPriceWithDiscount())) / 100;
+                 price = (priceInFloat * quantityInt).toLocaleString(localeString, { minimumFractionDigits: 2 });
+                 
+                 $("#totalPrice").html("Total Price: " + price + " Eur");
+             }
              else {
-                 if (isDiscounted) {
-                     var price = (@((int)Model.GetPriceWithDiscount()  / 100.0m) * quantityInt).toFixed(2);
-                     $("#totalPrice").html("Total Price: " + price + " Eur");
-                 }
-                 else {
-                     var price = (@(Model.Price  / 100.0m) * quantityInt).toFixed(2);
-                     $("#totalPrice").html("Total Price: " + price + " Eur");
-                 }
-
+                 var priceInFloat = parseFloat(@Model.Price) / 100;
+                 var price = (priceInFloat * quantityInt).toLocaleString(localeString, { minimumFractionDigits: 2 });
+                 $("#totalPrice").html("Total Price: " + price + " Eur");
              }
          });
 

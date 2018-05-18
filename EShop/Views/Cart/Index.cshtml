@@ -152,9 +152,14 @@
             var $itemId = $this.closest('div').find('#cartItem_Item_Id');
             var quantityInt = parseInt($quantity.val());
             var itemIdInt = parseInt($itemId.val());
+
             if (isNaN(quantityInt) || quantityInt < 1) {
                 $quantity.val(1).trigger('change');
                 return;
+            }
+
+            if (quantityInt > 99999) {
+                $quantity.val(99999).trigger('change');
             }
             var url = '@Url.Action("ChangeCartItemQuantity", "Cart")';
             $.ajax({
@@ -204,7 +209,7 @@
             var $input = $this.closest('div').find('.quantityBox');
             var value = parseInt($input.val());
 
-            if (value < 100000) {
+            if (value < 99999) {
                 value = value + 1;
             }
             $input.val(value).trigger('change');
