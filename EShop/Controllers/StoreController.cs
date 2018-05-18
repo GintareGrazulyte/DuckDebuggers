@@ -21,32 +21,14 @@ namespace EShop.Controllers
             _itemQueryService = itemQueryService;
         }
         // GET: Store
-        public ActionResult Index()
+        public ActionResult Index(string Search)
         {
-            var searchTerm = Request["Search"];
-            List<Item> allItems = _itemQueryService.GetAllItems().ToList();
-            List<Item> items = null;
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                searchTerm = searchTerm.ToUpper();
-                items = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Description.ToUpper().Contains(searchTerm) || x.Category.Name.ToUpper().Contains(searchTerm))
-                    .Distinct().ToList();
-            }
-
-            var noCategoryItems = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
             var categories = _categoryService.GetAllCategories();
-            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = noCategoryItems, Name = "No category" } };
-            categories = categories.Concat(noCategory);
-            List<Category> allCategories = categories.ToList();
 
-            var view = new StoreViewModel
-            {
-                AllItems = allItems,
-                DisplayedCategories = allCategories,
-                DisplayedItems = items
-            };
-            return View(view);
+            var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
+            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "No category" } };
+            categories = categories.Concat(noCategory);
+            return View(categories);
         }
         [ChildActionOnly]
         public ActionResult CategoryMenu()

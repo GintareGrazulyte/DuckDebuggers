@@ -1,4 +1,4 @@
-﻿@model EShop.Models.StoreViewModel
+﻿@model IEnumerable<BOL.Category>
 <style>
     * {
         box-sizing: border-box;
@@ -142,9 +142,12 @@
 
     var myArray = [];
 
-    @foreach (var item in Model.AllItems)
+    @foreach (var category in Model)
     {
-        @:myArray.push("@item.Name");
+        foreach (var item in category.Items)
+        {
+            @:myArray.push("@item.Name");
+        }
     }
 
     autocomplete(document.getElementById("myInput"), myArray);
