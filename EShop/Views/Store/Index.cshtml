@@ -9,10 +9,10 @@
 </head>
 
 
+
+@Html.Partial("_Search")
+
 @*<h2>Browse Category</h2>*@
-<div>
-    @Html.Partial("_Search")
-</div>
 
 <div id="myBtnContainer" style="margin:10px auto;">
     @{
@@ -30,62 +30,63 @@
     }
 </div>
 
-<div class="container">
-    @foreach (var category in Model)
-    {
-        foreach (var item in category.Items)
+    <div class="container grid">
+        @foreach (var category in Model)
         {
-            <div class="filterDiv @category.Name">
-                @{
-                    decimal piecePrice = item.Price / 100.0m;
-                }
-                <div class="card d-inline-block m-1">
-                    <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
-                    <div class="card-body">
-                        <h6 class="card-subtitle text-muted">@category.Name</h6>
-                    </div>
+            foreach (var item in category.Items)
+            {
+                <div class="filterDiv @category.Name">
                     @{
-                        if (item.ImageUrl != null)
-                        {
-                            @:<img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" />
-                        }
-                        else
-                        {
-                            <img style="height: 200px; width: 290px; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image">
-                        }
+                        decimal piecePrice = item.Price / 100.0m;
                     }
-                    <div class="card-body">
+                    <div class="card d-inline-block m-1">
+                        <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
+                        <div class="card-body">
+                            <h6 class="card-subtitle text-muted">@category.Name</h6>
+                        </div>
                         @{
-                            if (item.HasDiscount)
+                            if (item.ImageUrl != null)
                             {
-                                //apvalinimas. jei i parduotuves puse, istrint (int)
-                                decimal discountPrice = (int)item.GetPriceWithDiscount() / 100.0m;
-                                <p class="card-text text-lg-right">
-                                    <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
-                                    @Html.DisplayFor(modelItem => discountPrice) Eur/Piece
-                                </p>
+                                @:<img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" />
                             }
                             else
                             {
-                                <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</p>
+                                <img style="height: 200px; width: 290px; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image">
                             }
                         }
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action("Details", "Store", new {  itemId = item.Id, categoryId = item.CategoryId }, null)'">View details</button>
-                            <span><button type="button" id="AddToCart" class="btn btn-primary" style="position: absolute; right: 20px;" onClick="AddItem(@item.Id)">Add to cart</button></span>
+                        <div class="card-body">
+                            @{
+                                if (item.HasDiscount)
+                                {
+                                    //apvalinimas. jei i parduotuves puse, istrint (int)
+                                    decimal discountPrice = (int)item.GetPriceWithDiscount() / 100.0m;
+                                    <p class="card-text text-lg-right">
+                                        <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
+                                        @Html.DisplayFor(modelItem => discountPrice) Eur/Piece
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</p>
+                                }
+                            }
                         </div>
+                        <div class="card-body">
+                            <div>
+                                <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action("Details", "Store", new {  itemId = item.Id, categoryId = item.CategoryId }, null)'">View details</button>
+                                <span><button type="button" id="AddToCart" class="btn btn-primary" style="position: absolute; right: 20px;" onClick="AddItem(@item.Id)">Add to cart</button></span>
+                            </div>
 
-                    </div>
-                    <div class="card-footer text-muted">
+                        </div>
+                        <div class="card-footer text-muted">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="snackbar">Item was Added to Cart</div>
+                <div id="snackbar">Item was Added to Cart</div>
+            }
         }
-    }
-</div>
+    </div>
+
 
 <script>
 
@@ -164,12 +165,23 @@
         btns[i].addEventListener("click", function () {
             if (this.className.indexOf("active") > -1)
             {
-            this.className = this.className.replace(" active", "");
+                this.className = this.className.replace(" active", "");
             }
             else
             {
-            this.className += " active";
+                this.className += " active";
             }
         });
     }
+</script>
+<script>
+    $(".grid").on("click", ".trigger", function () {
+        $.ajax({
+            url: "/ProcessLogEntries",
+            type: "post"
+        })
+            .done(function (result) {
+                $(".grid").html(result);
+            });
+    });
 </script>

@@ -1,7 +1,5 @@
 ﻿using BLL_API;
 using BOL;
-using BOL.Objects;
-using EShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +19,7 @@ namespace EShop.Controllers
             _itemQueryService = itemQueryService;
         }
         // GET: Store
-        public ActionResult Index(string Search)
+        public ActionResult Index()
         {
             var categories = _categoryService.GetAllCategories();
 
@@ -30,6 +28,7 @@ namespace EShop.Controllers
             categories = categories.Concat(noCategory);
             return View(categories);
         }
+
         [ChildActionOnly]
         public ActionResult CategoryMenu()
         {
