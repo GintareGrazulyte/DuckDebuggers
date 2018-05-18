@@ -90,8 +90,29 @@
 
 <script>
 
-    filterSelection("all")
+    filterSelection("all", GetUrlParametersValue("Search"))
 
+    function GetUrlParametersValue(name) {
+        var url = window.location.href;
+        if (!url) url = location.href;
+        name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+        var regexS = "[\\?&]"+name+"=([^&#]*)";
+        var regex = new RegExp( regexS );
+        var results = regex.exec( url );
+        return results == null ? null : results[1];
+    }
+
+    function IsSearched(element, searchTerm) {
+        if (searchTerm == "" || searchTerm == null) return true;
+        var term = searchTerm.toUpperCase();
+        var productName = element.getElementsByClassName('card-header')[0].innerText.toUpperCase();
+        var productCategory = element.getElementsByClassName('card-subtitle')[0].innerText.toUpperCase();
+        if (productName.includes(term) || productCategory.includes(term)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     function AddItem(itemID) {
 
@@ -114,26 +135,43 @@
         });
     }
 
-    function filterSelection(c) {
+    function filterSelection(c, termWord) {
         var x, i;
-        x = document.getElementsByClassName("filterDiv");
-        if (c == "all") c = "";
-        for (i = 0; i < x.length; i++) {
-            if (x[i].className.indexOf(c) > -1)
-            {
-                if (c != "" && (x[i].className).indexOf("show") > -1)
-                {
-                    w3RemoveClass(x[i], "show");
+        if (termWord == null || termWord == "") {
+            x = document.getElementsByClassName("filterDiv");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                if (x[i].className.indexOf(c) > -1) {
+                    if (c != "" && (x[i].className).indexOf("show") > -1) {
+                        w3RemoveClass(x[i], "show");
+                    } else {
+                        if (c == "" && (x[i].className).indexOf("show") <= -1 || c != "") {
+                            w3AddClass(x[i], "show");
+                        }
+                    }
                 }
-                else
+            }
+        } else {
+            x = document.getElementsByClassName("filterDiv");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                if (x[i].className.indexOf(c) > -1)
                 {
-                    if (c == "" && (x[i].className).indexOf("show") <= -1 || c != "")
+                    if (c != "" && (x[i].className).indexOf("show") > -1 && !IsSearched(x[i], termWord))
                     {
-                        w3AddClass(x[i], "show");
+                        w3RemoveClass(x[i], "show");
+                    }
+                    else
+                    {
+                        if (c == "" && ((x[i].className).indexOf("show") <= -1 || c != "") && IsSearched(x[i], termWord))
+                        {
+                            w3AddClass(x[i], "show");
+                        }
                     }
                 }
             }
         }
+
     }
 
     function w3AddClass(element, name) {
