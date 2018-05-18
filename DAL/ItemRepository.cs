@@ -43,7 +43,7 @@ namespace DAL
 
         public List<Item> GetAll()
         {
-            return DbContext.Items.Include("Discounts").ToList();
+            return DbContext.Items.Include("Discounts").Include("Category").ToList();
         }
 
         public void Modify(Item item)

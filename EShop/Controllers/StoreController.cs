@@ -72,5 +72,11 @@ namespace EShop.Controllers
                 return HttpNotFound();
             }
         }
+
+        public ActionResult ListProducts()
+        {
+            var items = _itemQueryService.GetAllItems();
+            return PartialView("_Products", items);
+        }
     }
 }

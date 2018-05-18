@@ -232,6 +232,7 @@
     <Content Include="Views\Users\_Search.cshtml" />
     <Content Include="Views\Users\_AdminsList.cshtml" />
     <Content Include="Views\Users\_CustomersList.cshtml" />
+    <Content Include="Views\Store\_Products.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -270,7 +271,6 @@
     <Compile Include="Models\jsTree3Node.cs" />
     <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
-    <Compile Include="Models\StoreViewModel.cs" />
     <Compile Include="Models\Tree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleProviders\SiteRole.cs" />
