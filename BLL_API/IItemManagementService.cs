@@ -8,8 +8,8 @@ namespace BLL_API
 {
     public interface IItemManagementService
     {
-        Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file, string imagesFolder);
-        Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> allItems);
+        Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file, string imagesFolder, bool logInfoNeeded);
+        Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> allItems, bool logInfoNeeded, string folderToSave);
         void CreateItemWithImage(Item itemToCreate, string folderToImage);
         void CreateItem(Item itemToCreate);
         void UpdateItem(Item itemToUpdate);

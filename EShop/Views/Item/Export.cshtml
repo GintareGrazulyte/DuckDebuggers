@@ -1,4 +1,4 @@
-﻿
+﻿@model EShop.Models.ExportedItemsViewModel
 @{
     ViewBag.Title = "Export";
 }
@@ -6,4 +6,34 @@
 <h2>Export</h2>
 <p>Right after finish of the export, an information about it will be sent to your email</p>
 
-@Html.ActionLink("Export items", "ExportItemsToFile", "Item", null, new { @class = "btn btn-primary" })
+
+@{ Html.BeginForm("ExportItemsToFile", "Item", FormMethod.Post, new { enctype = "multipart/form-data" });}
+<p>
+    @Html.CheckBox("logInfoNeeded", false, new { @onclick = "check.call(this)" }) Get log information and exported items to email
+</p>
+
+<input type="submit" value="Export items" class="btn btn-primary" />
+
+<div class="downloads">
+    <br />
+    Already generated item files:
+    @{
+        foreach (var fileInfo in Model.ExportedItemsFiles)
+        {
+            <p>@Html.ActionLink(@fileInfo.Name, "DowloadExportedItemsFile", "Item", new { fileName = @fileInfo.Name, directoryName = @fileInfo.DirectoryName }, null)</p>
+        }
+    }
+</div>
+@{ Html.EndForm();}
+
+<script>
+    function check() {
+        this.checked = this.checked;
+        if (this.checked) {
+            $(".downloads").hide();
+        }
+        else {
+            $(".downloads").show();
+        }
+    }
+</script>
