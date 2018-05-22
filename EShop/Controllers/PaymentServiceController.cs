@@ -1,5 +1,4 @@
 ﻿using BLL_API;
-using BOL;
 using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
@@ -30,44 +29,39 @@ namespace EShop.Controllers
                 return actionResult;
             }
 
+            RecalculatePrices(cart);
             return View(new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = false });
         }
 
         public ActionResult IndexFormedOrder(int orderId)
         {
-            ActionResult actionResult = GetSessionCustomer(out Customer customer);
-            if (actionResult != null)
-            {
-                return actionResult;
-            }
+            GetSessionCustomer(out Customer customer);
 
-            Order order = customer.Orders.FirstOrDefault(o => o.Id == orderId);
+            var order = customer.Orders.FirstOrDefault(o => o.Id == orderId);
+            var cart = order.Cart;
 
             if (order == null)
             {
                 //TODO handle
             }
 
-            return View("Index", new PaymentViewModel() { Customer = customer, Cart = order.Cart, FormedOrder = true });
+            return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
         }
 
         public ActionResult PayFormedOrder(int cartId)
         {
-            ActionResult actionResult = GetSessionCustomer(out Customer customer); 
+            GetSessionCustomer(out Customer customer); 
 
-            if (actionResult != null)
-            {
-                return actionResult;
-            }
-
-            Order order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cartId);
+            var order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cartId);
+            var cart = order.Cart;
 
             if (order == null)
             {
                 //TODO handle
             }
 
-            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, order.Cart);
+            //Recalculation of prices is not needed as order is already formed
+            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
 
             return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo });
         }
@@ -91,16 +85,11 @@ namespace EShop.Controllers
 
         private ActionResult GetSessionProperties(out Customer customer, out Cart cart)
         {
-            ActionResult actionResult = GetSessionCustomer(out customer);
-            cart = null;
-
-            if (actionResult != null)
-            {
-                return actionResult;
-            }
+            GetSessionCustomer(out customer);
 
             if (Session["Cart"] == null)
-            {
+            { 
+                cart = null;
                 return RedirectToAction("EmptyCart", "Cart");
             }
 
@@ -109,18 +98,30 @@ namespace EShop.Controllers
             return null;
         }
 
-        private ActionResult GetSessionCustomer(out Customer customer)  //TODO: enough to return Customer.Id?
+        private void GetSessionCustomer(out Customer customer)  //TODO: enough to return Customer.Id?
         {
-            customer = null; 
-
             int? customerId = (int?)Session["AccountId"];
             customer = _customerAccountService.GetCustomer((int)customerId);
-            
-            if(customer == null)
+        }
+
+        private void RecalculatePrices(Cart cart)
+        {
+            cart.Cost = 0;
+
+            foreach (var item in cart.Items)
             {
-                return RedirectToAction("Register", "Customer");
+                if (item.Item.HasDiscount)
+                {
+                    item.BuyPrice = (int)(item.Item.GetPriceWithDiscount() * 100);
+                }
+                else
+                {
+                    item.BuyPrice = item.Item.Price;
+                }
+                cart.Cost += item.BuyPrice;
             }
-            return null;
+            //TODO a function to count buy prices
+            //cart.Cost = cart.CountCartPrice(cart.Items);
         }
     }
 }

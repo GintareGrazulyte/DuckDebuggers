@@ -24,3 +24,4 @@ EShop/App_Data/*.ldf
 /BLL_API/obj/Debug
 
 /EShop/Uploads
+/EShop/Content/Downloads/ExportedItems

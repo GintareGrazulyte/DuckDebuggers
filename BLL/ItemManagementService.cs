@@ -35,7 +35,7 @@ namespace BLL
         }
 
         public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
-            string imagesFolder)
+            string imagesFolder, bool logInfoNeeded)
         {
             await Task.Run(() =>
             {
@@ -43,14 +43,8 @@ namespace BLL
 
                 var items = _importService.ImportItemsFromFile(Path.Combine(folderToFile, fileName));
 
-                var email = new Email()
-                {
-                    ToName = admin.Name,
-                    ToAddress = admin.Email,
-                    Subject = "Import",
-                    Body = "",
-                    AttachmentPath = ""
-                };
+
+                string logInfo = "";
 
                 var categories = _categoryService.GetAllCategories();
 
@@ -61,19 +55,19 @@ namespace BLL
                     {
                         if (items[i].Price <= 0)
                         {
-                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as price <" +
+                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as price <" +
                                 items[i].Price + "> is not valid" + Environment.NewLine;
                             continue;
                         }
                         if (items[i].CategoryId != null && !categories.Any(c => c.Id == items[i].CategoryId))
                         {
-                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
+                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
                                 items[i].CategoryId + "> does not exist" + Environment.NewLine;
                             continue;
                         }
                         if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
                         {
-                            email.Body += i + 2 + ". <" + items[i].Name + "> is not added as image <" +
+                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as image <" +
                                 items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
                             continue;
                         }
@@ -81,7 +75,7 @@ namespace BLL
                         _itemRepository.Add(items[i]);
                         addedCount++;
                     }
-                    email.Body += addedCount + "/" + items.Count + " items were successfully added";
+                    logInfo += addedCount + "/" + items.Count + " items were successfully added";
 
                     try
                     {
@@ -89,43 +83,49 @@ namespace BLL
                     }
                     catch (Exception e)
                     {
-                        email.Body = "Unable to save items to database. Exception message: " + e.Message;
+                        logInfo = "Unable to save items to database. Exception message: " + e.Message;
                     }
                     finally
                     {
-                        _emailService.SendEmail(email);
+                        if (logInfoNeeded)
+                        {
+                            var email = new Email()
+                            {
+                                ToName = admin.Name,
+                                ToAddress = admin.Email,
+                                Subject = "Import",
+                                Body = logInfo,
+                                AttachmentPath = ""
+                            };
+                            _emailService.SendEmail(email);
+                        }
                     }
                 }
             });
         }
 
-        public async Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> items)
+        public async Task ExportAllItemsToFile(Admin admin, IEnumerable<Item> items, bool logInfoNeeded, string folderToSave)
         {
             await Task.Run(() =>
             {
-                var attachmentPath = _importService.ExportItemsToFile(items);
-                var email = new Email()
+                var attachmentPath = _importService.ExportItemsToFile(items, folderToSave);
+
+                if (logInfoNeeded)
                 {
-                    ToName = admin.Name,
-                    ToAddress = admin.Email,
-                    Subject = "Export",
-                    Body = "",
-                    AttachmentPath = attachmentPath
-                };
+                    var email = new Email()
+                    {
+                        ToName = admin.Name,
+                        ToAddress = admin.Email,
+                        Subject = "Export",
+                        Body = "",
+                        AttachmentPath = attachmentPath
+                    };
 
-                email.Body = "All of the items were successfully exported";
+                    email.Body = "All of the items were successfully exported";
 
-                _emailService.SendEmail(email);
-
-                //TODO: when temp file should be deleted?
-                try
-                {
-                    File.Delete(attachmentPath);
+                    _emailService.SendEmail(email);
                 }
-                catch (IOException)
-                {
-                    //file is in use or does not exist
-                }  
+
             });
         }
 
