@@ -1,12 +1,12 @@
-﻿using BOL.Carts;
+﻿using BLL_API;
+using BOL.Carts;
 using BOL.Objects;
 using BOL.Orders;
+using EShop.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using BLL_API;
-using EShop.Attributes;
 
 namespace EShop.Controllers
 {
@@ -25,7 +25,7 @@ namespace EShop.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-            if (Session["Cart"] == null || (int?)Session["Count"] == 0 )
+            if (Session["Cart"] == null || (int?)Session["Count"] == 0)
                 return RedirectToAction("EmptyCart");
 
             return View((Cart)Session["Cart"]);
@@ -64,7 +64,7 @@ namespace EShop.Controllers
 
             Item item = _itemQueryService.GetItem(id);
 
-            if(item == null)        //TODO: error handling
+            if (item == null)        //TODO: error handling
                 return RedirectToAction("Index");
 
             Cart cart;
@@ -98,7 +98,7 @@ namespace EShop.Controllers
             }
 
             cart.Cost = cart.CountCartPrice(cart.Items);
-            
+
             Session["Count"] = _cartService.CountItemsInCart(cart.Items);
 
             return Json(new { message = item.Name + "(" + quantity + ")" + " was Added to Cart", itemCount = Session["Count"] });
@@ -124,7 +124,7 @@ namespace EShop.Controllers
             {
                 return RedirectToAction("Index");
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 return RedirectToAction("Index");
             }
@@ -142,9 +142,9 @@ namespace EShop.Controllers
             {
                 cartCost = (cart.Cost / 100.0m),
                 itemCount = Session["Count"],
-                itemCost = (item.Item.Price*cartItemQuantity)/100.0m,
+                itemCost = (item.Item.Price * cartItemQuantity) / 100.0m,
                 hasDiscount = item.Item.HasDiscount,
-                discountCost = ((int)item.Item.GetPriceWithDiscount()/100.0m)*cartItemQuantity,
+                discountCost = ((int)item.Item.GetPriceWithDiscount() / 100.0m) * cartItemQuantity,
             });
         }
 

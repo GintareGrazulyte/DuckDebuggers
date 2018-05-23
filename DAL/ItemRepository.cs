@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using BOL.Objects;
+using DAL_API;
+using Mehdime.Entity;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using DAL_API;
-using BOL.Objects;
-using System;
-using Mehdime.Entity;
 
 namespace DAL
 {
@@ -43,7 +43,7 @@ namespace DAL
 
         public List<Item> GetAll()
         {
-            return DbContext.Items.Include("Discounts").ToList();
+            return DbContext.Items.Include("Discounts").Include("Category").ToList();
         }
 
         public void Modify(Item item)

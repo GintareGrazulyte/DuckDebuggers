@@ -27,6 +27,7 @@ namespace BOL.Objects
         public int Price { get; set; }
         [NotMapped]
         public HttpPostedFileBase Image { get; set; }
+        [DisplayName("Description")]
         public string Description { get; set; }
         [DisplayName("Category")]
         public int? CategoryId { get; set; }

@@ -1,0 +1,45 @@
+﻿@model List<BOL.Accounts.Admin>
+
+<div class="admins grid">
+
+    <b>Admins</b>
+    <br/>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Is active?</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Surname</td>
+                <td>@item.Email</td>
+                <td>@item.IsActive</td>
+                <td></td>
+            </tr>
+        }
+        <tr>
+            <td>
+                Amount of users: @Model.Count
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                @Html.ActionLink("Create new admin", "Create", "Admin")
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

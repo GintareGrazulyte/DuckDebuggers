@@ -1,0 +1,60 @@
+﻿@model List<BOL.Accounts.Customer>
+    
+<div class="customers grid">
+    <b>Customers</b>
+    <br />
+    @Html.Action("GetAllCustomers")
+    <br />
+    <table class="table table-striped">
+        <thead>
+
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Is active?</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4">
+                        No records match search criteria.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.Surname</td>
+                        <td>@item.Email</td>
+                        <td>@item.IsActive</td>
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                @Html.ActionLink("Disable User", "ChangeStatus", new { id = item.Id }, null)
+
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Enable User", "ChangeStatus", new { id = item.Id }, null)
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        Amount of users: @Model.Count
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

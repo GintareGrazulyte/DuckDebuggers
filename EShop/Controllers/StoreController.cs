@@ -1,20 +1,17 @@
 ﻿using BLL_API;
 using BOL;
-using BOL.Objects;
-using DAL_API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EShop.Controllers
 {
     public class StoreController : Controller
     {
-        private ICategoryService _categoryService;
-        private IItemQueryService _itemQueryService;
+        private readonly ICategoryService _categoryService;
+        private readonly IItemQueryService _itemQueryService;
 
         public StoreController(ICategoryService categoryService, IItemQueryService itemQueryService)
         {
@@ -31,6 +28,7 @@ namespace EShop.Controllers
             categories = categories.Concat(noCategory);
             return View(categories);
         }
+
         [ChildActionOnly]
         public ActionResult CategoryMenu()
         {
@@ -50,7 +48,7 @@ namespace EShop.Controllers
                 return View(noCategory);
             }
             try
-            { 
+            {
                 var category = _categoryService.GetCategory(categoryId.Value);
                 return View(category);
             }
@@ -73,6 +71,20 @@ namespace EShop.Controllers
             {
                 return HttpNotFound();
             }
+        }
+
+        public ActionResult ListProducts(string Search)
+        {
+            var searchTerm = Search;
+            var allItems = _itemQueryService.GetAllItems();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToUpper();
+                var selectedItems = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Category.Name.ToUpper().Contains(searchTerm))
+                    .Distinct().ToList();
+                return PartialView("_Products", selectedItems);
+            }
+            return PartialView("_Products", allItems);
         }
     }
 }

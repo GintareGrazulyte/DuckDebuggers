@@ -36,14 +36,6 @@ namespace BLL
             }
         }
 
-        public List<Customer> GetCustomers()
-        {
-            using (_dbContextScopeFactory.CreateReadOnly())
-            {
-                return _customerRepository.GetAll();
-            }
-        }
-
         public List<Admin> GetAdmins()
         {
             using (_dbContextScopeFactory.CreateReadOnly())
@@ -64,28 +56,6 @@ namespace BLL
                 }
                 else    //TODO: WrongEmailOrPasswordException
                     return null;
-            }
-        }
-
-        public Customer GetCustomer(int id)
-        {
-            using (_dbContextScopeFactory.CreateReadOnly())
-            {
-                return _customerRepository.FindById(id);
-            }
-        }
-
-        public void ChangeStatus(Customer account)
-        {
-            if (account == null)
-                throw new ArgumentNullException("accountStatusToChange");
-
-            using (var dbContextScope = _dbContextScopeFactory.Create())
-            {
-                var foundAccount = _customerRepository.FindById(account.Id);
-                foundAccount.IsActive = !account.IsActive;
-                _customerRepository.Modify(foundAccount);
-                dbContextScope.SaveChanges();
             }
         }
 
