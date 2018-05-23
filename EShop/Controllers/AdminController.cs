@@ -77,11 +77,11 @@ namespace EShop.Controllers
             List<Admin> allAdmins = _adminService.GetAdmins()
                 .Select(x => new Admin { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
                 .Distinct().ToList();
-            return PartialView("../Users/_AdminsList", allAdmins);
+            return PartialView("_AdminsList", allAdmins);
         }
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-        public ActionResult Create() => View("../Users/Create");
+        public ActionResult Create() => View("Create");
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
         [HttpPost]
@@ -93,7 +93,7 @@ namespace EShop.Controllers
                 try
                 {
                     _adminService.CreateAdmin(admin);
-                    return RedirectToAction("Users", "Admin");
+                    return Redirect("Users");
                 }
                 catch (Exception ex)
                 {
@@ -105,8 +105,7 @@ namespace EShop.Controllers
             return View();
         }
 
-        [Route("Users")]
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-        public ActionResult Users() => View("../Users/Users");
+        public ActionResult Users() => View();
     }
 }

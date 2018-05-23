@@ -205,7 +205,7 @@
     <Content Include="Views\Store\Details.cshtml" />
     <Content Include="Views\OrderHistory\NoOrders.cshtml" />
     <Content Include="Views\Shared\_NavigationBar.cshtml" />
-    <Content Include="Views\Users\Users.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Item\Export.cshtml" />
     <Content Include="Views\Item\Import.cshtml" />
     <Content Include="Views\OrderHistory\_OrderTable.cshtml" />
@@ -215,7 +215,7 @@
     <Content Include="Views\Customer\Details.cshtml" />
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Item\ChangeImage.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Error\NotFoundError.cshtml" />
     <Content Include="Views\Error\DefaultError.cshtml" />
     <Content Include="Views\Error\InternalError.cshtml" />
@@ -229,9 +229,9 @@
     <Content Include="Views\OrderHistory\AdminView.cshtml" />
     <Content Include="Views\OrderHistory\ChangeOrderStatus.cshtml" />
     <Content Include="Views\Store\_Search.cshtml" />
-    <Content Include="Views\Users\_Search.cshtml" />
-    <Content Include="Views\Users\_AdminsList.cshtml" />
-    <Content Include="Views\Users\_CustomersList.cshtml" />
+    <Content Include="Views\Admin\_Search.cshtml" />
+    <Content Include="Views\Admin\_AdminsList.cshtml" />
+    <Content Include="Views\Admin\_CustomersList.cshtml" />
     <Content Include="Views\Store\_Products.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

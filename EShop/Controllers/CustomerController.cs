@@ -1,13 +1,13 @@
-﻿using System.Web.Mvc;
+﻿using BLL_API;
 using BOL.Accounts;
-using System.Web.Security;
 using EShop.Attributes;
-using BLL_API;
+using EShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EShop.Models;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace EShop.Controllers
 {
@@ -43,7 +43,7 @@ namespace EShop.Controllers
                     _customerAccountService.CreateCustomer(customer);
                     return RedirectToAction("Login");
                 }
-                catch(Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
                 {
                     Debug.WriteLine(ex.Message);
                     ModelState.AddModelError("", ex.Message);
@@ -106,7 +106,7 @@ namespace EShop.Controllers
                     ModelState.AddModelError("", "Wrong old password");
                     return View(model);
                 }
-                if(!model.IsNewPasswordNew())
+                if (!model.IsNewPasswordNew())
                 {
                     ModelState.AddModelError("", "New password is the same as old one! Pick a new password");
                     return View(model);
@@ -128,7 +128,7 @@ namespace EShop.Controllers
         {
             //TODO also check if admin email isn't reserved
             var foundCustomer = _customerAccountService.LoginCustomer(customerToLogin);
-            if(foundCustomer != null)
+            if (foundCustomer != null)
             {
                 FormsAuthentication.SetAuthCookie(foundCustomer.Email, false);
                 Session["AccountId"] = foundCustomer.Id;
@@ -161,7 +161,7 @@ namespace EShop.Controllers
             List<Customer> allCustomers = _customerAccountService.GetCustomers()
                 .Select(x => new Customer { Id = x.Id, Name = x.Name, Surname = x.Surname, Email = x.Email, IsActive = x.IsActive })
                 .Distinct().ToList();
-            return PartialView("../Users/_Search", allCustomers);
+            return PartialView("../Admin/_Search", allCustomers);
         }
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
@@ -185,7 +185,7 @@ namespace EShop.Controllers
                     .Distinct().ToList();
             }
 
-            return PartialView("../Users/_CustomersList", foundCustomers);
+            return PartialView("../Admin/_CustomersList", foundCustomers);
         }
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
@@ -199,13 +199,8 @@ namespace EShop.Controllers
                     _customerAccountService.ChangeStatus(account);
                 }
             }
-            return RedirectToAction("Users");
-        }
 
-        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-        public ActionResult Users()
-        {
-            return View("../Users/Index");
+            return Redirect("Users", "Admin");
         }
     }
 }
