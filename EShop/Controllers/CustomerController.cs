@@ -200,7 +200,7 @@ namespace EShop.Controllers
                 }
             }
 
-            return Redirect("Users", "Admin");
+            return RedirectToAction("Users", "Admin");
         }
     }
 }
