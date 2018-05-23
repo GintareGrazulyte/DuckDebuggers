@@ -118,10 +118,8 @@ namespace EShop.Controllers
                 {
                     item.BuyPrice = item.Item.Price;
                 }
-                cart.Cost += item.BuyPrice;
+                cart.Cost += item.Quantity * item.BuyPrice;
             }
-            //TODO a function to count buy prices
-            //cart.Cost = cart.CountCartPrice(cart.Items);
         }
     }
 }
