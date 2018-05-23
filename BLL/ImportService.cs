@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using BOL.Objects;
-using System.Drawing;
 using System.IO;
 using OfficeOpenXml;
 
@@ -85,11 +84,11 @@ namespace BLL
             }
         }
 
-        public string ExportItemsToFile(IEnumerable<Item> items)
+        public string ExportItemsToFile(IEnumerable<Item> items, string folderToSave)
         {
-            string temproraryAttachmentPath = Path.GetTempPath() + "ExportedItems" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
+            string attacmentPath = folderToSave + "\\ExportedItems" + DateTime.Now.ToString("yyyy-MM-dd HH mm ss") + ".xlsx";
 
-            var newFile = new FileInfo(temproraryAttachmentPath);
+            var newFile = new FileInfo(attacmentPath);
             using (ExcelPackage excelPackage = new ExcelPackage(newFile))
             {
                 var worksheet = excelPackage.Workbook.Worksheets.Add("Items");
@@ -118,7 +117,7 @@ namespace BLL
                 excelPackage.Save();
             }
 
-            return temproraryAttachmentPath;
+            return attacmentPath;
         }
     }
 }

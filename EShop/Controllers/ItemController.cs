@@ -6,6 +6,9 @@ using BLL_API;
 using BOL.Accounts;
 using System.Web;
 using System.IO;
+using EShop.Models;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace EShop.Controllers
 {
@@ -39,27 +42,41 @@ namespace EShop.Controllers
 
         public ActionResult Export()
         {
-            return View();
+            return View(new ExportedItemsViewModel { ExportedItemsFiles = GetExportedFiles() });
+        }
+
+        public void DowloadExportedItemsFile(string fileName, string directoryName)
+        {
+            DownloadFile(fileName, directoryName);
         }
 
         public ActionResult DownloadImportExample()
         {
-            var fileName = "ImportExample.xlsx";
+            DownloadFile("ImportExample.xlsx", Server.MapPath("~/Content/Downloads"));
+            return View("Import");
+        }
+
+        private List<FileInfo> GetExportedFiles()
+        {
+            var directory = new DirectoryInfo(Server.MapPath("~/Content/Downloads/ExportedItems"));
+            return  directory.GetFiles("*.xlsx").ToList();
+        }
+
+        private void DownloadFile (string fileName, string directoryName)
+        {
             HttpResponse response = System.Web.HttpContext.Current.Response;
             response.ClearContent();
             response.Clear();
             response.ContentType = "text/plain";
             response.AddHeader("Content-Disposition",
                                "attachment; filename=" + fileName + ";");
-            response.TransmitFile(Path.Combine(Server.MapPath("~/Content/Downloads"), fileName));
+            response.TransmitFile(Path.Combine(directoryName, fileName));
             response.Flush();
             response.End();
-
-            return View("Import");
         }
 
         [HttpPost]
-        public ActionResult ImportItemsFromFile([Bind(Include = "file")] HttpPostedFileBase file)
+        public ActionResult ImportItemsFromFile([Bind(Include = "file")] HttpPostedFileBase file, bool logInfoNeeded)
         {
             int adminId = (int)Session["AccountId"];
 
@@ -72,12 +89,12 @@ namespace EShop.Controllers
             }
 
             _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file, 
-                Server.MapPath("~/Uploads/Images"));
+                Server.MapPath("~/Uploads/Images"), logInfoNeeded);
 
             return View("Index", _itemQueryService.GetAllItems());
         }
 
-        public ActionResult ExportItemsToFile()
+        public ActionResult ExportItemsToFile(bool logInfoNeeded)
         {
             int adminId = (int)Session["AccountId"];
 
@@ -85,9 +102,13 @@ namespace EShop.Controllers
 
             var allItems = _itemQueryService.GetAllItems();
 
-            _itemManagementService.ExportAllItemsToFile(admin, allItems);
-            
-            return View("Index", allItems);      
+            _itemManagementService.ExportAllItemsToFile(admin, allItems, logInfoNeeded, Server.MapPath("~/Content/Downloads/ExportedItems"));
+
+            if (logInfoNeeded)
+            {
+                return View("Index", allItems);
+            }
+            return View("Export", new ExportedItemsViewModel { ExportedItemsFiles = GetExportedFiles() });
         }
 
         // GET: Item/Details/5

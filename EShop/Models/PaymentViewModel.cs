@@ -9,8 +9,8 @@ namespace EShop.Models
         public PaymentInfo PaymentInfo { get; set; }
 
         public Cart Cart { get; set; }
-        public Customer Customer;
+        public Customer Customer { get; set; }
 
-        public bool FormedOrder;
+        public bool FormedOrder { get; set; }
     }
 }

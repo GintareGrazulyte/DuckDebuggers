@@ -1,6 +1,5 @@
 ﻿using BOL.Objects;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BLL_API
 {
@@ -8,6 +7,6 @@ namespace BLL_API
     public interface IImportService
     {
         List<Item> ImportItemsFromFile(string path);
-        string ExportItemsToFile(IEnumerable<Item> items);
+        string ExportItemsToFile(IEnumerable<Item> items, string folderToSave);
     }
 }
