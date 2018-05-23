@@ -6,9 +6,70 @@
 <h2>Payment</h2>
 <br />
 <p>
-    <b>Card information</b><br/>
+    <b>Items </b>
     <table class="table">
-        <tr>
+        <tr class="table-active">
+            <th>
+
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Total Price
+            </th>
+        </tr>
+        @foreach (var cartItem in Model.Cart.Items)
+        {
+            decimal price = (cartItem.BuyPrice * cartItem.Quantity) / 100.0m;
+            decimal piecePrice = cartItem.BuyPrice / 100.0m;
+
+            <tr style="vertical-align:middle;">
+                <td width="10%">
+                    @{
+                        if (cartItem.Item.ImageUrl != null)
+                        {
+                            @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Quantity)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => piecePrice) Eur/piece
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => price) Eur
+                </td>
+            </tr>
+        }
+    </table>
+
+    @{var totalCost = Model.Cart.Cost / 100.0m; }
+
+    <b>Card information</b>
+    <table class="table">
+        <tr class="table-active">
             <th>
                 Holder
             </th>
@@ -33,18 +94,18 @@
     </table>
 
     <br />
-    <b>Cart cost:</b> @(Model.Cart.Cost / 100.0m) Eur
+    <b>Cart cost:</b> @Html.DisplayFor(model => totalCost) Eur
     <br />
     <br />
 
-        @if (@Model.FormedOrder)
-        {
-            @Html.ActionLink("Confirm and pay", "PayFormedOrder", new { cartId = Model.Cart.Id }, new { @class = "btn btn-primary" })
-        }
-        else
-        {
-            @Html.ActionLink("Confirm and pay", "Pay", null, new { @class = "btn btn-primary" })
-        }
+    @if (@Model.FormedOrder)
+    {
+        @Html.ActionLink("Confirm and pay", "PayFormedOrder", new { cartId = Model.Cart.Id }, new { @class = "btn btn-primary" })
+    }
+    else
+    {
+        @Html.ActionLink("Confirm and pay", "Pay", null, new { @class = "btn btn-primary" })
+    }
 
 
 

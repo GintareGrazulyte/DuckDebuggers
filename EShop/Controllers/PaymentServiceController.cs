@@ -63,7 +63,7 @@ namespace EShop.Controllers
             //Recalculation of prices is not needed as order is already formed
             var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
 
-            return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo });
+            return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo, Cart = cart });
         }
 
         public ActionResult Pay()    
@@ -80,7 +80,7 @@ namespace EShop.Controllers
             Session["Cart"] = null;
             Session["Count"] = 0;
 
-            return View(new PaymentViewModel() { PaymentInfo = paymentInfo });
+            return View(new PaymentViewModel() { PaymentInfo = paymentInfo, Cart = cart });
         }
 
         private ActionResult GetSessionProperties(out Customer customer, out Cart cart)
@@ -118,10 +118,8 @@ namespace EShop.Controllers
                 {
                     item.BuyPrice = item.Item.Price;
                 }
-                cart.Cost += item.BuyPrice;
+                cart.Cost += item.Quantity * item.BuyPrice;
             }
-            //TODO a function to count buy prices
-            //cart.Cost = cart.CountCartPrice(cart.Items);
         }
     }
 }
