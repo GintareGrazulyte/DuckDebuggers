@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<BOL.Objects.Item>
 
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+
+
 <div class="container grid">
     @if (!Model.Any())
     {
@@ -9,14 +16,20 @@
     {
         foreach (var item in Model)
         {
-            <div class="filterDiv @item.Category.Name">
+            var categoryName = "Uncategorized";
+            if (item.Category != null)
+            {
+                categoryName = item.Category.Name;
+            }
+
+            <div class="filterDiv @categoryName">
                 @{
                     decimal piecePrice = item.Price / 100.0m;
                 }
                 <div class="card d-inline-block m-1">
                     <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
                     <div class="card-body">
-                        <h6 class="card-subtitle text-muted">@item.Category.Name</h6>
+                        <h6 class="card-subtitle text-muted">@categoryName</h6>
                     </div>
                     @{
                         if (item.ImageUrl != null)

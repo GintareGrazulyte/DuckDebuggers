@@ -24,7 +24,7 @@ namespace EShop.Controllers
             var categories = _categoryService.GetAllCategories();
 
             var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
-            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "No category" } };
+            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "Uncategorized" } };
             categories = categories.Concat(noCategory);
             return View(categories);
         }
@@ -44,7 +44,7 @@ namespace EShop.Controllers
             if (categoryId == 0)
             {
                 var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
-                var noCategory = new Category { Id = 0, Items = items, Name = "No category" };
+                var noCategory = new Category { Id = 0, Items = items, Name = "Uncategorized" };
                 return View(noCategory);
             }
             try
@@ -80,9 +80,18 @@ namespace EShop.Controllers
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.ToUpper();
-                var selectedItems = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm) || x.Category.Name.ToUpper().Contains(searchTerm))
-                    .Distinct().ToList();
-                return PartialView("_Products", selectedItems);
+                try
+                {
+                    var selectedItemsByName = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm)).ToList();
+                    var selectedItemsByCategory = allItems.Where(x => x.Category != null && x.Category.Name.ToUpper().Contains(searchTerm)).ToList();
+                    var selectedItems = selectedItemsByName.Union(selectedItemsByCategory);
+                    return PartialView("_Products", selectedItems);
+                }
+                catch (NullReferenceException)
+                {
+                    //do nth
+                }
+                
             }
             return PartialView("_Products", allItems);
         }
