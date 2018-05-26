@@ -25,7 +25,7 @@
     {
         @*@Html.ActionLink(category.Name, "Browse", new { categoryId = category.Id })
             <span class="badge badge-primary badge-pill">(@category.Items.Count)</span>*@
-        <button class="btn badge-pill active" onclick="filterSelection('@category.Name')"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
+        <button class="btn badge-pill " onclick="filterSelection('@category.Name')"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
     }
 </div>
 
@@ -167,13 +167,13 @@
     var btns = btnContainer.getElementsByClassName("btn");
     for (var i = 0; i < btns.length; i++) {
         btns[i].addEventListener("click", function () {
-            if (this.className.indexOf("active") > -1)
+            if (this.className.indexOf("notActive") > -1)
             {
-                this.className = this.className.replace(" active", "");
+                this.className = this.className.replace(" notActive", "");
             }
             else
             {
-                this.className += " active";
+                this.className += " notActive";
             }
         });
     }

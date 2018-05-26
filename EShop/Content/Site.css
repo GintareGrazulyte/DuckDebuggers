@@ -108,7 +108,7 @@ textarea {
     display: block;
 }
 
-.btn.active {
+.btn.notActive {
     background-color: #666;
     color: white;
 }

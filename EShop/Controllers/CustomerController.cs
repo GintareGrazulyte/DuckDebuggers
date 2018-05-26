@@ -136,7 +136,7 @@ namespace EShop.Controllers
                 Session["IsAdminAccount"] = false;
                 if (returnUrl == null || returnUrl == string.Empty)
                 {
-                    returnUrl = "Index";
+                    return RedirectToAction("Index", "Store");
                 }
                 return Redirect(returnUrl);
             }

@@ -24,8 +24,11 @@ namespace EShop.Controllers
             var categories = _categoryService.GetAllCategories();
 
             var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
-            IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "Uncategorized" } };
-            categories = categories.Concat(noCategory);
+            if (items.Count != 0)
+            {
+                IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "Uncategorized" } };
+                categories = categories.Concat(noCategory);
+            }
             return View(categories);
         }
 
