@@ -35,9 +35,19 @@ namespace EShop.RoleProviders
 
         public override string[] GetRolesForUser(string username)   //TODO: IMPORTANT
         {
-            var adminService = UnityConfig.Container.Resolve(typeof(IAdminService), "") as IAdminService;
-            var admin = adminService.GetAdmin(username);
-            string role = admin != null ? "Admin" : "Customer";
+            string role = "";
+            if(username[0] == 'a')
+            {
+                var adminService = UnityConfig.Container.Resolve(typeof(IAdminService), "") as IAdminService;
+                var admin = adminService.GetAdmin(username.Substring(1, username.Length - 1));
+                role = admin != null ? "Admin" : "";
+            }
+            else if(username[0] == 'c')
+            {
+                var customerService = UnityConfig.Container.Resolve(typeof(ICustomerAccountService), "") as ICustomerAccountService;
+                var customer = customerService.GetCustomer(username.Substring(1, username.Length - 1));
+                role = customer != null ? "Customer" : "";
+            }
             string[] result = { role };
             return result;
         }

@@ -130,7 +130,7 @@ namespace EShop.Controllers
             var foundCustomer = _customerAccountService.LoginCustomer(customerToLogin);
             if (foundCustomer != null)
             {
-                FormsAuthentication.SetAuthCookie(foundCustomer.Email, false);
+                FormsAuthentication.SetAuthCookie("c"+foundCustomer.Email, false);
                 Session["AccountId"] = foundCustomer.Id;
                 Session["AccountEmail"] = foundCustomer.Email;
                 Session["IsAdminAccount"] = false;

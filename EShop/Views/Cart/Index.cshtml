@@ -58,14 +58,12 @@
                 </td>
                 <td style="vertical-align:middle;">
                      @{
-                         if (cartItem.Item.CategoryId != null)
+                         var categoryName = "Uncategorized";
+                         if (cartItem.Item.Category != null)
                          {
-                         @Html.ActionLink(cartItem.Item.Category.Name, "Browse", "Store", new { categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                             categoryName = cartItem.Item.Category.Name;
                          }
-                         else
-                         {
-                         @Html.ActionLink("No category", "Browse", "Store", new { categoryId = 0 }, new { @style = "color:#f25e09;text-decoration:none;" })
-                         }
+                         @categoryName;
                     }
                 </td>
 

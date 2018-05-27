@@ -31,7 +31,7 @@ namespace BOL.Accounts
 
         public bool IsCorrectPassword(string unhashedPassword)
         {
-            return Password == Encryption.SHA256(unhashedPassword);
+            return Password.ToLower() == Encryption.SHA256(unhashedPassword).ToLower();
         }
 
         public void HashPassword()
