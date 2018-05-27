@@ -20,6 +20,35 @@ namespace BLL
             _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
             _propertyRepository = propertyRepository ?? throw new ArgumentNullException("propertyRepository");
         }
+
+        public void AddProperty(string name)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var property = new Property
+                {
+                    Name = name
+                };
+
+                _propertyRepository.Add(property);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void Delete(int propertyId)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var property = _propertyRepository.FindById(propertyId);
+
+                if (property == null)
+                    throw new ArgumentException($"Property with id {propertyId} not found");
+
+                _propertyRepository.Remove(property);
+                dbContextScope.SaveChanges();
+            }
+        }
+
         public List<Property> GetAllProperties()
         {
             using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
