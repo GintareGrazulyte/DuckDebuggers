@@ -171,7 +171,6 @@ namespace EShop.Controllers
                         ["quantity"] = Convert.ToString(item.Quantity)
                     };
                     AddToCart(fc);
-                    ChangeCartItemQuantity(fc);
                 }
             }
             return View("Index", (Cart)Session["Cart"]);
