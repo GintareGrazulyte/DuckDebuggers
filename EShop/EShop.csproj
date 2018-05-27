@@ -216,7 +216,6 @@
     <Content Include="Views\Customer\Details.cshtml" />
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Item\ChangeImage.cshtml" />
-    <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Error\NotFoundError.cshtml" />
     <Content Include="Views\Error\DefaultError.cshtml" />
     <Content Include="Views\Error\InternalError.cshtml" />

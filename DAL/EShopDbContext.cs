@@ -1,10 +1,11 @@
-﻿using BOL;
+using BOL;
 using BOL.Objects;
 using BOL.Accounts;
 using System.Data.Entity;
 using BOL.Orders;
 using System.Reflection;
 using BOL.Discounts;
+using BOL.Carts;
 using BOL.Property;
 
 namespace DAL
@@ -15,6 +16,7 @@ namespace DAL
             : base("DuckDebuggersEShop")
         {
         }
+        public DbSet<CartItem> CartItems { get; set; }
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }

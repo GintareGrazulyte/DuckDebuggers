@@ -30,7 +30,15 @@ namespace BLL
             return _client.SendAsync(request)
                 .ContinueWith(responseTask =>
                 {
-                    return responseTask.Result;   
+                    try
+                    {
+                        return responseTask.Result;
+                    }
+                    catch (System.AggregateException)
+                    {
+                        var response = new HttpResponseMessage(System.Net.HttpStatusCode.RequestTimeout);
+                        return response;
+                    }
                 });
 
         }
@@ -54,10 +62,6 @@ namespace BLL
         {
             HttpResponseMessage paymentResult = Pay(card, cost).Result;
 
-            var receiveStream = paymentResult.Content.ReadAsStreamAsync().Result;
-            var readStream = new StreamReader(receiveStream, Encoding.UTF8);
-            JObject responseContent = JObject.Parse(readStream.ReadToEnd());
-
             string paymentDetails = "";
             OrderStatus orderStatus;
 
@@ -72,29 +76,34 @@ namespace BLL
                 switch (paymentResult.StatusCode)
                 {
                     case System.Net.HttpStatusCode.BadRequest:
-                        paymentDetails = "Invalid card number, ";
+                        paymentDetails = "Invalid card number, please use another card for payment";
                         break;
                     case System.Net.HttpStatusCode.Unauthorized:
                         //401 nepavyko autentifikuoti API serviso vartotojo
                         //Exception
                         break;
                     case System.Net.HttpStatusCode.PaymentRequired:
+                        var receiveStream = paymentResult.Content.ReadAsStreamAsync().Result;
+                        var readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                        JObject responseContent = JObject.Parse(readStream.ReadToEnd());
                         string error = responseContent.Property("error").Value.ToString();
                         if (error == "OutOfFunds")
                         {
-                            paymentDetails = "Insufficient balance in the card, ";
+                            paymentDetails = "Insufficient balance in the card, please use another card for payment";
                         }
                         else if (error == "CardExpired")
                         {
-                            paymentDetails = "Card is expired, ";
+                            paymentDetails = "Card is expired, please use another card for payment";
                         }
                         break;
                     case System.Net.HttpStatusCode.NotFound:
                         //404 operacija nerasta (Galima tik post)
                         //Exception
                         break;
+                    case System.Net.HttpStatusCode.RequestTimeout:
+                        paymentDetails = "Payment failed: Something went wrong.";
+                        break;
                 }
-                paymentDetails += "please use another card for payment";
             }
             return new PaymentInfo() { OrderStatus = orderStatus, PaymentDetails = paymentDetails };
         }

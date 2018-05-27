@@ -53,6 +53,8 @@ namespace DAL
 
         public void Remove(Item item)
         {
+            DbContext.CartItems.Where(x => x.Item != null && x.Item.Id == item.Id).ToList()
+                .ForEach(y => y.Item = null);
             DbContext.Items.Remove(item);
         }
 
