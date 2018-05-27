@@ -46,7 +46,9 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                discount.ItemIds = discount.Items.Split(',').Select(x => int.Parse(x)).ToList();
+                if (discount.Items != null)
+                    discount.ItemIds = discount.Items.Split(',').Select(x => int.Parse(x)).ToList();
+
                 Discount discountToCreate = null;
                 if(discount.DiscountType == DiscountType.Absolute)
                 {
