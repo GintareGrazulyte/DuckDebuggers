@@ -70,10 +70,10 @@ namespace EShop
             container.RegisterType<IOrderRatingService, OrderRatingService>();
             container.RegisterType<IDiscountManagementService, DiscountManagementService>();
             container.RegisterType<IOrderService, OrderService>();
+            container.RegisterType<IPropertyService, PropertyService>();
+            container.RegisterType<IPropertyRepository, PropertyRepository>();
 
             container.RegisterType<IEmailService, EmailService>();
-
-
 
             container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());
             container.RegisterInstance<IDbContextScopeFactory>(new DbContextScopeFactory());

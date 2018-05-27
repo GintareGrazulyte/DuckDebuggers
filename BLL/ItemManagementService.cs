@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web;
 using System.Linq;
+using BOL.Property;
 
 namespace BLL
 {
@@ -17,14 +18,15 @@ namespace BLL
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IItemRepository _itemRepository;
+        private readonly IPropertyService _propertyService;
         private readonly IFileLoader _fileLoader;
         private readonly IImportService _importService;
         private readonly IEmailService _emailService;
         private readonly ICategoryService _categoryService;
 
         public ItemManagementService(IDbContextScopeFactory dbContextScopeFactory, IItemRepository itemRepository,
-                                    IImportService importService, IFileLoader fileLoader, IEmailService emailService,
-                                    ICategoryService categoryService)
+                                        IImportService importService, IFileLoader fileLoader, IEmailService emailService,
+                                        ICategoryService categoryService, IPropertyService propertyService)
         {
             _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
             _itemRepository = itemRepository ?? throw new ArgumentNullException("itemRepository");
@@ -32,6 +34,7 @@ namespace BLL
             _importService = importService ?? throw new ArgumentNullException("importService");
             _emailService = emailService ?? throw new ArgumentNullException("emailService");
             _categoryService = categoryService ?? throw new ArgumentNullException("categoryService");
+            _propertyService = propertyService ?? throw new ArgumentNullException("propertyService");
         }
 
         public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
@@ -224,6 +227,31 @@ namespace BLL
                 foundItem.Image = itemToUpdate.Image;
 
                 _itemRepository.Modify(foundItem);
+                dbContextScope.SaveChanges();
+            }
+        }
+
+        public void AddProperty(int itemId, int propertyId, string value)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var item = _itemRepository.FindById(itemId);
+                var property = _propertyService.GetProperty(propertyId);
+
+                if (item == null)
+                    throw new ArgumentException($"Item with id {itemId} not found");
+
+                if (property == null)
+                    throw new ArgumentException($"Property with id {propertyId} not found");
+
+                var itemProperty = new ItemProperty
+                {
+                    ItemId = itemId,
+                    PropertyId = propertyId,
+                    Value = value
+                };
+
+                item.ItemProperties.Add(itemProperty);
                 dbContextScope.SaveChanges();
             }
         }

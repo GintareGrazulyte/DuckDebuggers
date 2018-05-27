@@ -66,6 +66,8 @@
     <Compile Include="Orders\OrderStatus.cs" />
     <Compile Include="PaymentInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property\ItemProperty.cs" />
+    <Compile Include="Property\Property.cs" />
     <Compile Include="Utils\Encryption.cs" />
   </ItemGroup>
   <ItemGroup>
