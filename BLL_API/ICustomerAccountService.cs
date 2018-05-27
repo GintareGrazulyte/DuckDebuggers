@@ -12,6 +12,7 @@ namespace BLL_API
         void CreateCustomer(Customer customerToCreate);
         Customer LoginCustomer(Customer customerToLogin);
         Customer GetCustomer(int customerId);
+        Customer GetCustomer(string customerEmail);
         void Modify(Customer customer);
         void UpdatePassword(int customerId, string newPassword);
         List<Customer> GetCustomers();
