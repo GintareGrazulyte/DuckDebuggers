@@ -26,11 +26,11 @@ namespace BLL
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
 
-                var foundCategory = _categoryRepository.FindById(categoryToCreate.Id);
-                if (foundCategory != null)
+                var foundCategoryById = _categoryRepository.FindById(categoryToCreate.Id);
+                var foundCategoryByName = _categoryRepository.FindByName(categoryToCreate.Name);
+                if (foundCategoryById != null || foundCategoryByName != null)
                 {
-                    //TODO: CategoryAlreadyExistsException
-                    throw new Exception();
+                    throw new Exception("Category already exists");
                 }
 
                 _categoryRepository.Add(categoryToCreate);
@@ -76,6 +76,19 @@ namespace BLL
             }
         }
 
+        public Category GetCategory(string categoryName)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            {
+                Category category = _categoryRepository.FindByName(categoryName);
+
+                if (category == null)
+                    throw new ArgumentException(String.Format("Invalid value provided for category name: [{0}].", categoryName));
+
+                return category;
+            }
+        }
+
         public void UpdateCategory(Category categoryToUpdate)
         {
             if (categoryToUpdate == null)
@@ -89,6 +102,12 @@ namespace BLL
                 {
                     //TODO: CategoryNotFoundException
                     throw new Exception();
+                }
+
+                var foundCategoryByName = _categoryRepository.FindByName(categoryToUpdate.Name);
+                if (foundCategoryByName != null)
+                {
+                    throw new Exception("Category already exists");
                 }
 
                 //TODO: copy everything here or Attach from DbContext

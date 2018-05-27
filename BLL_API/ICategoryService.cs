@@ -1,10 +1,5 @@
 ﻿using BOL;
-using BOL.Objects;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL_API
 {
@@ -12,6 +7,7 @@ namespace BLL_API
     {
         IEnumerable<Category> GetAllCategories();
         Category GetCategory(int categoryId);
+        Category GetCategory(string categoryName);
         void CreateCategory(Category categoryToCreate);
         void UpdateCategory(Category categoryToUpdate);
         void DeleteCategory(int categoryId);
