@@ -239,10 +239,10 @@ namespace BLL
                 var property = _propertyService.GetProperty(propertyId);
 
                 if (item == null)
-                    throw new ArgumentException($"Item with id {itemId} not found");
+                    throw new ArgumentException($"Item with id {itemId} not found.");
 
                 if (property == null)
-                    throw new ArgumentException($"Property with id {propertyId} not found");
+                    throw new ArgumentException($"Property with id {propertyId} not found.");
 
                 var itemProperty = new ItemProperty
                 {
