@@ -102,6 +102,7 @@ namespace EShop.Controllers
         {
             int? customerId = (int?)Session["AccountId"];
             customer = _customerAccountService.GetCustomer((int)customerId);
+         
         }
 
         private void RecalculatePrices(Cart cart)
