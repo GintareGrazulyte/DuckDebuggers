@@ -14,7 +14,19 @@
 
     <div class="row">
         <div class="col-sm-6">
-            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail"/>
+            @{
+                if(Model.ImageUrl != null)
+                {
+                    <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@Model.Name" width="100%" class="img-thumbnail" />
+
+                }
+
+            }
+
         </div>
         <div class="col-sm-6">
             <table class="table">
