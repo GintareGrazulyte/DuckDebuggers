@@ -234,6 +234,8 @@
     <Content Include="Views\Admin\_AdminsList.cshtml" />
     <Content Include="Views\Admin\_CustomersList.cshtml" />
     <Content Include="Views\Store\_Products.cshtml" />
+    <Content Include="Views\Property\Index.cshtml" />
+    <Content Include="Views\Property\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -263,6 +265,7 @@
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\OrderHistoryController.cs" />
     <Compile Include="Controllers\PaymentServiceController.cs" />
+    <Compile Include="Controllers\PropertyController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
