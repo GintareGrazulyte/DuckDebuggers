@@ -1,4 +1,5 @@
 ﻿using BOL.Discounts;
+using BOL.Property;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace BOL.Objects
         public string ImageUrl { get; set; }
 
         public virtual ICollection<Discount> Discounts { get; set; }
+        public ICollection<ItemProperty> ItemProperties { get; set; }
 
         [NotMapped]
         public bool HasDiscount
