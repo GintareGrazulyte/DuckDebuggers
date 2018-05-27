@@ -17,18 +17,13 @@ namespace DAL
         }
 
         public DbSet<Item> Items { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<Customer> Customers { get; set; }
-
         public DbSet<Admin> Admins { get; set; }
-
         public DbSet<OrderRating> OrderRatings { get; set; }
-
         public DbSet<Order> Orders { get; set; }
-
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<Property> Properties { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
