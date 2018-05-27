@@ -5,6 +5,7 @@ using System.Data.Entity;
 using BOL.Orders;
 using System.Reflection;
 using BOL.Discounts;
+using BOL.Carts;
 
 namespace DAL
 {
@@ -14,6 +15,7 @@ namespace DAL
             : base("DuckDebuggersEShop")
         {
         }
+        public DbSet<CartItem> CartItems { get; set; }
 
         public DbSet<Item> Items { get; set; }
 

@@ -80,30 +80,7 @@ namespace EShop.Controllers
             return PartialView("_AdminsList", allAdmins);
         }
 
-        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-        public ActionResult Create() => View("Create");
-
-        [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Admin admin)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _adminService.CreateAdmin(admin);
-                    return Redirect("Users");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    ModelState.AddModelError("", ex.Message);
-                }
-            }
-
-            return View();
-        }
+        
 
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
         public ActionResult Users() => View();

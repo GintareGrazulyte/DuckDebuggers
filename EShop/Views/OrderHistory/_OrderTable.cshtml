@@ -39,18 +39,31 @@
             <tr>
                 <td width="10%">
                     @{
-                        if (cartItem.Item.ImageUrl != null)
+                        if (cartItem.Item != null && cartItem.Item.Image != null)
                         {
                             @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
                         }
                     }
                 </td>
                 <td style="vertical-align:middle;">
-                    @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
-
+                    @if (cartItem.Item != null)
+                    {
+                        Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" });
+                    }
+                    else
+                    {
+                        @:Not Available
+                    }
                 </td>
                 <td style="vertical-align:middle;">
-                    @Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
+                    @if (cartItem.Item != null)
+                    {
+                        Html.DisplayFor(modelItem => cartItem.Item.Category.Name);
+                    }
+                    else
+                    {
+                        @:Not Available
+                    }
                 </td>
 
                 <td style="vertical-align:middle;">
