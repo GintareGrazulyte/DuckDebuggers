@@ -49,8 +49,7 @@ namespace BLL
             using (_dbContextScopeFactory.CreateReadOnly())
             {
                 var foundAdmin = _adminRepository.FindByEmail(adminToLogin.Email);
-                //TODO needs to hashed, but how do you create an admin then?
-                if (foundAdmin != null && foundAdmin.Password == adminToLogin.Password)
+                if (foundAdmin != null && foundAdmin.IsCorrectPassword(adminToLogin.Password))
                 {
                     return foundAdmin;
                 }
