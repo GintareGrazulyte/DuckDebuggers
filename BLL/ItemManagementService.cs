@@ -231,7 +231,7 @@ namespace BLL
             }
         }
 
-        public void AddProperty(int itemId, int propertyId, string value)
+        public void AddPropertyToItem(int itemId, int propertyId, string value)
         {
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
