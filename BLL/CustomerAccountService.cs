@@ -74,6 +74,14 @@ namespace BLL
             }
         }
 
+        public Customer GetCustomer(string customerEmail)
+        {
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return _customerRepository.FindByEmail(customerEmail);
+            }
+        }
+
         public List<Customer> GetCustomers()
         {
             using (_dbContextScopeFactory.CreateReadOnly())
