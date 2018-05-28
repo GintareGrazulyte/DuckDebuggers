@@ -5,8 +5,6 @@ using System.Web.Mvc;
 using System.Web.Security;
 using EShop.Attributes;
 using BLL_API;
-using System;
-using System.Diagnostics;
 
 namespace EShop.Controllers
 {
