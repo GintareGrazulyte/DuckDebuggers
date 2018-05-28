@@ -11,17 +11,16 @@ EShop/obj/
 *.userosscache
 *.sln.docstates
 EShop/App_Data/*.ldf
-/BLL/bin/Debug
-/BLL/obj
-/DAL/bin/Debug
-/DAL/obj
-/DOL/bin/Debug
-/DOL/obj/Debug
-/DOL/obj/Release
-/DAL_API/bin/Debug
-/DAL_API/obj/Debug
-/BLL_API/bin/Debug
-/BLL_API/obj/Debug
+/BLL/bin/
+/BLL/obj/
+/DAL/bin/
+/DAL/obj/
+/DOL/bin/
+/DOL/obj/
+/DAL_API/bin/
+/DAL_API/obj/
+/BLL_API/bin/
+/BLL_API/obj/
 
 /EShop/Uploads
 /EShop/Content/Downloads/ExportedItems
