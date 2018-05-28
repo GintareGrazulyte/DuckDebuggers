@@ -48,10 +48,12 @@ namespace EShop.Controllers
             return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
         }
 
-        public ActionResult PayFormedOrder(int cartId)
+        public ActionResult PayFormedOrder(FormCollection fc)
         {
-            GetSessionCustomer(out Customer customer); 
-
+            string cvv = fc["Customer.Card.CVV"];
+            //TODO VALIDUOT CVV AR NE
+            int cartId = System.Convert.ToInt32(fc["cartId"]);
+            GetSessionCustomer(out Customer customer);
             var order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cartId);
             var cart = order.Cart;
 
@@ -61,21 +63,24 @@ namespace EShop.Controllers
             }
 
             //Recalculation of prices is not needed as order is already formed
-            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
+            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart, cvv);
 
             return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo, Cart = cart });
         }
 
-        public ActionResult Pay()    
+        public ActionResult Pay(FormCollection fc)    
         {
+            string cvv = fc["Customer.Card.CVV"];
+            //TODO AR REIKIA VALIDUOTI CVV?
+            
             ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
-
+            
             if (actionResult != null)
             {
                 return actionResult;
             }
 
-            var paymentInfo = _customerPaymentService.Pay(customer.Id, cart);
+            var paymentInfo = _customerPaymentService.Pay(customer.Id, cart, cvv);
 
             Session["Cart"] = null;
             Session["Count"] = 0;

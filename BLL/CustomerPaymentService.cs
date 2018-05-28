@@ -1,5 +1,6 @@
 ﻿using BLL_API;
 using BOL;
+using BOL.Accounts;
 using BOL.Carts;
 using BOL.Orders;
 using DAL;
@@ -26,17 +27,18 @@ namespace BLL
             _itemQueryService = itemQueryService ?? throw new ArgumentNullException("itemQueryService");
         }
 
-        public PaymentInfo Pay(int customerId, Cart cart)
+        public PaymentInfo Pay(int customerId, Cart cart, string cvv)
         {
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
 
-                var customer = _customerRepository.FindById(customerId);
+                var customer = _customerRepository.FindById(customerId); 
                 if (customer == null)
                 {
                     //TODO: CustomerNotFoundException
                     throw new Exception();
                 }
+                customer.Card.CVV = cvv;
                 var paymentInfo = _paymentService.Payment(customer.Card, cart.Cost);
 
                 cart.Items.ToList().ForEach(x => x.Item = _itemQueryService.GetItem(x.Item.Id)); //TODO: remove hack
@@ -44,29 +46,30 @@ namespace BLL
                 var order = new Order { Cart = cart, DateTime = DateTime.Now, OrderStatus = paymentInfo.OrderStatus };
                 customer.Orders.Add(order);
                 _customerRepository.Modify(customer);
-
+                customer.Card.CVV = null;
                 dbContextScope.SaveChanges();
                 return paymentInfo;
             }        
         }
 
-        public PaymentInfo PayFormedOrder(int customerId, Cart cart)
+        public PaymentInfo PayFormedOrder(int customerId, Cart cart, string cvv)
         {
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
 
-                var customer = _customerRepository.FindById(customerId);
+                var customer = _customerRepository.FindById(customerId); 
                 if (customer == null)
                 {
                     //TODO: CustomerNotFoundException
                     throw new Exception();
                 }
+                customer.Card.CVV = cvv;
                 var paymentInfo = _paymentService.Payment(customer.Card, cart.Cost);
 
                 Order order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cart.Id);
                 order.OrderStatus = paymentInfo.OrderStatus;
                 _customerRepository.Modify(customer);
-
+                customer.Card.CVV = null;
                 dbContextScope.SaveChanges();
                 return paymentInfo;
             }
