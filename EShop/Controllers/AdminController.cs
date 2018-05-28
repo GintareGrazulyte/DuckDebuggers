@@ -36,7 +36,7 @@ namespace EShop.Controllers
             var foundAdmin = _adminService.LoginAdmin(admin);
             if (foundAdmin != null)
             {
-                FormsAuthentication.SetAuthCookie(foundAdmin.Email, false);
+                FormsAuthentication.SetAuthCookie("a"+foundAdmin.Email, false);
                 Session["AccountId"] = foundAdmin.Id;
                 Session["AccountEmail"] = foundAdmin.Email;
                 Session["IsAdminAccount"] = true;

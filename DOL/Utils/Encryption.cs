@@ -17,7 +17,12 @@ namespace BOL.Utils
         {
             var mySHA256 = System.Security.Cryptography.SHA256.Create();
             byte[] sha256Data = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(text));
-            return Convert.ToBase64String(sha256Data);
+            return BytesToHexString(sha256Data);
+        }
+
+        private static string BytesToHexString(byte[] ba)
+        {
+            return BitConverter.ToString(ba).Replace("-", "");
         }
     }
 }

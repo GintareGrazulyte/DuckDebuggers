@@ -14,7 +14,19 @@
 
     <div class="row">
         <div class="col-sm-6">
-            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail"/>
+            @{
+                if(Model.ImageUrl != null)
+                {
+                    <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@Model.Name" width="100%" class="img-thumbnail" />
+
+                }
+
+            }
+
         </div>
         <div class="col-sm-6">
             <table class="table">
@@ -86,16 +98,9 @@
 
 <div class="fb-comments" data-width="230" data-numposts="5"/>
 <p>
-@{
-    if (Model.Category != null)
-    {
-        @Html.ActionLink("Back to browsing", "Browse", new { categoryId = Model.Category.Id })
+    @{
+        @Html.ActionLink("Back to browsing", "Index", "Store")
     }
-    else
-    {
-        @Html.ActionLink("Back to browsing", "Browse", new { categoryId = 0 })
-    }
-}
 
 </p>
 

@@ -15,5 +15,6 @@ namespace BLL_API
         void UpdateItem(Item itemToUpdate);
         void DeleteItem(int itemId);
         void UpdateItemImage(Item itemToUpdate, string folderToImage);
+        void AddPropertyToItem(int itemId, int propertyId, string value);
     }
 }

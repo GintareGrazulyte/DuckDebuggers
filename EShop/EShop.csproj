@@ -135,8 +135,11 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\cartIcon.jpg" />
     <Content Include="Content\Images\ImportExample.PNG" />
+    <Content Include="Content\Images\minus.svg" />
+    <Content Include="Content\Images\NoImage.jpg" />
     <Content Include="Content\Images\panda404.png" />
     <Content Include="Content\Images\panda404v2.png" />
+    <Content Include="Content\Images\plus.svg" />
     <Content Include="Content\Images\StarFade.gif" />
     <Content Include="Content\Images\StarGlow.gif" />
     <Content Include="Content\jsTree\docs.css" />
@@ -188,8 +191,6 @@
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Shared\_Login.cshtml" />
     <Content Include="Views\Store\Index.cshtml" />
-    <Content Include="Views\Store\Browse.cshtml" />
-    <Content Include="Views\Store\CategoryMenu.cshtml" />
     <Content Include="Views\PaymentService\Index.cshtml" />
     <Content Include="Views\PaymentService\Pay.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
