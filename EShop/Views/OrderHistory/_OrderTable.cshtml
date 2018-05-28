@@ -48,7 +48,7 @@
                 <td style="vertical-align:middle;">
                     @if (cartItem.Item != null)
                     {
-                        Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" });
+                        @:@Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                     }
                     else
                     {
@@ -58,7 +58,7 @@
                 <td style="vertical-align:middle;">
                     @if (cartItem.Item != null)
                     {
-                        Html.DisplayFor(modelItem => cartItem.Item.Category.Name);
+                        @:@Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
                     }
                     else
                     {
