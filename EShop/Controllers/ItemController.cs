@@ -9,12 +9,15 @@ using System.IO;
 using EShop.Models;
 using System.Linq;
 using System.Collections.Generic;
+using log4net;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class ItemController : Controller    //TODO: exception handling
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(ItemController));
+
         private IItemQueryService _itemQueryService;
         private ICategoryService _categoryService;
         private IItemManagementService _itemManagementService;

@@ -3,6 +3,7 @@ using BOL.Carts;
 using BOL.Objects;
 using BOL.Orders;
 using EShop.Attributes;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,12 @@ namespace EShop.Controllers
 {
     public class CartController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(CartController));
+
         private IItemQueryService _itemQueryService;
         private ICartService _cartService;
         private ICustomerAccountService _customerAccountService;
+
 
         public CartController(IItemQueryService itemQueryService, ICartService cartService, ICustomerAccountService customerAccountService)
         {

@@ -7,11 +7,14 @@ using BLL_API;
 using EShop.Models;
 using EShop.Attributes;
 using System.Net;
+using log4net;
 
 namespace EShop.Controllers
 {
     public class OrderHistoryController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(OrderHistoryController));
+
         private ICustomerAccountService _customerAccountService;
         private IOrderRatingService _orderRatingService;
         private IOrderService _orderService;

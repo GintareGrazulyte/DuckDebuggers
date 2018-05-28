@@ -1,17 +1,19 @@
 ﻿using BLL_API;
 using BOL.Accounts;
 using BOL.Carts;
-using BOL.Orders;
 using EShop.Models;
 using System.Linq;
 using System.Web.Mvc;
 using EShop.Attributes;
+using log4net;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
     public class PaymentServiceController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(PaymentServiceController));
+
         private ICustomerPaymentService _customerPaymentService;
         private ICustomerAccountService _customerAccountService;
 

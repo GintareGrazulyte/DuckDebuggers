@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BOL.Property;
+﻿using BOL.Property;
 using System.Web.Mvc;
 using BLL_API;
+using log4net;
 
 namespace EShop.Controllers
 {
     public class PropertyController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(PropertyController));
+
         readonly IPropertyService _propertyService;
 
         public PropertyController(IPropertyService propertyService)

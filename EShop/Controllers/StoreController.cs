@@ -1,5 +1,6 @@
 ﻿using BLL_API;
 using BOL;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace EShop.Controllers
 {
     public class StoreController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(StoreController));
+
         private readonly ICategoryService _categoryService;
         private readonly IItemQueryService _itemQueryService;
 

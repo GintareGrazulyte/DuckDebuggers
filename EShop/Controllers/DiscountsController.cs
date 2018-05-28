@@ -2,19 +2,19 @@
 using BOL.Discounts;
 using EShop.Attributes;
 using EShop.Models;
+using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class DiscountsController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(DiscountsController));
+
         private ICategoryService _categoryService;
         private IDiscountManagementService _discountManagementService;
 

@@ -5,12 +5,16 @@ using System.Web.Mvc;
 using System.Web.Security;
 using EShop.Attributes;
 using BLL_API;
+using log4net;
 
 namespace EShop.Controllers
 {
     public class AdminController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(AdminController));
+
         private IAdminService _adminService;
+        
 
         public AdminController(IAdminService adminService)
         {

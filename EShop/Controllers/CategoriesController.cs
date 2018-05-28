@@ -4,12 +4,15 @@ using System.Web.Mvc;
 using BOL;
 using EShop.Attributes;
 using BLL_API;
+using log4net;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class CategoriesController : Controller      //TODO: exception handling -> error messages
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(CategoriesController));
+
         private ICategoryService _categoryService;
 
         public CategoriesController(ICategoryService categoryService)

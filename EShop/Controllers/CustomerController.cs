@@ -2,6 +2,7 @@
 using BOL.Accounts;
 using EShop.Attributes;
 using EShop.Models;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,8 @@ namespace EShop.Controllers
 {
     public class CustomerController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(CustomerController));
+
         private readonly ICustomerAccountService _customerAccountService;
 
         public CustomerController(ICustomerAccountService customerAccountService)
