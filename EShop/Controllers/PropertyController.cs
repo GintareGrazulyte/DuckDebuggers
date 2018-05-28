@@ -30,9 +30,13 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Name")] Property property)
         {
+            _logger.InfoFormat("Create property with name [{0}]", property.Name);
+
             if (ModelState.IsValid)
             {
                 _propertyService.AddProperty(property.Name);
+
+                _logger.InfoFormat("Create property with name [{0}] was successful.", property.Name);
                 return RedirectToAction("Index");
             }
             return View(property);

@@ -50,6 +50,8 @@ namespace EShop.Controllers
 
         public void DowloadExportedItemsFile(string fileName, string directoryName)
         {
+            _logger.InfoFormat("Download exported items file : [{0}], directory : [{1}]", fileName, directoryName);
+
             DownloadFile(fileName, directoryName);
         }
 
@@ -61,7 +63,10 @@ namespace EShop.Controllers
 
         private List<FileInfo> GetExportedFiles()
         {
-            var directory = new DirectoryInfo(Server.MapPath("~/Content/Downloads/ExportedItems"));
+            string path = Server.MapPath("~/Content/Downloads/ExportedItems");
+            _logger.InfoFormat("Get all exported items files from path [{0}]", path);
+
+            var directory = new DirectoryInfo(path);
             return  directory.GetFiles("*.xlsx").ToList();
         }
 
@@ -88,8 +93,13 @@ namespace EShop.Controllers
             if (file == null)
             {
                 ModelState.AddModelError("", "Choose a file to import");
+
+                _logger.Info("Import file was not chosen");
+
                 return View("Import");
             }
+
+            _logger.InfoFormat("Import items form file [{0}], log info needed [{1}]", file.FileName, logInfoNeeded);
 
             _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file, 
                 Server.MapPath("~/Uploads/Images"), logInfoNeeded);
@@ -99,6 +109,8 @@ namespace EShop.Controllers
 
         public ActionResult ExportItemsToFile(bool logInfoNeeded)
         {
+            _logger.InfoFormat("Export all items to file, log info needed [{0}]", logInfoNeeded);
+
             int adminId = (int)Session["AccountId"];
 
             var admin = _adminService.GetAdmin(adminId);
@@ -117,6 +129,8 @@ namespace EShop.Controllers
         // GET: Item/Details/5
         public ActionResult Details(int? id)
         {
+            _logger.InfoFormat("View details about item with id [{0}]", id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -124,8 +138,11 @@ namespace EShop.Controllers
             Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
+                _logger.InfoFormat("Item with id [{0}] was not found", id);
                 return HttpNotFound();
             }
+
+            _logger.InfoFormat("Item with id [{0}] was successfully found", id);
             return View(item);
         }
 
@@ -143,10 +160,15 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
         {
+            _logger.InfoFormat("Create item with name [{0}], price [{1}], description [{2}], image [{3}], categoryId [{4}]",
+                item.Name, item.Price, item.Description, item.Image != null ? item.Image.FileName : null, item.CategoryId);
+
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
                 _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
+
+                _logger.Info("Item was successfully created");
                 return RedirectToAction("Index");
             }
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
@@ -155,11 +177,12 @@ namespace EShop.Controllers
 
         // GET: Item/Edit/5
         public ActionResult Edit(int? id)
-        {
+        { 
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Item item = _itemQueryService.GetItem(id.Value);
             if (item == null)
             {
@@ -176,14 +199,20 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,CategoryId")] Item item)
         {
+            _logger.InfoFormat("Edit item with id [{0}]", item.Id);
+
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             //var selectList = ViewBag.CategoryId as SelectList;
             //var selectedItem = selectList.SelectedValue;
             if (ModelState.IsValid)
             {
                 _itemManagementService.UpdateItem(item);
+
+                _logger.InfoFormat("Item with id [{0}] was successfully updated", item.Id);
                 return RedirectToAction("Index");
             }
+
+            _logger.InfoFormat("Update item with id [{0}] failed", item.Id);
             return View(item);
         }
 
@@ -220,6 +249,7 @@ namespace EShop.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(item);
         }
 
@@ -228,7 +258,12 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            _logger.InfoFormat("Delete item with id [{0}]", id);
+
             _itemManagementService.DeleteItem(id);
+
+            _logger.InfoFormat("Item with id [{0}] was successfully deleted", id);
+
             return RedirectToAction("Index");
         }
     }

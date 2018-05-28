@@ -24,6 +24,8 @@ namespace EShop.Controllers
         // GET: Store
         public ActionResult Index()
         {
+            _logger.Info("Get all categories");
+
             var categories = _categoryService.GetAllCategories();
 
             var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
@@ -32,6 +34,8 @@ namespace EShop.Controllers
                 IEnumerable<Category> noCategory = new List<Category> { new Category { Id = 0, Items = items, Name = "Uncategorized" } };
                 categories = categories.Concat(noCategory);
             }
+
+            _logger.InfoFormat("Categories found : [{0}]", categories.ToList().Count);
             return View(categories);
         }
 
@@ -42,46 +46,34 @@ namespace EShop.Controllers
             return PartialView(categories);
 
         }
-        public ActionResult Browse(int? categoryId)
-        {
-            if (categoryId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            if (categoryId == 0)
-            {
-                var items = (_itemQueryService.GetAllItems()).Where(i => i.CategoryId == null).ToList();
-                var noCategory = new Category { Id = 0, Items = items, Name = "Uncategorized" };
-                return View(noCategory);
-            }
-            try
-            {
-                var category = _categoryService.GetCategory(categoryId.Value);
-                return View(category);
-            }
-            catch (ArgumentException)
-            {
-                return HttpNotFound();
-            }
-        }
+      
         public ActionResult Details(int? itemId)
         {
+            _logger.InfoFormat("View details of an item with id [{0}]", itemId);
+
             if (itemId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             try
             {
                 var item = _itemQueryService.GetItem(itemId.Value);
+
+                _logger.InfoFormat("Item with id [{0}] was successfully found", itemId);
+
                 return View(item);
             }
             catch (ArgumentException)
             {
+                _logger.InfoFormat("Item with id [{0}] details cannot be displayed", itemId);
                 return HttpNotFound();
             }
         }
 
-        public ActionResult ListProducts(string Search)
+        public ActionResult ListProducts(string search)
         {
-            var searchTerm = Search;
+            _logger.InfoFormat("Get all items for search criteria : [{0}]", search);
+
+            var searchTerm = search;
             var allItems = _itemQueryService.GetAllItems();
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -91,6 +83,9 @@ namespace EShop.Controllers
                     var selectedItemsByName = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm)).ToList();
                     var selectedItemsByCategory = allItems.Where(x => x.Category != null && x.Category.Name.ToUpper().Contains(searchTerm)).ToList();
                     var selectedItems = selectedItemsByName.Union(selectedItemsByCategory);
+
+                    _logger.InfoFormat("Search for citeria [{0}] returned [{1}] items", searchTerm, selectedItems.ToList().Count);
+
                     return PartialView("_Products", selectedItems);
                 }
                 catch (NullReferenceException)
