@@ -15,7 +15,7 @@ namespace BLL
             string fileName = Path.GetFileName(file.FileName);
             string path = Path.Combine(folder, fileName);
             file.SaveAs(path);
-            return file.FileName;
+            return fileName;
         }
     }
 }

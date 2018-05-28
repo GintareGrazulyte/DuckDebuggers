@@ -239,6 +239,7 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult AddItemProperty(PropertyViewModel property)
         {
+            //TODO also pass PropertyName through PropertyViewModel
             var itemProperty = new ItemProperty() { PropertyId = int.Parse(property.PropertyId), Value = property.Value };
             //TODO: somehow add this itemProperty to Item
             ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
