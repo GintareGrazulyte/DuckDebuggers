@@ -55,8 +55,15 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryService.CreateCategory(category);
-                return RedirectToAction("Index");
+                try
+                {
+                    _categoryService.CreateCategory(category);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
 
             return View(category);
@@ -88,8 +95,15 @@ namespace EShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryService.UpdateCategory(category);
-                return RedirectToAction("Index");
+                try
+                {
+                    _categoryService.UpdateCategory(category);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
             return View(category);
         }
