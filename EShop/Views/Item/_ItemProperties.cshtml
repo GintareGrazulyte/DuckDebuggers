@@ -1,0 +1,68 @@
+﻿@model IEnumerable<BOL.Property.ItemProperty>
+@using BOL.Property
+
+@{
+    var itemProperty = new ItemProperty();
+}
+<div class="form-group">
+    @Html.LabelFor(property => itemProperty.PropertyId, "Property", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10 row">
+        @Html.DropDownList("PropertyId", null, "No property", htmlAttributes: new { @class = "form-control", id = "dropDown" })
+        @Html.ValidationMessageFor(property => itemProperty.PropertyId, "", new { @class = "text-danger" })
+
+        @Html.EditorFor(property => itemProperty.Value, new { htmlAttributes = new { @class = "form-control", id = "propertyValue" } })
+        @Html.ValidationMessageFor(property => itemProperty.Value, "", new { @class = "text-danger" })
+
+        <input type="button" onclick="updateProperties()" value="Add" />
+    </div>
+</div>
+
+<table class="table" id="PropertiesTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Property.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Value)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Property.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+</table>
+
+<script type="text/javascript">
+    function updateProperties() {
+        var url = '@Url.Action("AddItemProperty", "Item")';
+
+        var property = {
+            PropertyId: $("#dropDown").val(),
+            Value: $("#propertyValue").val()
+        };
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: property,
+            success: function (mydata) {
+               
+            }
+        });
+        return false;
+    }
+
+
+</script>

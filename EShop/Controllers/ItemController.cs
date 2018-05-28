@@ -9,6 +9,7 @@ using System.IO;
 using EShop.Models;
 using System.Linq;
 using System.Collections.Generic;
+using BOL.Property;
 
 namespace EShop.Controllers
 {
@@ -19,14 +20,17 @@ namespace EShop.Controllers
         private ICategoryService _categoryService;
         private IItemManagementService _itemManagementService;
         private IAdminService _adminService;
+        private IPropertyService _propertyService;
+        
 
         public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
-            IItemManagementService itemManagementService, IAdminService adminService)
+            IItemManagementService itemManagementService, IAdminService adminService, IPropertyService propertyService)
         {
             _itemQueryService = itemQueryService;
             _categoryService = categoryService;
             _itemManagementService = itemManagementService;
             _adminService = adminService;
+            _propertyService = propertyService;
         }
 
         // GET: Item
@@ -130,7 +134,10 @@ namespace EShop.Controllers
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
-            return View();
+            ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
+            var item = new Item();
+            item.ItemProperties.Add(new ItemProperty() { Value = "Shit" });
+            return View(item);
         }
 
         // POST: Item/Create
@@ -138,7 +145,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId")] Item item)
+        public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Image,CategoryId,ItemProperties")] Item item)
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
@@ -227,6 +234,15 @@ namespace EShop.Controllers
         {
             _itemManagementService.DeleteItem(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult AddItemProperty(PropertyViewModel property)
+        {
+            var itemProperty = new ItemProperty() { PropertyId = int.Parse(property.PropertyId), Value = property.Value };
+            //TODO: somehow add this itemProperty to Item
+            ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
+            return PartialView("_ItemProperties", property);
         }
     }
 }

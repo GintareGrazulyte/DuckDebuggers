@@ -53,5 +53,6 @@ namespace DAL
                 .WithMany(t => t.ItemProperties)
                 .HasForeignKey(t => t.PropertyId);
         }
+        
     }
 }
