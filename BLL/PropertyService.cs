@@ -69,5 +69,26 @@ namespace BLL
                 return property;
             }
         }
+
+        public void Update(Property property)
+        {
+            if (property == null)
+                throw new ArgumentNullException("itemToUpdate");
+
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundProperty = _propertyRepository.FindById(property.Id);
+                if (foundProperty == null)
+                {
+                    throw new Exception();
+                }
+
+                foundProperty.Name = property.Name;
+
+                _propertyRepository.Modify(foundProperty);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }
