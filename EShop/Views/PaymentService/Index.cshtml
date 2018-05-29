@@ -91,7 +91,7 @@
     @{var totalCost = Model.Cart.Cost / 100.0m; }
 
     <b>Card information</b>
-    <table class="table">
+    <table class="table"  style="width:40%">
         <tr class="table-active">
             <th>
                 Holder
@@ -110,7 +110,7 @@
             <th>
                 @Model.Customer.Card.Number
             </th>
-            <th>
+            <th style="width:30%; text-align:center">
                 @Html.EditorFor(model => model.Customer.Card.CVV, new { htmlAttributes = new { @class = "form-control" } })
                 <input type="hidden" name="cartId" value="@cartId" />
             </th>
