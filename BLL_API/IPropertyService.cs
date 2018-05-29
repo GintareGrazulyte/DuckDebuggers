@@ -10,6 +10,7 @@ namespace BLL_API
     public interface IPropertyService
     {
         List<Property> GetAllProperties();
+        List<Property> GetProperties(List<int> ids);
         Property GetProperty(int propertyId);
         void Update(Property property);
         void Delete(int propertyId);

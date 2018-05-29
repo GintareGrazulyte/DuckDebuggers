@@ -16,5 +16,6 @@ namespace BOL.Property
         public string Name { get; set; }
 
         public ICollection<ItemProperty> ItemProperties { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

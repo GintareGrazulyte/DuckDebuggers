@@ -273,5 +273,20 @@ namespace BLL
                 dbContextScope.SaveChanges();
             }
         }
+
+        public void DeleteItemProperty(int itemId, int propertyId)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+                var item = _itemRepository.FindById(itemId);
+                var itemProperty = item.ItemProperties.SingleOrDefault(x => x.PropertyId == propertyId);
+
+                if (item == null)
+                    throw new ArgumentException($"Item with id {itemId} not found.");
+                
+                item.ItemProperties.Remove(itemProperty);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }

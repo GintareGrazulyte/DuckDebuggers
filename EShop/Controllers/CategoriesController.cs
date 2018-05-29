@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using BOL;
 using EShop.Attributes;
 using BLL_API;
+using EShop.Models;
+using System.Collections.Generic;
+using System.Linq;
 using log4net;
 
 namespace EShop.Controllers
@@ -14,10 +17,12 @@ namespace EShop.Controllers
         private static ILog _logger = LogManager.GetLogger(typeof(CategoriesController));
 
         private ICategoryService _categoryService;
+        private IPropertyService _propertyService;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IPropertyService propertyService)
         {
             _categoryService = categoryService;
+            _propertyService = propertyService;
         }
 
         // GET: Categories
@@ -48,28 +53,38 @@ namespace EShop.Controllers
             }
         }
 
-        // GET: Categories/Create
+
+        [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            AddCategoryViewModel model = new AddCategoryViewModel();
+            var properties = _propertyService.GetAllProperties();
+            var checkBoxListItems = new List<CheckBoxListItem>();
+            properties.ForEach(x => checkBoxListItems.Add(new CheckBoxListItem()
+            {
+                ID = x.Id,
+                Display = x.Name,
+                IsChecked = false
+            }));
+
+            model.Properties = checkBoxListItems;
+            return View(model);
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Category category)
+        public ActionResult Create(AddCategoryViewModel model)
         {
-            _logger.InfoFormat("Create category with name [{0}]", category.Name);
+            _logger.InfoFormat("Create category with name [{0}]", model.Name);
 
+            var selectedProperties = model.Properties.Where(x => x.IsChecked).Select(x => x.ID).ToList();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _categoryService.CreateCategory(category);
+                    _categoryService.CreateCategory(model.Name, selectedProperties);
 
-                    _logger.InfoFormat("Create category with name [{0}] was successful", category.Name);
+                    _logger.InfoFormat("Create category with name [{0}] was successful", model.Name);
 
                     return RedirectToAction("Index");
                 }
@@ -79,8 +94,8 @@ namespace EShop.Controllers
                     ModelState.AddModelError("", ex.Message);
                 }
             }
-            _logger.InfoFormat("Create category with name [{0}] failed", category.Name);
-            return View(category);
+            _logger.InfoFormat("Create category with name [{0}] failed", model.Name);
+            return View(model);
         }
 
         // GET: Categories/Edit/5

@@ -1,4 +1,5 @@
 ﻿@model BOL.Objects.Item
+@using BOL.Property
 
 @{
     ViewBag.Title = "Create";
@@ -62,12 +63,28 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-primary" />
+        <!-- add missing 'eta' symbols -->
+        <!--<div class="form-group">
+            Html.LabelFor(property => itemProperty.PropertyId, "Property", htmlAttributes: new { class = "control-label col-md-2" })
+            <div class="col-md-10 row">
+                Html.DropDownList("PropertyId", null, "No property", htmlAttributes: new { class = "form-control", id = "dropDown" })
+                Html.ValidationMessageFor(property => itemProperty.PropertyId, "", new { class = "text-danger" })
+
+                Html.EditorFor(property => itemProperty.Value, new { htmlAttributes = new { class = "form-control", id = "propertyValue" } })
+                Html.ValidationMessageFor(property => itemProperty.Value, "", new { class = "text-danger" })
+
+                <input type="button" onclick="updateProperties()" value="Add" />
+            </div>
+        </div>
+
+        @Html.Partial("_ItemProperties", Model.ItemProperties)-->
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div>
@@ -76,4 +93,26 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+    function updateProperties() {
+        var url = '@Url.Action("AddItemProperty", "Item")';
+
+        var property = {
+            PropertyId: $("#dropDown").val(),
+            Value: $("#propertyValue").val()
+        };
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: property,
+            success: function (mydata) {
+
+            }
+        });
+        return false;
+    }
+
+    </script>
 }
