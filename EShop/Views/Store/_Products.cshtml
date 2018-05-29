@@ -27,9 +27,9 @@
                     decimal piecePrice = item.Price / 100.0m;
                 }
                 <div class="card d-inline-block m-1">
-                    <h3 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h3>
+                    <h4 class="card-header">@Html.DisplayFor(modelItem => item.Name)</h4>
                     <div class="card-body">
-                        <h6 class="card-subtitle text-muted">@categoryName</h6>
+                        <h6 class="card-subtitle text-muted">@Html.DisplayFor(modelItem => item.Title)</h6>
                     </div>
                     @{
                         if (item.ImageUrl != null)
@@ -65,7 +65,8 @@
                         </div>
 
                     </div>
-                    <div class="card-footer text-muted">
+                    <div class="card-footer text-muted text-center">
+                        @categoryName
                     </div>
                 </div>
             </div>

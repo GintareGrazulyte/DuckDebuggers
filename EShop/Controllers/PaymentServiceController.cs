@@ -50,10 +50,12 @@ namespace EShop.Controllers
             return View("Index", new PaymentViewModel() { Customer = customer, Cart = cart, FormedOrder = true });
         }
 
-        public ActionResult PayFormedOrder(int cartId)
+        public ActionResult PayFormedOrder(FormCollection fc)
         {
-            GetSessionCustomer(out Customer customer); 
-
+            string cvv = fc["Customer.Card.CVV"];
+            //TODO VALIDUOT CVV AR NE
+            int cartId = System.Convert.ToInt32(fc["cartId"]);
+            GetSessionCustomer(out Customer customer);
             var order = customer.Orders.FirstOrDefault(o => o.Cart.Id == cartId);
 
             if (order == null)
@@ -66,15 +68,18 @@ namespace EShop.Controllers
             _logger.InfoFormat("Payment for formed order with id [{0}], price [{1}]", cart.Id, cart.Cost);
 
             //Recalculation of prices is not needed as order is already formed
-            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart);
+            var paymentInfo = _customerPaymentService.PayFormedOrder(customer.Id, cart, cvv);
 
             _logger.InfoFormat("Payment info : [{0}], for formed order with id [{1}]", paymentInfo.OrderStatus, cart.Id);
 
             return View("Pay", new PaymentViewModel() { PaymentInfo = paymentInfo, Cart = cart });
         }
 
-        public ActionResult Pay()    
+        public ActionResult Pay(FormCollection fc)    
         {
+            string cvv = fc["Customer.Card.CVV"];
+            //TODO AR REIKIA VALIDUOTI CVV?
+            
             ActionResult actionResult = GetSessionProperties(out Customer customer, out Cart cart);
 
             _logger.InfoFormat("Payment for cart price [{1}]", cart.Id, cart.Cost);
@@ -85,7 +90,7 @@ namespace EShop.Controllers
                 return actionResult;
             }
 
-            var paymentInfo = _customerPaymentService.Pay(customer.Id, cart);
+            var paymentInfo = _customerPaymentService.Pay(customer.Id, cart, cvv);
 
             _logger.InfoFormat("Payment info : [{0}], for cart with id [{1}]", paymentInfo.OrderStatus, cart.Id);
 
