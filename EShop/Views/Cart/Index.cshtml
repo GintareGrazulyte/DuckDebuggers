@@ -18,6 +18,9 @@
                 Name
             </th>
             <th>
+                Title
+            </th>
+            <th>
                 Category
             </th>
             <th style="text-align:center">
@@ -43,7 +46,7 @@
             }
 
             decimal piecePrice = cartItem.Item.Price / 100.0m;
-
+            
             <tr>
                 <td style="vertical-align:middle;" width="10%">
                     @{
@@ -55,6 +58,9 @@
                 </td>
                 <td style="vertical-align:middle;">
                     @Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
+                </td>
+                <td style="vertical-align:middle;">
+                    @cartItem.Item.Title
                 </td>
                 <td style="vertical-align:middle;">
                      @{
@@ -124,6 +130,7 @@
             <th>
                 Total:
             </th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
