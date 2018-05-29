@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BOL.Property;
+﻿using BOL.Property;
 using System.Web.Mvc;
 using BLL_API;
 using EShop.Attributes;
 using System.Net;
+using log4net;
+using System;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class PropertyController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(PropertyController));
+
         readonly IPropertyService _propertyService;
 
         public PropertyController(IPropertyService propertyService)
@@ -34,9 +34,13 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Name")] Property property)
         {
+            _logger.InfoFormat("Create property with name [{0}]", property.Name);
+
             if (ModelState.IsValid)
             {
                 _propertyService.AddProperty(property.Name);
+
+                _logger.InfoFormat("Create property with name [{0}] was successful.", property.Name);
                 return RedirectToAction("Index");
             }
             return View(property);

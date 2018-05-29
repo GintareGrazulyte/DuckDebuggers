@@ -4,12 +4,15 @@ using System.Web.Mvc;
 using BOL;
 using EShop.Attributes;
 using BLL_API;
+using log4net;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class CategoriesController : Controller      //TODO: exception handling -> error messages
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(CategoriesController));
+
         private ICategoryService _categoryService;
 
         public CategoriesController(ICategoryService categoryService)
@@ -26,16 +29,21 @@ namespace EShop.Controllers
         // GET: Categories/Details/5
         public ActionResult Details(int? id)
         {
+            _logger.InfoFormat("View details of category with id [{0}]", id);
+
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             try
             {
                 var category = _categoryService.GetCategory(id.Value);
+                _logger.InfoFormat("Get details of category with id [{0}] was successful", id);
+
                 return View(category);
             }
             catch (ArgumentException)
             {
+                _logger.InfoFormat("View details of category with id [{0}]", id);
                 return HttpNotFound();
             }
         }
@@ -53,19 +61,25 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name")] Category category)
         {
+            _logger.InfoFormat("Create category with name [{0}]", category.Name);
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _categoryService.CreateCategory(category);
+
+                    _logger.InfoFormat("Create category with name [{0}] was successful", category.Name);
+
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    _logger.Info(ex.Message);
                     ModelState.AddModelError("", ex.Message);
                 }
             }
-
+            _logger.InfoFormat("Create category with name [{0}] failed", category.Name);
             return View(category);
         }
 
@@ -93,18 +107,29 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name")] Category category)
         {
+            _logger.InfoFormat("Edit category with id [{0}], set name to [{1}]", category.Id, category.Name);
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _categoryService.UpdateCategory(category);
+
+                    _logger.InfoFormat("Update category with id [{0}], set name to [{1}] was successful", 
+                        category.Id, category.Name);
+
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    _logger.Info(ex.Message);
+
                     ModelState.AddModelError("", ex.Message);
                 }
             }
+
+            _logger.InfoFormat("Edit category with id [{0}] failed, set name to [{1}]", category.Id, category.Name);
+
             return View(category);
         }
 
@@ -130,13 +155,20 @@ namespace EShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            _logger.InfoFormat("Delete category with id [{0}]", id);
+
             try
             {
                 _categoryService.DeleteCategory(id);
+
+                _logger.InfoFormat("Delete category with id [{0}] was successful", id);
+
                 return RedirectToAction("Index");
             }
             catch (ArgumentException)
             {
+                _logger.InfoFormat("Delete category with id [{0}] failed", id);
+
                 return HttpNotFound();
             }
         }
