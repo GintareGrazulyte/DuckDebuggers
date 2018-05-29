@@ -8,7 +8,7 @@
     <link href="~/Content/quantityBox.css" rel="stylesheet" />
 </head>
 <div class="jumbotron">
-    <h1 class="display-3">@Model.Name</h1>
+    <h1 class="display-4">@Model.Name @Model.Title</h1>
 
     <hr class="my-4">
 
@@ -30,7 +30,6 @@
         </div>
         <div class="col-sm-6">
             <table class="table">
-                <tr><td>@Html.DisplayNameFor(model => model.Title)</td><td>@Html.DisplayFor(model => model.Name)</td></tr>
                 <tr><td>@Html.DisplayNameFor(model => model.Category)</td><td>@Html.DisplayFor(model => model.Category.Name)</td></tr>
                 <tr><td>@Html.DisplayNameFor(model => model.SKUCode)</td><td>@Html.DisplayFor(model => model.SKUCode)</td></tr>
             </table>
