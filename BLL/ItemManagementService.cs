@@ -37,6 +37,25 @@ namespace BLL
             _propertyService = propertyService ?? throw new ArgumentNullException("propertyService");
         }
 
+        private string CreateItemUrl(Item itemToCreate, string folderToImage)
+        {
+            if (String.IsNullOrEmpty(itemToCreate.ImageUrl) && itemToCreate.Image != null)
+            {
+                //TODO would be nice to have a not hardcoded int function
+                string[] directories = folderToImage.Split(Path.DirectorySeparatorChar);
+                return Path.DirectorySeparatorChar + Path.Combine(directories[directories.Length - 2], Path.Combine(directories[directories.Length-1], _fileLoader.Load(folderToImage, itemToCreate.Image)));
+            }
+            else if((!String.IsNullOrEmpty(itemToCreate.ImageUrl) && itemToCreate.Image == null) ||
+                (!String.IsNullOrEmpty(itemToCreate.ImageUrl) && itemToCreate.Image != null))
+            {
+                return itemToCreate.ImageUrl;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
             string imagesFolder, bool logInfoNeeded)
         {
@@ -140,7 +159,7 @@ namespace BLL
                 if (foundItem != null)
                     throw new Exception(); //TODO: item already exists
 
-                itemToCreate.ImageUrl = _fileLoader.Load(folderToImage, itemToCreate.Image);
+                itemToCreate.ImageUrl = CreateItemUrl(itemToCreate, folderToImage);
                 _itemRepository.Add(itemToCreate);
                 dbContextScope.SaveChanges();
             }
@@ -220,8 +239,7 @@ namespace BLL
                     throw new Exception();
                 }
 
-                itemToUpdate.ImageUrl = _fileLoader.Load(folderToImage, itemToUpdate.Image);
-
+                itemToUpdate.ImageUrl = CreateItemUrl(itemToUpdate, folderToImage);
                 //TODO: copy everything here or Attach from DbContext
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
                 foundItem.Image = itemToUpdate.Image;

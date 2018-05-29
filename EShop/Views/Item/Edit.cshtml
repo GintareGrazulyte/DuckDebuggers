@@ -58,7 +58,16 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+            @{
+                if (Model.ImageUrl != null)
+                {
+                    <img src="@Url.Content(Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@Model.Name" width="100%" class="img-thumbnail" />
+                }
+            }
 
             <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ChangeImage", "Item", new { id = Model.Id })'">Change image</button>
         </div>

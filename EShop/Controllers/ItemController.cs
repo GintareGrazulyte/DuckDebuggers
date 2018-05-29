@@ -162,7 +162,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,Image,CategoryId,ItemProperties")] Item item)
+        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,ImageUrl,Image,CategoryId,ItemProperties")] Item item)
         {
             _logger.InfoFormat("Create item with SKUCode [{5}], name [{0}], title [{6}], price [{1}], description [{2}], image [{3}], categoryId [{4}]",
                 item.Name, item.Price, item.Description, item.Image != null ? item.Image.FileName : null, item.CategoryId, item.SKUCode, item.Title);
@@ -227,6 +227,7 @@ namespace EShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Item item = _itemQueryService.GetItem(id.Value);
+            item.ImageUrl = null;
             if (item == null)
             {
                 return HttpNotFound();
@@ -235,7 +236,7 @@ namespace EShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeImage([Bind(Include="Id, Image")] Item model)
+        public ActionResult ChangeImage([Bind(Include="Id, ImageUrl, Image")] Item model)
         {
             _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
             return RedirectToAction("Index");

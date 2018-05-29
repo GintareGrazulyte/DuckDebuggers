@@ -142,6 +142,7 @@
     <Content Include="Content\Images\NoImage.jpg" />
     <Content Include="Content\Images\panda404.png" />
     <Content Include="Content\Images\panda404v2.png" />
+    <Content Include="Content\Images\panda500.gif" />
     <Content Include="Content\Images\plus.svg" />
     <Content Include="Content\Images\StarFade.gif" />
     <Content Include="Content\Images\StarGlow.gif" />
@@ -163,6 +164,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Downloads\ImportExample.xlsx" />
+    <Content Include="log4net.config" />
     <None Include="packages.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
@@ -241,6 +243,7 @@
     <Content Include="Views\Item\_ItemProperties.cshtml" />
     <Content Include="Views\Property\Edit.cshtml" />
     <Content Include="Views\Property\Delete.cshtml" />
+    <Content Include="Views\Item\_ItemImage.cshtml" />
     <Content Include="Views\Categories\EditorTemplates\CheckBoxListItem.cshtml" />
     <Content Include="Views\Item\EditorTemplates\ItemProperty.cshtml" />
     <None Include="Web.Debug.config">
