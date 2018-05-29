@@ -22,10 +22,12 @@ namespace BOL.Objects
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
+        [DisplayName("Product name")]
         public string Name { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
+        [DisplayName("SKU code")]
         public string SKUCode { get; set; }
         //TODO maybe should be better to change from int to unsigned int?
         [Range(1, int.MaxValue, ErrorMessage = "Item price must be positive!")]
