@@ -34,11 +34,11 @@
                     @{
                         if (item.ImageUrl != null)
                         {
-                            <img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" />
+                            <img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px"  class="img-thumbnail"/>
                         }
                         else
                         {
-                            <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@item.Name" width="100%" class="img-thumbnail" />
+                            <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" class="img-thumbnail" />
                         }
                     }
                     <div class="card-body">
