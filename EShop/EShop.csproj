@@ -163,6 +163,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Downloads\ImportExample.xlsx" />
+    <Content Include="log4net.config" />
     <None Include="packages.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
