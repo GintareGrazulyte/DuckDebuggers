@@ -7,11 +7,14 @@ using BLL_API;
 using EShop.Models;
 using EShop.Attributes;
 using System.Net;
+using log4net;
 
 namespace EShop.Controllers
 {
     public class OrderHistoryController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(OrderHistoryController));
+
         private ICustomerAccountService _customerAccountService;
         private IOrderRatingService _orderRatingService;
         private IOrderService _orderService;
@@ -27,7 +30,11 @@ namespace EShop.Controllers
         [CustomAuthorization(LoginPage = "~/Customer/Login", Roles = "Customer")]
         public ActionResult Index()
         {
+            _logger.Info("Get all orders");
+
             Customer currentCustomer = _customerAccountService.GetCustomer((int)Session["AccountId"]);
+
+            _logger.InfoFormat("All orders count : [{0}]", currentCustomer.Orders.Count);
 
             if (currentCustomer.Orders.Count == 0)
                 return RedirectToAction("NoOrders");
@@ -85,6 +92,7 @@ namespace EShop.Controllers
             var orderId = int.Parse(form["OrderId"]);
             var rating = int.Parse(form["rating"]);
 
+            _logger.InfoFormat("Add rating for oder with id [{0}]. Comment : [{1}], rating : [{2}]", orderId, comment, rating);
 
             if (rating == 0)
                 return Json(new { Success = "false", ErrorMsg = "Please set a rating" });
@@ -96,6 +104,8 @@ namespace EShop.Controllers
             Order order = currentCustomer.Orders.SingleOrDefault(o => o.Id == orderId);
             OrderRating orderRating = new OrderRating { Rating = rating, Comment = comment, Order = order};
             _orderRatingService.CreateOrderRating(orderRating, order);
+
+            _logger.InfoFormat("Rating for order with id [{0}] was successfully added", orderId);
 
             return PartialView("_OrderRatingTable", orderRating);
                 
@@ -114,7 +124,12 @@ namespace EShop.Controllers
                 return Content("<html></html>");
             }
 
+            _logger.InfoFormat("Get rating for order with id [{0}]", orderID);
+
             OrderRating orderRating = _orderRatingService.GetOrderRatingByOrderId(orderID);
+
+            _logger.InfoFormat("Get rating for order with id [{0}] was successful", orderID);
+
             return PartialView("_OrderRatingTable", orderRating);
         }
 
@@ -143,7 +158,11 @@ namespace EShop.Controllers
         [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
         public ActionResult ChangeOrderStatus([Bind(Include = "Id, OrderStatus")] Order order)
         {
+            _logger.InfoFormat("Change order with id [{0}] status [{1}].", order.Id, order.OrderStatus);
             _orderService.UpdateStatus(order.Id, order.OrderStatus);
+
+            _logger.InfoFormat("Change order with id [{0}] to status [{1}] was successful.", order.Id, order.OrderStatus);
+
             return RedirectToAction("AdminView");
         }
     }

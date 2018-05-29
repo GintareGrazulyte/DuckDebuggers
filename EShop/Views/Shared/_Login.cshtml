@@ -3,7 +3,7 @@
     var isAdmin = Session["IsAdminAccount"] as bool?;
 }
 
-@if (Session["AccountId"] == null)
+@if (!User.Identity.IsAuthenticated)
 {
     <li class="nav-item">
         @Html.ActionLink("Register", "Register", "Customer", new { area = "" }, new { @class = "nav-link" })
