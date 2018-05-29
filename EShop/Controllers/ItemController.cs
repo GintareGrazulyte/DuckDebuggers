@@ -223,6 +223,7 @@ namespace EShop.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Item item = _itemQueryService.GetItem(id.Value);
+            item.ImageUrl = null;
             if (item == null)
             {
                 return HttpNotFound();
