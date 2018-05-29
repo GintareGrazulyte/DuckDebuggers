@@ -11,6 +11,7 @@ namespace DAL_API
     {
         Property FindById(int id);
         List<Property> GetAll();
+        List<Property> GetByIds(List<int> ids);
         void Remove(Property property);
         void Add(Property property);
         void Modify(Property property);

@@ -42,7 +42,7 @@ namespace DAL
                     q.ItemId,
                     q.PropertyId
                 });
-            
+
             modelBuilder.Entity<ItemProperty>()
                 .HasRequired(t => t.Item)
                 .WithMany(t => t.ItemProperties)

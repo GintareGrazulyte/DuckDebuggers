@@ -22,7 +22,6 @@ namespace EShop.Controllers
         private IAdminService _adminService;
         private IPropertyService _propertyService;
         
-
         public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
             IItemManagementService itemManagementService, IAdminService adminService, IPropertyService propertyService)
         {
@@ -135,9 +134,7 @@ namespace EShop.Controllers
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
-            var item = new Item();
-            item.ItemProperties.Add(new ItemProperty() { Value = "Shit" });
-            return View(item);
+            return View(new Item());
         }
 
         // POST: Item/Create
@@ -234,16 +231,6 @@ namespace EShop.Controllers
         {
             _itemManagementService.DeleteItem(id);
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult AddItemProperty(PropertyViewModel property)
-        {
-            //TODO also pass PropertyName through PropertyViewModel
-            var itemProperty = new ItemProperty() { PropertyId = int.Parse(property.PropertyId), Value = property.Value };
-            //TODO: somehow add this itemProperty to Item
-            ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
-            return PartialView("_ItemProperties", property);
         }
     }
 }

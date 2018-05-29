@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using BOL;
 using EShop.Attributes;
 using BLL_API;
+using EShop.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EShop.Controllers
 {
@@ -11,10 +14,12 @@ namespace EShop.Controllers
     public class CategoriesController : Controller      //TODO: exception handling -> error messages
     {
         private ICategoryService _categoryService;
+        private IPropertyService _propertyService;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IPropertyService propertyService)
         {
             _categoryService = categoryService;
+            _propertyService = propertyService;
         }
 
         // GET: Categories
@@ -40,24 +45,34 @@ namespace EShop.Controllers
             }
         }
 
-        // GET: Categories/Create
+
+        [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            AddCategoryViewModel model = new AddCategoryViewModel();
+            var properties = _propertyService.GetAllProperties();
+            var checkBoxListItems = new List<CheckBoxListItem>();
+            properties.ForEach(x => checkBoxListItems.Add(new CheckBoxListItem()
+            {
+                ID = x.Id,
+                Display = x.Name,
+                IsChecked = false
+            }));
+
+            model.Properties = checkBoxListItems;
+            return View(model);
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Category category)
+        public ActionResult Create(AddCategoryViewModel model)
         {
+            var selectedProperties = model.Properties.Where(x => x.IsChecked).Select(x => x.ID).ToList();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _categoryService.CreateCategory(category);
+                    _categoryService.CreateCategory(model.Name, selectedProperties);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -65,9 +80,9 @@ namespace EShop.Controllers
                     ModelState.AddModelError("", ex.Message);
                 }
             }
-
-            return View(category);
+            return View(model);
         }
+
 
         // GET: Categories/Edit/5
         public ActionResult Edit(int? id)

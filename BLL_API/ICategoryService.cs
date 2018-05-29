@@ -8,7 +8,7 @@ namespace BLL_API
         IEnumerable<Category> GetAllCategories();
         Category GetCategory(int categoryId);
         Category GetCategory(string categoryName);
-        void CreateCategory(Category categoryToCreate);
+        void CreateCategory(string name, List<int> properties);
         void UpdateCategory(Category categoryToUpdate);
         void DeleteCategory(int categoryId);
     }

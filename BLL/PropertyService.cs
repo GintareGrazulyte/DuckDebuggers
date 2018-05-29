@@ -57,6 +57,14 @@ namespace BLL
             }
         }
 
+        public List<Property> GetProperties(List<int> ids)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            {
+                return _propertyRepository.GetByIds(ids);
+            }
+        }
+
         public Property GetProperty(int propertyId)
         {
             using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())

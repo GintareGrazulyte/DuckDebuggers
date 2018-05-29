@@ -238,6 +238,7 @@
     <Content Include="Views\Item\_ItemProperties.cshtml" />
     <Content Include="Views\Property\Edit.cshtml" />
     <Content Include="Views\Property\Delete.cshtml" />
+    <Content Include="Views\Categories\EditorTemplates\CheckBoxListItem.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -272,7 +273,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddCategoryViewModel.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
+    <Compile Include="Models\CheckBoxListItem.cs" />
     <Compile Include="Models\DiscountViewModel.cs" />
     <Compile Include="Models\ExportedItemsViewModel.cs" />
     <Compile Include="Models\jsTree3Node.cs" />
