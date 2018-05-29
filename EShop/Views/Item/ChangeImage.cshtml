@@ -19,12 +19,7 @@
         @Html.HiddenFor(model => model.Id)
 
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Image, new { type = "file" })
-            </div>
-        </div>
+        @Html.Partial("_ItemImage", Model)
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

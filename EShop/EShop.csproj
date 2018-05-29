@@ -241,6 +241,7 @@
     <Content Include="Views\Property\Create.cshtml" />
     <Content Include="Views\Property\Edit.cshtml" />
     <Content Include="Views\Property\Delete.cshtml" />
+    <Content Include="Views\Item\_ItemImage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -52,31 +52,7 @@
         </div>
     </div>
 
-    <div class="col-md-10">
-        <ul class="pagination">
-            <li class="page-item active" id="fromUrlButton">
-                <a class="page-link" href="#">From URL</a>
-            </li>
-            <li class="page-item" id="fromFileButton">
-                <a class="page-link" href="#">From file</a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="form-group" id="fromFile" style="display: none;">
-        @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Image, new { type = "file" })
-        </div>
-    </div>
-
-    <div class="form-group" id="fromUrl">
-        @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
-        </div>
-    </div>
+    @Html.Partial("_ItemImage", Model)
 
     <div class="form-group">
         @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -97,22 +73,6 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
-<script type="text/javascript">
-    $("#fromUrlButton").click(function () {
-        $("#fromFileButton").removeClass("active");
-        $("#fromUrlButton").addClass("active");
-        $("#fromUrl").show("fast");
-        $("#fromFile").hide("fast");
-    });
-
-    $("#fromFileButton").click(function () {
-        $("#fromUrlButton").removeClass("active");
-        $("#fromFileButton").addClass("active");
-        $("#fromFile").show("fast");
-        $("#fromUrl").hide("fast");
-    });
-</script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

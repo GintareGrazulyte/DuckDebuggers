@@ -54,7 +54,7 @@
         </dd>
         @if (Model.ImageUrl != null)
     {
-        <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="Image" />
+        <img src="@Url.Content(Model.ImageUrl)" alt="Image" />
 }
     </dl>
 </div>
