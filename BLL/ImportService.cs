@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BOL.Objects;
 using System.IO;
 using OfficeOpenXml;
+using BOL;
 
 namespace BLL
 {
@@ -13,43 +14,95 @@ namespace BLL
         public List<Item> ImportItemsFromFile(string path)
         {
             var items = new List<Item>();
-        
+
             var file = new FileInfo(path);
             using (ExcelPackage excelPackage = new ExcelPackage(file))
             {
                 //todo rename
-                var worksheet = excelPackage.Workbook.Worksheets["Items"];
+                var worksheet = excelPackage.Workbook.Worksheets[1];
 
                 if (worksheet == null)
                 {
-                    throw new Exception("Worksheet <Items> is missing");
+                    throw new Exception("Worksheet is missing");
                 }
-                int i = 2;
-                string name, description, imageUrl;
+                int row = 2;
 
-                while (IsValidName(worksheet.Cells[i, 1].Value, out name))
+                ReadValues(out string name, out string title, out int price, out string imageUrl, out string skuCode, 
+                    out string description, out string categoryName, worksheet, row);
+                row++;
+
+                while (!IsRowEmpty(name, title, price, imageUrl, skuCode, description, categoryName))
                 {
-                    Int32.TryParse(ConvertTostring(worksheet.Cells[i, 2].Value), out int price);
-                    description = ConvertTostring(worksheet.Cells[i, 3].Value);
-                    Int32.TryParse(ConvertTostring(worksheet.Cells[i, 4].Value), out int categoryId);
-                    imageUrl = ConvertTostring(worksheet.Cells[i, 5].Value);
+                    ReadValues(out name, out title, out price, out imageUrl, out skuCode, 
+                        out description, out categoryName, worksheet, row);
 
                     var item = new Item
                     {
+                        SKUCode = skuCode,
                         Name = name,
+                        Title = title,
                         Price = price,
                         Description = description,
-                        CategoryId = categoryId,
-                        ImageUrl = imageUrl
+                        Category = new Category() { Name = categoryName },
+                        ImageUrl = imageUrl,
                     };
                     CorrectValues(item);
 
                     items.Add(item);
-                    i++;
+                    row++;
                 }
 
             }
             return items;
+        }
+
+        private void ReadValues(out string name, out string title, out int price, out string imageUrl,
+            out string skuCode, out string description, out string categoryName,
+            ExcelWorksheet worksheet, int row)
+        {
+            name = ConvertTostring(worksheet.Cells[row, 1].Value);
+            title = ConvertTostring(worksheet.Cells[row, 2].Value);
+            string priceStr = ConvertTostring(worksheet.Cells[row, 3].Value);
+            if (priceStr != null)
+            {
+                decimal.TryParse(priceStr.Replace(',', '.'), out decimal priceDec);
+                price = (int)(priceDec * 100);
+            }
+            else
+            {
+                price = 0;
+            }
+            imageUrl = ConvertTostring(worksheet.Cells[row, 4].Value);
+            skuCode = ConvertTostring(worksheet.Cells[row, 5].Value);
+            description = ConvertTostring(worksheet.Cells[row, 6].Value);
+            var categoriesStr = ConvertTostring(worksheet.Cells[row, 7].Value);
+            if (categoriesStr != null)
+            {
+                var categories = categoriesStr.Split('/');
+                //NOTE : we don't have subcategories so the most spetific subcategory is used
+                categoryName = categories[categories.Length - 1];
+            }
+            else
+            {
+                categoryName = null;
+            }
+        }
+
+        private bool IsRowEmpty(string name, string title, int price, string imageUrl,
+            string skuCode, string description, string categoryName)
+        {
+            return IsEmpty(name) &&
+                   IsEmpty(title) &&
+                   price == 0 &&
+                   IsEmpty(imageUrl) &&
+                   IsEmpty(skuCode) &&
+                   IsEmpty(description) &&
+                   IsEmpty(categoryName);
+        }
+
+        private bool IsEmpty(string str)
+        {
+            return (string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str));
         }
 
         private bool IsValidName(object stringObj, out string name)
@@ -70,17 +123,13 @@ namespace BLL
 
         private void CorrectValues(Item item)
         {
-            if (string.IsNullOrEmpty(item.Description) && string.IsNullOrWhiteSpace(item.Description))
+            if (IsEmpty(item.Description))
             {
                 item.Description = null;
             }
-            if (string.IsNullOrEmpty(item.ImageUrl) && string.IsNullOrWhiteSpace(item.ImageUrl))
+            if (IsEmpty(item.ImageUrl))
             {
                 item.ImageUrl = null;
-            }
-            if (item.CategoryId == 0)
-            {
-                item.CategoryId = null;
             }
         }
 
