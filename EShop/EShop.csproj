@@ -142,6 +142,7 @@
     <Content Include="Content\Images\NoImage.jpg" />
     <Content Include="Content\Images\panda404.png" />
     <Content Include="Content\Images\panda404v2.png" />
+    <Content Include="Content\Images\panda500.gif" />
     <Content Include="Content\Images\plus.svg" />
     <Content Include="Content\Images\StarFade.gif" />
     <Content Include="Content\Images\StarGlow.gif" />
