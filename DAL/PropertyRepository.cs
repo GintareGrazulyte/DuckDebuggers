@@ -57,5 +57,10 @@ namespace DAL
         {
             DbContext.Properties.Remove(property);
         }
+
+        public List<Property> GetByIds(List<int> ids)
+        {
+            return DbContext.Properties.Where(x=>ids.Contains(x.Id)).Include("ItemProperties").ToList();
+        }
     }
 }
