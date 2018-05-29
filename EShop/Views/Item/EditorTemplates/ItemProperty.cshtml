@@ -1,0 +1,7 @@
+﻿@model BOL.Property.ItemProperty
+
+    @Html.HiddenFor(x => x.ItemId)
+    @Html.HiddenFor(x => x.PropertyId)
+    @Html.DisplayFor(x => x.Property.Name)
+    @Html.EditorFor(x => x.Value)
+<br />
