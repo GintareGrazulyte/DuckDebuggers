@@ -3,6 +3,7 @@
     IEnumerable<BOL.Carts.CartItem> cartItems = Model.Order.Cart.Items;
     Layout = null;
     var orderDateTime = Model.Order.DateTime;
+    var orderStatus = Model.Order.OrderStatus;
 }
 @using BOL.Orders
 <br />
@@ -48,7 +49,7 @@
                 <td style="vertical-align:middle;">
                     @if (cartItem.Item != null)
                     {
-                        Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" });
+                        @:@Html.ActionLink(cartItem.Item.Name, "Details", "Store", new { itemId = cartItem.Item.Id, categoryId = cartItem.Item.CategoryId }, new { @style = "color:#f25e09;text-decoration:none;" })
                     }
                     else
                     {
@@ -58,7 +59,7 @@
                 <td style="vertical-align:middle;">
                     @if (cartItem.Item != null)
                     {
-                        Html.DisplayFor(modelItem => cartItem.Item.Category.Name);
+                        @:@Html.DisplayFor(modelItem => cartItem.Item.Category.Name)
                     }
                     else
                     {
@@ -78,7 +79,7 @@
                     @Html.DisplayFor(modelItem => price) Eur
                 </td>
             </tr>
-                        }
+        }
 
         @{var totalCost = Model.Order.Cart.Cost / 100.0m; }
 
@@ -109,13 +110,17 @@
         }
     </p>
 
-    @if (Model.OrderRating != null)
+    @if (Model.Order.OrderStatus == OrderStatus.delivered)
     {
-        @Html.Partial("_OrderRatingTable", Model.OrderRating)
+        if (Model.OrderRating != null)
+        {
+            @Html.Partial("_OrderRatingTable", Model.OrderRating)
+        }
+        else
+        {
+            @Html.Partial("_OrderRatingForm")
+        }
     }
-    else
-    {
-        @Html.Partial("_OrderRatingForm")
-    }
+
 
 </div>

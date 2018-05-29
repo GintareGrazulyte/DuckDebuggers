@@ -2,19 +2,19 @@
 using BOL.Discounts;
 using EShop.Attributes;
 using EShop.Models;
+using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace EShop.Controllers
 {
     [CustomAuthorization(LoginPage = "~/Admin/Login", Roles = "Admin")]
     public class DiscountsController : Controller
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(DiscountsController));
+
         private ICategoryService _categoryService;
         private IDiscountManagementService _discountManagementService;
 
@@ -58,6 +58,8 @@ namespace EShop.Controllers
                         BeginDate = discount.BeginDate,
                         EndDate = discount.EndDate
                     };
+
+                    _logger.InfoFormat("Create absolute [{0}] discount for items [{1}]. Begin date : [{2}]. End date : [{3}].", discount.Value, discount.Items, discount.BeginDate.ToString(), discount.EndDate.ToString());
                 }
                 else
                 {
@@ -67,8 +69,13 @@ namespace EShop.Controllers
                         BeginDate = discount.BeginDate,
                         EndDate = discount.EndDate
                     };
+
+                    _logger.InfoFormat("Create percentage [{0}] discount for items [{1}]. Begin date : [{2}]. End date : [{3}].", discount.Value, discount.Items, discount.BeginDate.ToString(), discount.EndDate.ToString());
                 }
+
                 _discountManagementService.CreateDiscount(discountToCreate, discount.ItemIds);
+
+                _logger.InfoFormat("Discount sucessfully created");
 
                 return RedirectToAction("Index");
             }
@@ -81,6 +88,8 @@ namespace EShop.Controllers
         // GET: Discounts/Details/5
         public ActionResult Details(int? id)
         {
+            _logger.InfoFormat("View details of discount with id [{0}]", id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -89,10 +98,15 @@ namespace EShop.Controllers
             try
             {
                 Discount discount = _discountManagementService.GetDiscount(id.Value);
+
+                _logger.InfoFormat("Get details of discount with id [{0}] was successful", id);
+
                 return View(discount);
             }
             catch (Exception e)
             {
+                _logger.InfoFormat("Get details of discount with id [{0}] failed", id);
+
                 return HttpNotFound(e.Message);
             }
         }
@@ -100,13 +114,18 @@ namespace EShop.Controllers
         // GET: Discounts/Expirations
         public ActionResult Expirations()
         {
+            _logger.Info("Get expired discounts.");
             return View(_discountManagementService.GetAllDiscounts().Where(x => x.EndDate < DateTime.Now).ToList());
         }
         
 
         public ActionResult DeleteExpired()
         {
+            _logger.Info("Delete expired discounts.");
+
             _discountManagementService.DeleteExpiredDiscounts();
+
+            _logger.Info("Delete expired discounts was successfull.");
 
             return RedirectToAction("Index");
         }
