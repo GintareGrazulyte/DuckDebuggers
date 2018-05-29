@@ -23,6 +23,10 @@ namespace BOL.Objects
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public string SKUCode { get; set; }
         //TODO maybe should be better to change from int to unsigned int?
         [Range(1, int.MaxValue, ErrorMessage = "Item price must be positive!")]
         public int Price { get; set; }
