@@ -1,10 +1,27 @@
 ﻿@model EShop.Models.PaymentViewModel
 @{
     ViewBag.Title = "Payment";
+    string method;
+    int cartId = -1;
+    if (Model.FormedOrder)
+    {
+        method = "PayFormedOrder";
+        cartId = Model.Cart.Id;
+    }
+    else
+    {
+        method = "Pay";
+    }
 }
 
 <h2>Payment</h2>
 <br />
+
+
+    @using (Html.BeginForm(method, "PaymentService", FormMethod.Post))
+    {
+
+
 <p>
     <b>Items </b>
     <table class="table">
@@ -88,7 +105,8 @@
                 @Model.Customer.Card.Number
             </th>
             <th>
-                @Model.Customer.Card.CVV
+                @Html.EditorFor(model => model.Customer.Card.CVV, new { htmlAttributes = new { @class = "form-control" } })
+                <input type="hidden" name="cartId" value="@cartId" />
             </th>
         </tr>
     </table>
@@ -97,18 +115,42 @@
     <b>Cart cost:</b> @Html.DisplayFor(model => totalCost) Eur
     <br />
     <br />
-
-    @if (@Model.FormedOrder)
-    {
-        @Html.ActionLink("Confirm and pay", "PayFormedOrder", new { cartId = Model.Cart.Id }, new { @class = "btn btn-primary" })
-    }
-    else
-    {
-        @Html.ActionLink("Confirm and pay", "Pay", null, new { @class = "btn btn-primary" })
-    }
-
-
-
+    <input type="submit" name="btnPay" value="Pay" class="btn btn-primary" />
+   
 </p>
+    }
+
+<script type="text/javascript">
+    function Pay() {
+        var url = '@Url.Action("Pay", "PaymentService")';
+        var cvv = $('#Customer_Card_CVV').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { Customer_Card_CVV: cvv},
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                $("html").empty();
+                $("html").append(response);
+            }
+        });
+    }
+    function PayFormedOrder(cartID) {
+        var url = '@Url.Action("PayFormedOrder", "PaymentService")';
+        var cvv = $('#Customer_Card_CVV').val();
+        alert(cvv);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { Customer_Card_CVV: cvv, cartId: cartID },
+            cache: false,
+            dataType: 'html',
+            //success: function (response) {
+            //    $("#OrderTable").html(response);
+            //}
+        });
+    }
+</script>
 
 

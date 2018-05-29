@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BOL
 {
@@ -16,8 +17,7 @@ namespace BOL
         [Range(1, 12, ErrorMessage = "Incorrect card expiration month number!")]
         [Required(ErrorMessage = "Card expiration month is required!")]
         public int ExpMonth { get; set; }
-        [Required(ErrorMessage = "Card cvv number is required!")]
-        [StringLength(3, MinimumLength = 3, ErrorMessage = "Incorrect card cvv number!")]
+        [NotMapped]
         public string CVV { get; set; }
     }
 }
