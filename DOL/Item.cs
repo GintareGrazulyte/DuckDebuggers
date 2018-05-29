@@ -16,6 +16,7 @@ namespace BOL.Objects
         public Item()
         {
             Discounts = new HashSet<Discount>();
+            ItemProperties = new HashSet<ItemProperty>();
         }
 
         [Key]
@@ -42,7 +43,7 @@ namespace BOL.Objects
         public string ImageUrl { get; set; }
 
         public virtual ICollection<Discount> Discounts { get; set; }
-        public ICollection<ItemProperty> ItemProperties { get; set; }
+        public virtual ICollection<ItemProperty> ItemProperties { get; set; }
 
         [NotMapped]
         public bool HasDiscount

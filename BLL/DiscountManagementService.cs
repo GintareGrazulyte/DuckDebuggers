@@ -36,7 +36,7 @@ namespace BLL
                     throw new Exception("This discount already exists");
                 }
 
-                discount.Items = _itemRepository.GetByIds(itemIds);
+                discount.Items = itemIds != null ? _itemRepository.GetByIds(itemIds) : null;
 
                 _discountRepository.Add(discount);
                 dbContextScope.SaveChanges();

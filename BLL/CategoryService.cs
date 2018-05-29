@@ -11,29 +11,28 @@ namespace BLL
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPropertyService _propertyService;
 
-        public CategoryService(IDbContextScopeFactory dbContextScopeFactory, ICategoryRepository categoryRepository)
+        public CategoryService(IDbContextScopeFactory dbContextScopeFactory, ICategoryRepository categoryRepository,
+                                    IPropertyService propertyService)
         {
             _dbContextScopeFactory = dbContextScopeFactory ?? throw new ArgumentNullException("dbContextScopeFactory");
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException("categoryRepository");
+            _propertyService = propertyService ?? throw new ArgumentNullException("propertyService");
         }
 
-        public void CreateCategory(Category categoryToCreate)
+        public void CreateCategory(string name, List<int> propertiesIds)
         {
-            if (categoryToCreate == null)
-                throw new ArgumentNullException("categoryToCreate");
-
             using (var dbContextScope = _dbContextScopeFactory.Create())
             {
-
-                var foundCategoryById = _categoryRepository.FindById(categoryToCreate.Id);
-                var foundCategoryByName = _categoryRepository.FindByName(categoryToCreate.Name);
-                if (foundCategoryById != null || foundCategoryByName != null)
+                var foundCategoryByName = _categoryRepository.FindByName(name);
+                if (foundCategoryByName != null)
                 {
                     throw new Exception("Category already exists");
                 }
-
-                _categoryRepository.Add(categoryToCreate);
+                var properties = _propertyService.GetProperties(propertiesIds);
+                var category = new Category { Name = name, Properties = properties};
+                _categoryRepository.Add(category);
                 dbContextScope.SaveChanges();
             }
         }

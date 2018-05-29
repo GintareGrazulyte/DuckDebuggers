@@ -9,6 +9,7 @@ using System.IO;
 using EShop.Models;
 using System.Linq;
 using System.Collections.Generic;
+using BOL.Property;
 using log4net;
 
 namespace EShop.Controllers
@@ -22,14 +23,16 @@ namespace EShop.Controllers
         private ICategoryService _categoryService;
         private IItemManagementService _itemManagementService;
         private IAdminService _adminService;
-
+        private IPropertyService _propertyService;
+        
         public ItemController(IItemQueryService itemQueryService, ICategoryService categoryService, 
-            IItemManagementService itemManagementService, IAdminService adminService)
+            IItemManagementService itemManagementService, IAdminService adminService, IPropertyService propertyService)
         {
             _itemQueryService = itemQueryService;
             _categoryService = categoryService;
             _itemManagementService = itemManagementService;
             _adminService = adminService;
+            _propertyService = propertyService;
         }
 
         // GET: Item
@@ -150,7 +153,8 @@ namespace EShop.Controllers
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
-            return View();
+            ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
+            return View(new Item());
         }
 
         // POST: Item/Create
