@@ -104,9 +104,9 @@ namespace BLL
                     if (items[i].Category.Name != null && 
                         (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
                     {
-                        items[i].Category = null;
                         logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
                             items[i].Category.Name + "> does not exist" + Environment.NewLine;
+                        items[i].Category = null;
                     }
                     else
                     {
@@ -114,30 +114,27 @@ namespace BLL
                         items[i].CategoryId = categoryToAdd.Id;
                     }
 
-              
-                    //TODO add properties
-                    //var propertiesToAdd = items[i].ItemProperties.ToList();
-                    //var itemPropertiesToAdd = new HashSet<ItemProperty>();
-                    //for (int j = 0; j < propertiesToAdd.Count; j++)
-                    //{
-                    //    var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
-                    //    if (propertyToAdd != null)
-                    //    {
-                    //        //TODO set item id
-                    //        itemPropertiesToAdd.Add(new ItemProperty { ItemId = 0, PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
-                    //    }
-                    //    else
-                    //    {
-                    //        logInfo += "For item <" + items[i].Name + "> property <" +
-                    //           propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
-                    //    }
-                    //}
-                    items[i].ItemProperties = null;
-                    //TODO add property list
-                    //items[i].ItemProperties = itemPropertiesToAdd;
 
+                    //TODO category properties
+                    var propertiesToAdd = items[i].ItemProperties.ToList();
+                    var itemPropertiesToAdd = new HashSet<ItemProperty>();
 
-                    
+                    for (int j = 0; j < propertiesToAdd.Count; j++)
+                    {
+                        var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
+                        if (propertyToAdd != null)
+                        {
+                            itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
+                        }
+                        else
+                        {
+                            logInfo += "For item <" + items[i].Name + "> property <" +
+                               propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
+                        }
+                    }
+                
+                    items[i].ItemProperties = itemPropertiesToAdd;
+
                     try
                     {
                         CreateItemWithImage(items[i], imagesFolder);
