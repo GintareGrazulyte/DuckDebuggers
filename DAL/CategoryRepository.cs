@@ -37,7 +37,7 @@ namespace DAL
 
         public Category FindById(int? id)
         {
-            return DbContext.Categories.Include("Items.Discounts")
+            return DbContext.Categories.Include("Items.Discounts").Include("Properties")
                     .SingleOrDefault(c => c.Id == id);
         }
 
