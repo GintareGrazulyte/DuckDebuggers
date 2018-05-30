@@ -76,10 +76,15 @@
     <div class="form-group">
         @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("CategoryId", null, "No Category", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownList("CategoryId", null, "No Category", htmlAttributes: new { @class = "form-control", @onchange = "onChange()" })
             @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group" id="EditProperties">
+        @Html.EditorFor(model => model.ItemProperties)
+    </div>
+
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -95,4 +100,22 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    function onChange() {
+        var url = '@Url.Action("_ItemProperties", "Item")';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#CategoryId').serialize(),
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                $("#EditProperties").html(response);
+                console.log(response)
+            }
+        });
+    }
+</script>
 }

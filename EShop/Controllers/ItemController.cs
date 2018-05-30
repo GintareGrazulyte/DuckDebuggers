@@ -171,11 +171,18 @@ namespace EShop.Controllers
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                item.ItemProperties = item.ItemProperties.Where(x => x.Value != null && x.Value != "").ToList();
-                _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
+                try
+                {
+                    item.ItemProperties = item.ItemProperties.Where(x => x.Value != null && x.Value != "").ToList();
+                    _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
 
-                _logger.Info("Item was successfully created");
-                return RedirectToAction("Index");
+                    _logger.Info("Item was successfully created");
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
@@ -203,7 +210,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId,ItemProperties,Property")] Item item)
         {
             _logger.InfoFormat("Edit item with id [{0}]", item.Id);
 
@@ -240,8 +247,16 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ChangeImage([Bind(Include="Id, ImageUrl, Image")] Item model)
         {
-            _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
-            return RedirectToAction("Index");
+            try
+            {
+                _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
+            return View(model);
         }
 
         // GET: Item/Delete/5
