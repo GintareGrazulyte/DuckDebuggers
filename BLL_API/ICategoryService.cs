@@ -10,6 +10,7 @@ namespace BLL_API
         Category GetCategory(string categoryName);
         void CreateCategory(string name, List<int> properties);
         void UpdateCategory(Category categoryToUpdate);
+        void UpdateCategory(int id, string name, List<int> properties);
         void DeleteCategory(int categoryId);
     }
 }

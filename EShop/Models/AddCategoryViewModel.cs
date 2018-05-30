@@ -7,6 +7,7 @@ namespace EShop.Models
 {
     public class AddCategoryViewModel
     {
+        public int? Id { get; set; }
         public string Name { get; set; }
         public List<CheckBoxListItem> Properties { get; set; }
 

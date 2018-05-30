@@ -116,5 +116,31 @@ namespace BLL
                 dbContextScope.SaveChanges();
             }
         }
+
+        public void UpdateCategory(int id, string name, List<int> properties)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundCategory = _categoryRepository.FindById(id);
+                if (foundCategory == null)
+                {
+                    throw new Exception();
+                }
+
+                var foundCategoryByName = _categoryRepository.FindByName(name);
+                if (foundCategoryByName != null && foundCategoryByName.Id != foundCategory.Id)
+                {
+                    throw new Exception("Category already exists");
+                }
+
+                //TODO: copy everything here or Attach from DbContext
+                foundCategory.Name = name;
+                foundCategory.Properties = _propertyService.GetProperties(properties);
+
+                _categoryRepository.Modify(foundCategory);
+                dbContextScope.SaveChanges();
+            }
+        }
     }
 }

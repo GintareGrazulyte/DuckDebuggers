@@ -107,7 +107,18 @@ namespace EShop.Controllers
             try
             {
                 Category category = _categoryService.GetCategory(id.Value);
-                return View(category);
+                AddCategoryViewModel model = new AddCategoryViewModel() { Name = category.Name , Id = category.Id};
+                var properties = _propertyService.GetAllProperties();
+                var checkBoxListItems = new List<CheckBoxListItem>();
+                properties.ForEach(x => checkBoxListItems.Add(new CheckBoxListItem()
+                {
+                    ID = x.Id,
+                    Display = x.Name,
+                    IsChecked = category.Properties.Any(y=>y.Id == x.Id)
+                }));
+
+                model.Properties = checkBoxListItems;
+                return View(model);
             }
             catch (ArgumentException)
             {
@@ -120,7 +131,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Category category)
+        public ActionResult Edit([Bind(Include = "Id,Name,Properties")] AddCategoryViewModel category)
         {
             _logger.InfoFormat("Edit category with id [{0}], set name to [{1}]", category.Id, category.Name);
 
@@ -128,7 +139,8 @@ namespace EShop.Controllers
             {
                 try
                 {
-                    _categoryService.UpdateCategory(category);
+                    var selectedProperties = category.Properties.Where(x => x.IsChecked).Select(x => x.ID).ToList();
+                    _categoryService.UpdateCategory((int)category.Id, category.Name, selectedProperties);
 
                     _logger.InfoFormat("Update category with id [{0}], set name to [{1}] was successful", 
                         category.Id, category.Name);
