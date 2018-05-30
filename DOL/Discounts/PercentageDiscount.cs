@@ -12,7 +12,8 @@ namespace BOL.Discounts
 
         public override decimal CalculateDiscountedPrice(int itemPrice)
         {
-            return itemPrice * (1 - (Percentage / 100));
+            var value = itemPrice * (1 - (Percentage / 100));
+            return value < 0 ? 0 : value;
         }
     }
 }
