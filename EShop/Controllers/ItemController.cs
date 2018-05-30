@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BOL.Property;
 using log4net;
+using System;
 
 namespace EShop.Controllers
 {
@@ -270,6 +271,28 @@ namespace EShop.Controllers
             _logger.InfoFormat("Item with id [{0}] was successfully deleted", id);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult _ItemProperties(FormCollection fc)
+        {
+            int categoryId = 0;
+            List<ItemProperty> itemProperties = new List<ItemProperty>();
+            try
+            {
+                categoryId = Convert.ToInt32(fc["CategoryId"]);
+                var properties = _categoryService.GetCategory(categoryId).Properties;
+
+                itemProperties = properties.Select(x => new ItemProperty { Property = x, PropertyId = x.Id }).ToList();
+            }
+            catch (FormatException)
+            {
+                return Content("<html></html>");
+            }
+
+            
+            ViewData = new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } };
+            return PartialView("_ItemProperties", itemProperties);
         }
     }
 }
