@@ -63,9 +63,12 @@
         </div>
     </div>
 
-    <div class="form-group">
-           <div id="ItemProperties"></div>
-    </div>
+
+        <div class="form-group">
+                <div id="ItemProperties">
+                    @Html.Partial("_ItemProperties", Model.ItemProperties, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } })
+                </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

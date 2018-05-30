@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Linq;
 using BOL.Property;
+using System.Text.RegularExpressions;
 
 namespace BLL
 {
@@ -54,6 +55,11 @@ namespace BLL
             {
                 return null;
             }
+        }
+
+        private bool IsImageUrlCorrect(string url)
+        {
+            return Regex.IsMatch(url, @"(\.png|\.jpg|\.jpeg|\.gif){1}$");
         }
 
         public async Task ImportItemsFromFile(Admin admin, string folderToFile, HttpPostedFileBase file,
@@ -200,6 +206,11 @@ namespace BLL
                     throw new Exception(); //TODO: item already exists
 
                 itemToCreate.ImageUrl = CreateItemUrl(itemToCreate, folderToImage);
+                //TODO should be checked before uplaoding the file to server
+                if (!IsImageUrlCorrect(itemToCreate.ImageUrl))
+                {
+                    throw new Exception("Incorrect image format");
+                }
                 _itemRepository.Add(itemToCreate);
                 dbContextScope.SaveChanges();
             }
@@ -281,6 +292,10 @@ namespace BLL
                 }
 
                 itemToUpdate.ImageUrl = CreateItemUrl(itemToUpdate, folderToImage);
+                if (!IsImageUrlCorrect(itemToUpdate.ImageUrl))
+                {
+                    throw new Exception("Incorrect image format");
+                }
                 //TODO: copy everything here or Attach from DbContext
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
                 foundItem.Image = itemToUpdate.Image;
