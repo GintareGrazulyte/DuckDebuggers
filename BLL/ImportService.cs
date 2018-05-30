@@ -208,16 +208,16 @@ namespace BLL
                     worksheet.Cells[rowIndex, 6].Value = item.Description;
                     worksheet.Cells[rowIndex, 7].Value = (item.Category != null) ? 
                         item.Category.Name : "";
- 
-                    //TODO: Fix. ItemProperties disposed
-                    //foreach (var itemProperty in item.ItemProperties)
-                    //{
-                    //    worksheet.Cells[rowIndex, 8].Value = itemProperty.Property.Name;
-                    //    worksheet.Cells[rowIndex, 9].Value = itemProperty.Value;
-                    //    rowIndex++;
-                    //}
 
-                   // if (item.ItemProperties.Count == 0)
+                    //TODO: Fix. ItemProperties disposed
+                    foreach (var itemProperty in item.ItemProperties)
+                    {
+                        worksheet.Cells[rowIndex, 8].Value = itemProperty.Property.Name;
+                        worksheet.Cells[rowIndex, 9].Value = itemProperty.Value;
+                        rowIndex++;
+                    }
+
+                    if (item.ItemProperties.Count == 0)
                     {
                     rowIndex++;
                     }
