@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BOL.Property;
 using log4net;
+using System;
 
 namespace EShop.Controllers
 {
@@ -162,7 +163,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,ImageUrl,Image,CategoryId")] Item item)
+        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,ImageUrl,Image,CategoryId,ItemProperties")] Item item)
         {
             _logger.InfoFormat("Create item with SKUCode [{5}], name [{0}], title [{6}], price [{1}], description [{2}], image [{3}], categoryId [{4}]",
                 item.Name, item.Price, item.Description, item.Image != null ? item.Image.FileName : null, item.CategoryId, item.SKUCode, item.Title);
@@ -270,6 +271,28 @@ namespace EShop.Controllers
             _logger.InfoFormat("Item with id [{0}] was successfully deleted", id);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult _ItemProperties(FormCollection fc)
+        {
+            int categoryId = 0;
+            List<ItemProperty> itemProperties = new List<ItemProperty>();
+            try
+            {
+                categoryId = Convert.ToInt32(fc["CategoryId"]);
+                var properties = _categoryService.GetCategory(categoryId).Properties;
+
+                itemProperties = properties.Select(x => new ItemProperty { Property = x, PropertyId = x.Id }).ToList();
+            }
+            catch (FormatException)
+            {
+                return Content("<html></html>");
+            }
+
+            
+            ViewData = new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } };
+            return PartialView("_ItemProperties", itemProperties);
         }
     }
 }
