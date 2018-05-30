@@ -64,8 +64,8 @@
                     .ChildrenHtmlAttributes(new { @class = "subItem" })
                     .ItemText()
                     .RootTemplate(@<text><a class="text-primary">@item</a></text>)
-                    .CategoryTemplate(@<text><a class="text-primary">@item.Name</a></text>)
-                    .ItemTemplate(@<text><a class="text-primary">@item.Name</a></text>))
+                    .CategoryTemplate(@<text><a class="text-primary">@item.Name </a></text>)
+                    .ItemTemplate(@<text><a class="text-primary">@item.Name @item.Title</a></text>))
         </div>
     </div>
         
