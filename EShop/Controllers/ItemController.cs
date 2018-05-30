@@ -171,10 +171,17 @@ namespace EShop.Controllers
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
+                try
+                {
+                    _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
 
-                _logger.Info("Item was successfully created");
-                return RedirectToAction("Index");
+                    _logger.Info("Item was successfully created");
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
@@ -239,8 +246,16 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ChangeImage([Bind(Include="Id, ImageUrl, Image")] Item model)
         {
-            _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
-            return RedirectToAction("Index");
+            try
+            {
+                _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
+            return View(model);
         }
 
         // GET: Item/Delete/5
