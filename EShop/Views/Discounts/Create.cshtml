@@ -1,6 +1,7 @@
 ﻿@model EShop.Models.DiscountViewModel
 @using EShop.Models
 @using BOL
+@using BOL.Objects
 
 @{
     ViewBag.Title = "Create";
@@ -8,6 +9,7 @@
 
 @{
     var categories = (List<Category>)ViewData["Categories"];
+    var itemsWithNoCategory = (List<Item>)ViewData["ItemsWithNoCategory"];
 }
 <h2>View</h2>
 <link href="~/Content/jsTree/themes/default/style.min.css" rel="stylesheet" />
@@ -57,7 +59,7 @@
 
     <div class="form-group">
         <div id="jstree">
-            @(Html.TreeView(categories)
+            @(Html.TreeView(categories, itemsWithNoCategory)
                     .EmptyContent("Items")
                     .Children(m => m.Items)
                     .HtmlAttributes(new { id = "tree" })

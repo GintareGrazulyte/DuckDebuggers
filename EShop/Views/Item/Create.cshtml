@@ -58,26 +58,17 @@
     <div class="form-group">
         @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("CategoryId", null, "No Category", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownList("CategoryId", null, "No Category", htmlAttributes: new { @class = "form-control", @onchange = "onChange()" })
             @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
         </div>
     </div>
 
-        <!-- add missing 'eta' symbols -->
-        <!--<div class="form-group">
-            Html.LabelFor(property => itemProperty.PropertyId, "Property", htmlAttributes: new { class = "control-label col-md-2" })
-            <div class="col-md-10 row">
-                Html.DropDownList("PropertyId", null, "No property", htmlAttributes: new { class = "form-control", id = "dropDown" })
-                Html.ValidationMessageFor(property => itemProperty.PropertyId, "", new { class = "text-danger" })
 
-                Html.EditorFor(property => itemProperty.Value, new { htmlAttributes = new { class = "form-control", id = "propertyValue" } })
-                Html.ValidationMessageFor(property => itemProperty.Value, "", new { class = "text-danger" })
-
-                <input type="button" onclick="updateProperties()" value="Add" />
-            </div>
+        <div class="form-group">
+                <div id="ItemProperties">
+                    @Html.Partial("_ItemProperties", Model.ItemProperties, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } })
+                </div>
         </div>
-
-        @Html.Partial("_ItemProperties", Model.ItemProperties)-->
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -95,24 +86,20 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
-    function updateProperties() {
-        var url = '@Url.Action("AddItemProperty", "Item")';
-
-        var property = {
-            PropertyId: $("#dropDown").val(),
-            Value: $("#propertyValue").val()
-        };
+    function onChange() {
+        var url = '@Url.Action("_ItemProperties", "Item")';
 
         $.ajax({
-            url: url,
             type: "POST",
-            data: property,
-            success: function (mydata) {
-
+            url: url,
+            data: $('#CategoryId').serialize(),
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                $("#ItemProperties").html(response);
+                console.log(response)
             }
         });
-        return false;
     }
-
     </script>
 }

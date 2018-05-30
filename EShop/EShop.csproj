@@ -245,6 +245,7 @@
     <Content Include="Views\Property\Delete.cshtml" />
     <Content Include="Views\Item\_ItemImage.cshtml" />
     <Content Include="Views\Categories\EditorTemplates\CheckBoxListItem.cshtml" />
+    <Content Include="Views\Item\EditorTemplates\ItemProperty.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

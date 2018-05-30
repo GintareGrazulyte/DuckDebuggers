@@ -16,7 +16,7 @@ namespace BOL.Objects
         public Item()
         {
             Discounts = new HashSet<Discount>();
-            ItemProperties = new HashSet<ItemProperty>();
+            ItemProperties = new List<ItemProperty>();
         }
 
         [Key]

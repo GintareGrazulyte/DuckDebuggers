@@ -16,9 +16,9 @@ namespace EShop.Models
         /// <summary>
         /// Create an HTML tree from a recursive collection of items
         /// </summary>
-        public static TreeView TreeView(this HtmlHelper html, IEnumerable<Category> categories)
+        public static TreeView TreeView(this HtmlHelper html, IEnumerable<Category> categories, IEnumerable<Item> itemsWithNoCategory)
         {
-            return new TreeView(html, categories);
+            return new TreeView(html, categories, itemsWithNoCategory);
         }
     }
 
@@ -38,12 +38,14 @@ namespace EShop.Models
         private Func<Category, HelperResult> _categoryTemplate;
         private Func<Item, HelperResult> _itemTemplate;
         private Func<string, HelperResult> _rootTemplate;
+        private IEnumerable<Item> _itemsWithNoCategory;
 
-        public TreeView(HtmlHelper html, IEnumerable<Category> items)
+        public TreeView(HtmlHelper html, IEnumerable<Category> categories, IEnumerable<Item> itemsWithNoCategory)
         {
             if (html == null) throw new ArgumentNullException("html");
             _html = html;
-            _categories = items;
+            _categories = categories;
+            _itemsWithNoCategory = itemsWithNoCategory;
             // The ItemTemplate will fdeault to rendering the DisplayProperty
             _categoryTemplate = item => new HelperResult(writer => writer.Write(_categoryDisplayProperty(item)));
             _itemTemplate = item => new HelperResult(writer => writer.Write(_itemDisplayProperty(item)));
@@ -172,9 +174,15 @@ namespace EShop.Models
         {
             ValidateSettings();
             var listItems = new List<Category>();
+            var noCategoryItems = new List<Item>();
             if (_categories != null)
             {
                 listItems = _categories.ToList();
+            }
+
+            if(_itemsWithNoCategory != null)
+            {
+                noCategoryItems = _itemsWithNoCategory.ToList();
             }
 
 
@@ -186,7 +194,7 @@ namespace EShop.Models
             };
             li.MergeAttribute("id", "-1");
 
-            if (listItems.Count > 0)
+            if (listItems.Count > 0 || noCategoryItems.Count > 0)
             {
                 var innerUl = new TagBuilder("ul");
                 innerUl.MergeAttributes(_childHtmlAttributes);
@@ -195,6 +203,8 @@ namespace EShop.Models
                 {
                     BuildNestedTag(innerUl, item, _childrenProperty);
                 }
+
+                BuildNestedTag(innerUl, new Category() { Name = "No category", Items = noCategoryItems, Id = -2 }, _childrenProperty);
                 li.InnerHtml += innerUl.ToString();
             }
             ul.InnerHtml += li.ToString();

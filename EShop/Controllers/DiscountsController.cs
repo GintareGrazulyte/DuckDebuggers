@@ -17,11 +17,13 @@ namespace EShop.Controllers
 
         private ICategoryService _categoryService;
         private IDiscountManagementService _discountManagementService;
+        private IItemQueryService _itemQueryService;
 
-        public DiscountsController(ICategoryService categoryService, IDiscountManagementService discountManagementService)
+        public DiscountsController(ICategoryService categoryService, IDiscountManagementService discountManagementService, IItemQueryService itemQueryService)
         {
             _categoryService = categoryService;
             _discountManagementService = discountManagementService;
+            _itemQueryService = itemQueryService;
         }
         // GET: Discounts
         public ActionResult Index()
@@ -34,6 +36,7 @@ namespace EShop.Controllers
         public ActionResult Create()
         {
             ViewData["Categories"] = _categoryService.GetAllCategories();
+            ViewData["ItemsWithNoCategory"] = _itemQueryService.GetAllItems().Where(x => x.CategoryId == null).ToList();
             return View(new DiscountViewModel() { BeginDate = DateTime.Now, EndDate = DateTime.Now });
         }
 
@@ -82,6 +85,8 @@ namespace EShop.Controllers
 
             var view = View(discount);
             view.ViewData["Categories"] = _categoryService.GetAllCategories();
+            view.ViewData["ItemsWithNoCategory"] = _itemQueryService.GetAllItems().Where(x => x.CategoryId == null).ToList();
+
             return view;
         }
 

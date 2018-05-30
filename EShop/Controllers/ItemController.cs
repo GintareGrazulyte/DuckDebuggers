@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 using BOL.Property;
 using log4net;
+using System;
 
 namespace EShop.Controllers
 {
@@ -154,7 +155,7 @@ namespace EShop.Controllers
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
-            return View(new Item());
+            return View(new Item() { ItemProperties = _propertyService.GetAllProperties().Select(x=> new ItemProperty { Property = x, PropertyId = x.Id }).ToList() });
         }
 
         // POST: Item/Create
@@ -162,7 +163,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,ImageUrl,Image,CategoryId")] Item item)
+        public ActionResult Create([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,ImageUrl,Image,CategoryId,ItemProperties")] Item item)
         {
             _logger.InfoFormat("Create item with SKUCode [{5}], name [{0}], title [{6}], price [{1}], description [{2}], image [{3}], categoryId [{4}]",
                 item.Name, item.Price, item.Description, item.Image != null ? item.Image.FileName : null, item.CategoryId, item.SKUCode, item.Title);
@@ -170,10 +171,18 @@ namespace EShop.Controllers
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
-                _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
+                try
+                {
+                    item.ItemProperties = item.ItemProperties.Where(x => x.Value != null && x.Value != "").ToList();
+                    _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
 
-                _logger.Info("Item was successfully created");
-                return RedirectToAction("Index");
+                    _logger.Info("Item was successfully created");
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name", item.CategoryId);
             return View(item);
@@ -201,7 +210,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId,ItemProperties,Property")] Item item)
         {
             _logger.InfoFormat("Edit item with id [{0}]", item.Id);
 
@@ -238,8 +247,16 @@ namespace EShop.Controllers
         [HttpPost]
         public ActionResult ChangeImage([Bind(Include="Id, ImageUrl, Image")] Item model)
         {
-            _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
-            return RedirectToAction("Index");
+            try
+            {
+                _itemManagementService.UpdateItemImage(model, Server.MapPath("~/Uploads/Images"));
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)    //TODO: create separate exception to handle "Email already exists"
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
+            return View(model);
         }
 
         // GET: Item/Delete/5
@@ -270,6 +287,32 @@ namespace EShop.Controllers
             _logger.InfoFormat("Item with id [{0}] was successfully deleted", id);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult _ItemProperties(FormCollection fc)
+        {
+            int categoryId = 0;
+            List<ItemProperty> itemProperties = new List<ItemProperty>();
+            try
+            {
+                categoryId = Convert.ToInt32(fc["CategoryId"]);
+                var properties = _categoryService.GetCategory(categoryId).Properties;
+
+                itemProperties = properties.Select(x => new ItemProperty { Property = x, PropertyId = x.Id }).ToList();
+            }
+            catch (FormatException)
+            {
+                var properties = _propertyService.GetAllProperties();
+                if(properties != null && properties.Count > 0)
+                    itemProperties = properties.Select(x => new ItemProperty { Property = x, PropertyId = x.Id }).ToList();
+                else
+                    return Content("<html></html>");
+            }
+
+            
+            ViewData = new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } };
+            return PartialView("_ItemProperties", itemProperties);
         }
     }
 }
