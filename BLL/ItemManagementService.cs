@@ -71,118 +71,97 @@ namespace BLL
                 var categories = _categoryService.GetAllCategories();
                 var properties = _propertyService.GetAllProperties();
 
-                using (var dbContextScope = _dbContextScopeFactory.Create())
+              
+                int addedCount = 0;
+                for (int i = 0; i < items.Count; i++)
                 {
-                    int addedCount = 0;
-                    for (int i = 0; i < items.Count; i++)
+                    if (items[i].Name == null)
                     {
-                        if (items[i].Name == null)
-                        {
-                            logInfo += "<" + items[i].Name + "> is not added as name cannot be empty" +
-                            Environment.NewLine;
-                            continue;
-                        }
-                        if (items[i].Title == null)
-                        {
-                            logInfo += "<" + items[i].Name + "> is not added as title cannot be empty" +
-                            Environment.NewLine;
-                            continue;
-                        }
-                        if (items[i].SKUCode == null)
-                        {
-                            logInfo += "<" + items[i].Name + "> is not added as SKU code cannot be empty" +
-                            Environment.NewLine;
-                            continue;
-                        }
-                        if (items[i].Price <= 0)
-                        {
-                            logInfo += "<" + items[i].Name + "> is not added as price <" +
-                                items[i].Price + "> is not valid" + Environment.NewLine;
-                            continue;
-                        }
-                        //NOTE: items[i].Category should be nulled 
-                        Category categoryToAdd = null;
-                        if (items[i].Category.Name != null && 
-                            (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
-                        {
-                            items[i].Category = null;
-                            logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
-                                items[i].Category.Name + "> does not exist" + Environment.NewLine;
-                        }
-                        else
-                        {
-                            items[i].Category = null;
-                            items[i].CategoryId = categoryToAdd.Id;
-                        }
-
-                        try
-                        {
-                            //TODO add item image from internet
-                            if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
-                            {
-                                items[i].ImageUrl = null;
-                                logInfo += "<" + items[i].Name + "> image is set NULL as image <" +
-                                    items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
-                            }
-                        }
-                        catch
-                        {
-                            items[i].ImageUrl = null;
-                            logInfo += "<" + items[i].Name + "> image is set NULL as image <" +
-                                    items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
-                        }
-                        
-
-                        //TODO add properties
-                        //var propertiesToAdd = items[i].ItemProperties.ToList();
-                        //var itemPropertiesToAdd = new HashSet<ItemProperty>();
-                        //for (int j = 0; j < propertiesToAdd.Count; j++)
-                        //{
-                        //    var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
-                        //    if (propertyToAdd != null)
-                        //    {
-                        //        //TODO set item id
-                        //        itemPropertiesToAdd.Add(new ItemProperty { ItemId = 0, PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
-                        //    }
-                        //    else
-                        //    {
-                        //        logInfo += "For item <" + items[i].Name + "> property <" +
-                        //           propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
-                        //    }
-                        //}
-                        items[i].ItemProperties = null;
-                        //TODO add property list
-                        //items[i].ItemProperties = itemPropertiesToAdd;
-                        
-
-                        _itemRepository.Add(items[i]);
-                        addedCount++;
+                        logInfo += "<" + items[i].Name + "> is not added as name cannot be empty" +
+                        Environment.NewLine;
+                        continue;
                     }
-                    logInfo += addedCount + "/" + items.Count + " items were successfully added";
+                    if (items[i].Title == null)
+                    {
+                        logInfo += "<" + items[i].Name + "> is not added as title cannot be empty" +
+                        Environment.NewLine;
+                        continue;
+                    }
+                    if (items[i].SKUCode == null)
+                    {
+                        logInfo += "<" + items[i].Name + "> is not added as SKU code cannot be empty" +
+                        Environment.NewLine;
+                        continue;
+                    }
+                    if (items[i].Price <= 0)
+                    {
+                        logInfo += "<" + items[i].Name + "> is not added as price <" +
+                            items[i].Price + "> is not valid" + Environment.NewLine;
+                        continue;
+                    }
+                    //NOTE: items[i].Category should be nulled 
+                    Category categoryToAdd = null;
+                    if (items[i].Category.Name != null && 
+                        (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
+                    {
+                        items[i].Category = null;
+                        logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
+                            items[i].Category.Name + "> does not exist" + Environment.NewLine;
+                    }
+                    else
+                    {
+                        items[i].Category = null;
+                        items[i].CategoryId = categoryToAdd.Id;
+                    }
 
+              
+                    //TODO add properties
+                    //var propertiesToAdd = items[i].ItemProperties.ToList();
+                    //var itemPropertiesToAdd = new HashSet<ItemProperty>();
+                    //for (int j = 0; j < propertiesToAdd.Count; j++)
+                    //{
+                    //    var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
+                    //    if (propertyToAdd != null)
+                    //    {
+                    //        //TODO set item id
+                    //        itemPropertiesToAdd.Add(new ItemProperty { ItemId = 0, PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
+                    //    }
+                    //    else
+                    //    {
+                    //        logInfo += "For item <" + items[i].Name + "> property <" +
+                    //           propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
+                    //    }
+                    //}
+                    items[i].ItemProperties = null;
+                    //TODO add property list
+                    //items[i].ItemProperties = itemPropertiesToAdd;
+
+
+                    
                     try
                     {
-                        dbContextScope.SaveChanges();
+                        CreateItemWithImage(items[i], imagesFolder);
+                        addedCount++;
                     }
                     catch (Exception e)
                     {
-                        logInfo = "Unable to save items to database. Exception message: " + e.Message;
+                        logInfo = "Unable to save item <" + items[i].Name + "> to database. Exception message: " + e.Message;
                     }
-                    finally
+
+                }
+                if (logInfoNeeded)
+                {
+                    logInfo += addedCount + "/" + items.Count + " items were successfully added";
+
+                    var email = new Email()
                     {
-                        if (logInfoNeeded)
-                        {
-                            var email = new Email()
-                            {
-                                ToName = admin.Name,
-                                ToAddress = admin.Email,
-                                Subject = "Import",
-                                Body = logInfo,
-                                AttachmentPath = ""
-                            };
-                            _emailService.SendEmail(email);
-                        }
-                    }
+                        ToName = admin.Name,
+                        ToAddress = admin.Email,
+                        Subject = "Import",
+                        Body = logInfo,
+                        AttachmentPath = ""
+                    };
+                    _emailService.SendEmail(email);
                 }
             });
         }
