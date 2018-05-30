@@ -19,6 +19,23 @@
         </dd>
 
     </dl>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Properties)
+            </th>
+        </tr>
+
+        @foreach (var property in Model.Properties)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => property.Name)
+            </td>
+        </tr>
+        }
+    </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
