@@ -209,7 +209,6 @@ namespace BLL
                     worksheet.Cells[rowIndex, 7].Value = (item.Category != null) ? 
                         item.Category.Name : "";
 
-                    //TODO: Fix. ItemProperties disposed
                     foreach (var itemProperty in item.ItemProperties)
                     {
                         worksheet.Cells[rowIndex, 8].Value = itemProperty.Property.Name;
