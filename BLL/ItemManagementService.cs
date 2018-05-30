@@ -50,30 +50,91 @@ namespace BLL
                 string logInfo = "";
 
                 var categories = _categoryService.GetAllCategories();
+                var properties = _propertyService.GetAllProperties();
 
                 using (var dbContextScope = _dbContextScopeFactory.Create())
                 {
                     int addedCount = 0;
                     for (int i = 0; i < items.Count; i++)
                     {
+                        if (items[i].Name == null)
+                        {
+                            logInfo += "<" + items[i].Name + "> is not added as name cannot be empty" +
+                            Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].Title == null)
+                        {
+                            logInfo += "<" + items[i].Name + "> is not added as title cannot be empty" +
+                            Environment.NewLine;
+                            continue;
+                        }
+                        if (items[i].SKUCode == null)
+                        {
+                            logInfo += "<" + items[i].Name + "> is not added as SKU code cannot be empty" +
+                            Environment.NewLine;
+                            continue;
+                        }
                         if (items[i].Price <= 0)
                         {
-                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as price <" +
+                            logInfo += "<" + items[i].Name + "> is not added as price <" +
                                 items[i].Price + "> is not valid" + Environment.NewLine;
                             continue;
                         }
-                        if (items[i].CategoryId != null && !categories.Any(c => c.Id == items[i].CategoryId))
+                        //NOTE: items[i].Category should be nulled 
+                        Category categoryToAdd = null;
+                        if (items[i].Category.Name != null && 
+                            (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
                         {
-                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as category <" + 
-                                items[i].CategoryId + "> does not exist" + Environment.NewLine;
-                            continue;
+                            items[i].Category = null;
+                            logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
+                                items[i].Category.Name + "> does not exist" + Environment.NewLine;
                         }
-                        if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
+                        else
                         {
-                            logInfo += i + 2 + ". <" + items[i].Name + "> is not added as image <" +
-                                items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
-                            continue;
+                            items[i].Category = null;
+                            items[i].CategoryId = categoryToAdd.Id;
                         }
+
+                        try
+                        {
+                            //TODO add item image from internet
+                            if (items[i].ImageUrl != null && !File.Exists(Path.Combine(imagesFolder, items[i].ImageUrl)))
+                            {
+                                items[i].ImageUrl = null;
+                                logInfo += "<" + items[i].Name + "> image is set NULL as image <" +
+                                    items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
+                            }
+                        }
+                        catch
+                        {
+                            items[i].ImageUrl = null;
+                            logInfo += "<" + items[i].Name + "> image is set NULL as image <" +
+                                    items[i].ImageUrl + "> is not uploaded" + Environment.NewLine;
+                        }
+                        
+
+                        //TODO add properties
+                        //var propertiesToAdd = items[i].ItemProperties.ToList();
+                        //var itemPropertiesToAdd = new HashSet<ItemProperty>();
+                        //for (int j = 0; j < propertiesToAdd.Count; j++)
+                        //{
+                        //    var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
+                        //    if (propertyToAdd != null)
+                        //    {
+                        //        //TODO set item id
+                        //        itemPropertiesToAdd.Add(new ItemProperty { ItemId = 0, PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
+                        //    }
+                        //    else
+                        //    {
+                        //        logInfo += "For item <" + items[i].Name + "> property <" +
+                        //           propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
+                        //    }
+                        //}
+                        items[i].ItemProperties = null;
+                        //TODO add property list
+                        //items[i].ItemProperties = itemPropertiesToAdd;
+                        
 
                         _itemRepository.Add(items[i]);
                         addedCount++;
