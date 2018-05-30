@@ -5,6 +5,7 @@ using BOL.Objects;
 using System.IO;
 using OfficeOpenXml;
 using BOL;
+using BOL.Property;
 
 namespace BLL
 {
@@ -18,78 +19,119 @@ namespace BLL
             var file = new FileInfo(path);
             using (ExcelPackage excelPackage = new ExcelPackage(file))
             {
-                //todo rename
                 var worksheet = excelPackage.Workbook.Worksheets[1];
 
                 if (worksheet == null)
                 {
                     throw new Exception("Worksheet is missing");
                 }
+
                 int row = 2;
 
-                ReadValues(out string name, out string title, out int price, out string imageUrl, out string skuCode, 
-                    out string description, out string categoryName, worksheet, row);
-                row++;
+                string name = null, title = null, imageUrl = null, skuCode = null, description = null,
+                    categoryName = null, propertyName = null, propertyValue = null;
+                int price = 0;
 
-                while (!IsRowEmpty(name, title, price, imageUrl, skuCode, description, categoryName))
+                int lastItemRow = worksheet.Cells[row, 1].GetLastItemRow();
+                bool firstRow = true;
+                Item item = null;
+                HashSet<ItemProperty> properties = null;
+
+                ReadValues(ref name, ref title, ref price, ref imageUrl, ref skuCode, 
+                    ref description, ref categoryName, ref propertyName, ref propertyValue, worksheet, row);
+
+                while (!IsRowEmpty(name, title, price, imageUrl, skuCode, description, categoryName, propertyName, propertyValue))
                 {
-                    ReadValues(out name, out title, out price, out imageUrl, out skuCode, 
-                        out description, out categoryName, worksheet, row);
-
-                    var item = new Item
+                    if (firstRow)
                     {
-                        SKUCode = skuCode,
-                        Name = name,
-                        Title = title,
-                        Price = price,
-                        Description = description,
-                        Category = new Category() { Name = categoryName },
-                        ImageUrl = imageUrl,
-                    };
-                    CorrectValues(item);
+                        item = new Item
+                        {
+                            SKUCode = skuCode,
+                            Name = name,
+                            Title = title,
+                            Price = price,
+                            Description = description,
+                            Category = new Category() { Name = categoryName },
+                            ImageUrl = imageUrl,
+                        };
 
-                    items.Add(item);
-                    row++;
+                        properties = new HashSet<ItemProperty>();
+
+                        firstRow = false;
+                    }
+
+
+                    if (row == lastItemRow)
+                    {
+                        item.ItemProperties = properties;
+                        CorrectValues(item);
+                        items.Add(item);
+
+
+                        firstRow = true;
+                        lastItemRow = worksheet.Cells[row, 1].GetLastItemRow();
+
+                        ReadValues(ref name, ref title, ref price, ref imageUrl, ref skuCode,
+                            ref description, ref categoryName, ref propertyName, ref propertyValue, worksheet, row);
+                    }
+                    else
+                    {
+                        properties.Add(new ItemProperty() { Property = new Property() { Name = propertyName }, Value = propertyValue } );
+                        row++;
+                        ReadValues(ref propertyName, ref propertyValue, worksheet, row);
+                    }
+
                 }
 
             }
             return items;
         }
 
-        private void ReadValues(out string name, out string title, out int price, out string imageUrl,
-            out string skuCode, out string description, out string categoryName,
-            ExcelWorksheet worksheet, int row)
+        private void ReadValues(ref string name, ref string title, ref int price, ref string imageUrl,
+            ref string skuCode, ref string description, ref string categoryName, ref string propertyName,
+            ref string propertyValue, ExcelWorksheet worksheet, int row)
         {
-            name = ConvertTostring(worksheet.Cells[row, 1].Value);
-            title = ConvertTostring(worksheet.Cells[row, 2].Value);
-            string priceStr = ConvertTostring(worksheet.Cells[row, 3].Value);
-            if (priceStr != null)
-            {
-                decimal.TryParse(priceStr.Replace(',', '.'), out decimal priceDec);
-                price = (int)(priceDec * 100);
-            }
-            else
-            {
-                price = 0;
-            }
-            imageUrl = ConvertTostring(worksheet.Cells[row, 4].Value);
-            skuCode = ConvertTostring(worksheet.Cells[row, 5].Value);
-            description = ConvertTostring(worksheet.Cells[row, 6].Value);
-            var categoriesStr = ConvertTostring(worksheet.Cells[row, 7].Value);
-            if (categoriesStr != null)
-            {
-                var categories = categoriesStr.Split('/');
-                //NOTE : we don't have subcategories so the most spetific subcategory is used
-                categoryName = categories[categories.Length - 1];
-            }
-            else
-            {
-                categoryName = null;
-            }
+             name = ConvertTostring(worksheet.Cells[row, 1].Value);
+             
+             title = ConvertTostring(worksheet.Cells[row, 2].Value);
+             string priceStr = ConvertTostring(worksheet.Cells[row, 3].Value);
+             if (priceStr != null)
+             {
+                 decimal.TryParse(priceStr.Replace(',', '.'), out decimal priceDec);
+                 price = (int)(priceDec * 100);
+             }
+             else
+             {
+                 price = 0;
+             }
+             imageUrl = ConvertTostring(worksheet.Cells[row, 4].Value);
+             skuCode = ConvertTostring(worksheet.Cells[row, 5].Value);
+             description = ConvertTostring(worksheet.Cells[row, 6].Value);
+             var categoriesStr = ConvertTostring(worksheet.Cells[row, 7].Value);
+             if (categoriesStr != null)
+             {
+                 var categories = categoriesStr.Split('/');
+                 //NOTE : we don't have subcategories so the most spetific subcategory is used
+                 categoryName = categories[categories.Length - 1];
+             }
+             else
+             {
+                 categoryName = null;
+             }
+
+            ReadValues(ref propertyName, ref propertyValue, worksheet, row);
         }
 
+        private void ReadValues(ref string propertyName, ref string propertyValue, ExcelWorksheet worksheet, int row)
+        {
+            propertyName = ConvertTostring(worksheet.Cells[row, 8].Value);
+            propertyValue = ConvertTostring(worksheet.Cells[row, 9].Value);
+        }
+
+
         private bool IsRowEmpty(string name, string title, int price, string imageUrl,
-            string skuCode, string description, string categoryName)
+            string skuCode, string description, string categoryName, string propertyName,
+            string propertyValue)
         {
             return IsEmpty(name) &&
                    IsEmpty(title) &&
@@ -97,7 +139,9 @@ namespace BLL
                    IsEmpty(imageUrl) &&
                    IsEmpty(skuCode) &&
                    IsEmpty(description) &&
-                   IsEmpty(categoryName);
+                   IsEmpty(categoryName) &&
+                   IsEmpty(propertyName) &&
+                   IsEmpty(propertyValue);
         }
 
         private bool IsEmpty(string str)
@@ -169,4 +213,22 @@ namespace BLL
             return attacmentPath;
         }
     }
+
+    public static class Extensions
+    {
+        public static int GetLastItemRow(this ExcelRange @this)
+        {
+            int startRow = @this.Start.Row;
+            if (@this.Merge)
+            {
+                var idx = @this.Worksheet.GetMergeCellId(startRow, @this.Start.Column);
+                return @this.Worksheet.Cells[@this.Worksheet.MergedCells[idx - 1]].Rows + startRow;
+            }
+            else
+            {
+                return startRow;
+            }
+        }
+    }
+
 }
