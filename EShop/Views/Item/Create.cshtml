@@ -65,7 +65,9 @@
 
         <div class="form-group">
             <div class="col-md-10">
-                <div id="ItemProperties"></div>
+                <div id="ItemProperties">
+                    @Html.Partial("_ItemProperties", Model.ItemProperties, new ViewDataDictionary { TemplateInfo = new TemplateInfo { HtmlFieldPrefix = "ItemProperties" } })
+                </div>
             </div>
         </div>
 
