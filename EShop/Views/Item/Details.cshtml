@@ -52,6 +52,13 @@
         <dd>
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
+        <dt>
+            @Html.DisplayName("Properties")
+        </dt>
+            @foreach(var property in Model.ItemProperties)
+            {
+                <dd>@property.Property.Name</dd>
+            }
         @if (Model.ImageUrl != null)
     {
         <img src="@Url.Content(Model.ImageUrl)" alt="Image" />
