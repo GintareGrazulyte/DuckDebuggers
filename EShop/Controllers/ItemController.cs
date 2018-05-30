@@ -155,7 +155,7 @@ namespace EShop.Controllers
         {
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             ViewBag.PropertyId = new SelectList(_propertyService.GetAllProperties(), "Id", "Name");
-            return View(new Item());
+            return View(new Item() { ItemProperties = _propertyService.GetAllProperties().Select(x=> new ItemProperty { Property = x, PropertyId = x.Id }).ToList() });
         }
 
         // POST: Item/Create
@@ -171,6 +171,7 @@ namespace EShop.Controllers
             ViewBag.CategoryId = new SelectList(_categoryService.GetAllCategories(), "Id", "Name");
             if (ModelState.IsValid)
             {
+                item.ItemProperties = item.ItemProperties.Where(x => x.Value != null && x.Value != "").ToList();
                 _itemManagementService.CreateItemWithImage(item, Server.MapPath("~/Uploads/Images"));
 
                 _logger.Info("Item was successfully created");
@@ -287,7 +288,11 @@ namespace EShop.Controllers
             }
             catch (FormatException)
             {
-                return Content("<html></html>");
+                var properties = _propertyService.GetAllProperties();
+                if(properties != null && properties.Count > 0)
+                    itemProperties = properties.Select(x => new ItemProperty { Property = x, PropertyId = x.Id }).ToList();
+                else
+                    return Content("<html></html>");
             }
 
             
