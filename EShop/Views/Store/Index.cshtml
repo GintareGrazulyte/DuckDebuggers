@@ -25,7 +25,7 @@
     {
         @*@Html.ActionLink(category.Name, "Browse", new { categoryId = category.Id })
             <span class="badge badge-primary badge-pill">(@category.Items.Count)</span>*@
-        <button class="btn badge-pill " onclick="filterSelection('@category.Name')"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
+        <button class="btn badge-pill " onclick="filterSelection('@category.Name')" style="margin-bottom:2px"> @category.Name <span class="badge badge-primary badge-pill">(@category.Items.Count)</span></button>
     }
 </div>
 

@@ -37,13 +37,13 @@ namespace DAL
 
         public Item FindById(int? id)
         {
-            return DbContext.Items.Include("Category").Include("Discounts")
+            return DbContext.Items.Include("Category").Include("Discounts").Include("ItemProperties")
                     .SingleOrDefault(c => c.Id == id);
         }
 
         public List<Item> GetAll()
         {
-            return DbContext.Items.Include("Discounts").Include("Category").ToList();
+            return DbContext.Items.Include("Discounts").Include("Category").Include("ItemProperties").ToList();
         }
 
         public void Modify(Item item)
