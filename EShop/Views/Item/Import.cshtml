@@ -47,7 +47,7 @@
 </div>
 
 @{ Html.BeginForm("ImportItemsFromFile", "Item", FormMethod.Post, new { enctype = "multipart/form-data" });}
-<p>
+<p style="margin:10px">
     File name: @Html.TextBox("file", null, new { type = "file" }) @Html.ValidationSummary(true, "", new { @class = "text-danger" }) <br />
     @Html.CheckBox("logInfoNeeded", true) Get log information to email
 </p>
