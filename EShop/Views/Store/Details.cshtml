@@ -32,6 +32,15 @@
             <table class="table">
                 <tr><td>@Html.DisplayNameFor(model => model.Category)</td><td>@Html.DisplayFor(model => model.Category.Name)</td></tr>
                 <tr><td>@Html.DisplayNameFor(model => model.SKUCode)</td><td>@Html.DisplayFor(model => model.SKUCode)</td></tr>
+                <tr><td/><td/></tr>
+                <tr><td style="font-weight: bold;">Properties:</td><td/></tr>
+                @foreach (var property in Model.ItemProperties)
+                {
+                    if (property.Value != null)
+                    {
+                        <tr><td>@property.Property.Name</td><td>@property.Value</td></tr>
+                    }
+                }
             </table>
 
             @{
@@ -42,7 +51,6 @@
                     decimal discountPrice = (int)Model.GetPriceWithDiscount() / 100.0m;
                     <p class="lead text-lg-right itemPrice">
                         <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur/Piece</del>
-                        @* JEI TRINSIT SITA BR PASAKYKIT EDGARUI, NES SULUS KODAS VIENOJ VIETOJ ISTRYNUS*@
                         <br />
             
                         @Html.DisplayFor(modelItem => discountPrice) Eur/Piece</p>
