@@ -186,7 +186,8 @@ namespace BLL
             {
                 var worksheet = excelPackage.Workbook.Worksheets.Add("Items");
 
-                var columnNames = new List<string> { "Name", "Price", "Description", "CategoryId", "ImageUrl" };
+                var columnNames = new List<string> { "Product Name", "Title", "Price", "Image", "SKU code",
+                    "Description", "Category", "Properties" };
                 for (int i = 1; i < columnNames.Count + 1; i++)
                 {
                     worksheet.Column(i).Width = 20;
@@ -196,16 +197,30 @@ namespace BLL
                     //= new Font("Calibri", 12, FontStyle.Bold);
                 }
 
-                int cellIndex = 2;
+                int rowIndex = 2;
                 foreach (var item in items)
                 {
-                    worksheet.Cells[cellIndex, 1].Value = item.Name;
-                    worksheet.Cells[cellIndex, 2].Value = item.Price;
-                    worksheet.Cells[cellIndex, 3].Value = item.Description;
-                    worksheet.Cells[cellIndex, 4].Value = item.CategoryId;
-                    worksheet.Cells[cellIndex, 5].Value = item.ImageUrl;
+                    worksheet.Cells[rowIndex, 1].Value = item.Name;
+                    worksheet.Cells[rowIndex, 2].Value = item.Title;
+                    worksheet.Cells[rowIndex, 3].Value = item.Price;
+                    worksheet.Cells[rowIndex, 4].Value = item.ImageUrl;
+                    worksheet.Cells[rowIndex, 5].Value = item.SKUCode;
+                    worksheet.Cells[rowIndex, 6].Value = item.Description;
+                    worksheet.Cells[rowIndex, 7].Value = (item.Category != null) ? 
+                        item.Category.Name : "";
+ 
+                    //TODO: Fix. ItemProperties disposed
+                    //foreach (var itemProperty in item.ItemProperties)
+                    //{
+                    //    worksheet.Cells[rowIndex, 8].Value = itemProperty.Property.Name;
+                    //    worksheet.Cells[rowIndex, 9].Value = itemProperty.Value;
+                    //    rowIndex++;
+                    //}
 
-                    cellIndex++;
+                   // if (item.ItemProperties.Count == 0)
+                    {
+                    rowIndex++;
+                    }
                 }             
                 excelPackage.Save();
             }
