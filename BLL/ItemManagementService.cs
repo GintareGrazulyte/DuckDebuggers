@@ -259,6 +259,7 @@ namespace BLL
                     foundItem.Category = itemToUpdate.Category;
                     foundItem.CategoryId = itemToUpdate.CategoryId;
                 }
+                foundItem.ItemProperties = itemToUpdate.ItemProperties;
                 _itemRepository.Modify(foundItem);
                 dbContextScope.SaveChanges();
             }

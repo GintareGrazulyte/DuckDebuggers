@@ -60,7 +60,7 @@
                     </div>
                     <div class="card-body">
                         <div>
-                            <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action(" Details", "Store" , new { itemId=item.Id, categoryId=item.CategoryId }, null)'">View details</button>
+                            <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action("Details", "Store" , new { itemId=item.Id, categoryId=item.CategoryId }, null)'">View details</button>
                             <span><button type="button" id="AddToCart" class="btn btn-primary" style="position: absolute; right: 20px;" onClick="AddItem(@item.Id)">Add to cart</button></span>
                         </div>
 

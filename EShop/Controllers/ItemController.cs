@@ -202,7 +202,7 @@ namespace EShop.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId")] Item item)
+        public ActionResult Edit([Bind(Include = "Id,SKUCode,Title,Name,Price,Description,CategoryId,ItemProperties,Property")] Item item)
         {
             _logger.InfoFormat("Edit item with id [{0}]", item.Id);
 

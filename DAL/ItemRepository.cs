@@ -60,7 +60,7 @@ namespace DAL
 
         public List<Item> GetByIds(IEnumerable<int> ids)
         {
-            return DbContext.Items.Include("Category").Include("Discounts").Where(t => ids.Contains(t.Id)).ToList();
+            return DbContext.Items.Include("Category").Include("Discounts").Include("ItemProperties.Property").Where(t => ids.Contains(t.Id)).ToList();
         }
     }
 }

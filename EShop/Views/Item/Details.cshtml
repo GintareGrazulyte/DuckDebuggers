@@ -60,7 +60,11 @@
             </dt>
             foreach (var property in Model.ItemProperties)
             {
-                <dd>@property.Property.Name: @property.Value</dd>
+                if (property.Value != null)
+                {
+                    <dd>@property.Property.Name: @property.Value</dd>
+                }
+
             }
         }
 
