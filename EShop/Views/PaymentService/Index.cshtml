@@ -58,7 +58,7 @@
                     @{
                         if (cartItem.Item.ImageUrl != null)
                         {
-                            @:<img src="@Url.Content("~/Uploads/Images/" + cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
+                            @:<img src="@Url.Content(cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
                         }
                     }
                 </td>

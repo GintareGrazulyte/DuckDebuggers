@@ -1,18 +1,17 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 @{
-    Layout = null;
+    ViewBag.Title = "InternalError";
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
 }
+<hr />
+<div class="jumbotron">
+    <div class="row align-items-center justify-content-center">
+        <h1 class="text-center ">Opps! We messed up...</h1>
+        <img src="~/Content/Images/panda500.gif" width="700" class="img" />
+    </div>
+    <br/>
+    <div class="row align-items-center justify-content-center">
+        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Store")'">Accept apologies and go home</button>
+    </div>
+</div>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <hgroup>
-        <h1 class="text-danger">Error.</h1>
-        <h2 class="text-danger">An error occurred while processing your request.</h2>
-    </hgroup>
-</body>
-</html>

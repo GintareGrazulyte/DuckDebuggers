@@ -60,7 +60,5 @@ namespace BOL.Objects
         {
             return HasDiscount ? Discounts.Where(x => x.EndDate >= DateTime.Now).MinBy(x => x.CalculateDiscountedPrice(Price)) : null;
         }
-
-
     }
 }

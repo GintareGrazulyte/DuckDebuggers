@@ -17,7 +17,7 @@
             @{
                 if(Model.ImageUrl != null)
                 {
-                    <img src="@Url.Content("~/Uploads/Images/" + Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail" />
+                    <img src="@Url.Content(Model.ImageUrl)" alt="@Model.Name" width="100%" class="img-thumbnail" />
                 }
                 else
                 {

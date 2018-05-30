@@ -32,35 +32,35 @@
                         <h6 class="card-subtitle text-muted">@Html.DisplayFor(modelItem => item.Title)</h6>
                     </div>
                     @{
-                        if (item.ImageUrl != null)
-                        {
-                            <img src="@Url.Content("~/Uploads/Images/" + item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px"  class="img-thumbnail"/>
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/Content/Images/NoImage.jpg")" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" class="img-thumbnail" />
-                        }
+                    if (item.ImageUrl != null)
+                    {
+                            <img src="@Url.Content(item.ImageUrl)" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px class="img-thumbnail" />
+                    }
+                    else
+                    {
+                    <img src="@Url.Content(" ~/Content/Images/NoImage.jpg")" alt="@item.Name" style="height:200px; min-height:200px; width:290px; min-width:290px" class="img-thumbnail" />
+                    }
                     }
                     <div class="card-body">
                         @{
-                            if (item.HasDiscount)
-                            {
-                                //apvalinimas. jei i parduotuves puse, istrint (int)
-                                decimal discountPrice = (int)item.GetPriceWithDiscount() / 100.0m;
-                                <p class="card-text text-lg-right">
-                                    <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
-                                    @Html.DisplayFor(modelItem => discountPrice) Eur/Piece
-                                </p>
-                            }
-                            else
-                            {
-                                <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</p>
-                            }
+                        if (item.HasDiscount)
+                        {
+                        //apvalinimas. jei i parduotuves puse, istrint (int)
+                        decimal discountPrice = (int)item.GetPriceWithDiscount() / 100.0m;
+                        <p class="card-text text-lg-right">
+                            <del class="text-primary">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</del>
+                            @Html.DisplayFor(modelItem => discountPrice) Eur/Piece
+                        </p>
+                        }
+                        else
+                        {
+                        <p class="card-text text-lg-right">@Html.DisplayFor(modelItem => piecePrice) Eur / Piece</p>
+                        }
                         }
                     </div>
                     <div class="card-body">
                         <div>
-                            <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action("Details", "Store", new {  itemId = item.Id, categoryId = item.CategoryId }, null)'">View details</button>
+                            <button type="button" id="details" class="btn btn-info" style="left: 20px;" onclick="location.href='@Url.Action(" Details", "Store" , new { itemId=item.Id, categoryId=item.CategoryId }, null)'">View details</button>
                             <span><button type="button" id="AddToCart" class="btn btn-primary" style="position: absolute; right: 20px;" onClick="AddItem(@item.Id)">Add to cart</button></span>
                         </div>
 
