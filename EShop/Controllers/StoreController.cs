@@ -78,20 +78,13 @@ namespace EShop.Controllers
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.ToUpper();
-                try
-                {
-                    var selectedItemsByName = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm)).ToList();
-                    var selectedItemsByCategory = allItems.Where(x => x.Category != null && x.Category.Name.ToUpper().Contains(searchTerm)).ToList();
-                    var selectedItems = selectedItemsByName.Union(selectedItemsByCategory);
+                var selectedItemsByName = allItems.Where(x => x.Name.ToUpper().Contains(searchTerm)).ToList();
+                var selectedItemsByCategory = allItems.Where(x => x.Category != null && x.Category.Name.ToUpper().Contains(searchTerm)).ToList();
+                var selectedItems = selectedItemsByName.Union(selectedItemsByCategory);
 
-                    _logger.InfoFormat("Search for citeria [{0}] returned [{1}] items", searchTerm, selectedItems.ToList().Count);
+                _logger.InfoFormat("Search for citeria [{0}] returned [{1}] items", searchTerm, selectedItems.ToList().Count);
 
-                    return PartialView("_Products", selectedItems);
-                }
-                catch (NullReferenceException)
-                {
-                    //do nth
-                }
+                return PartialView("_Products", selectedItems);
                 
             }
             return PartialView("_Products", allItems);
