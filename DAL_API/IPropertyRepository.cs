@@ -10,6 +10,7 @@ namespace DAL_API
     public interface IPropertyRepository
     {
         Property FindById(int id);
+        Property FindByName(string name);
         List<Property> GetAll();
         List<Property> GetByIds(List<int> ids);
         void Remove(Property property);

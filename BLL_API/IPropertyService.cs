@@ -12,6 +12,7 @@ namespace BLL_API
         List<Property> GetAllProperties();
         List<Property> GetProperties(List<int> ids);
         Property GetProperty(int propertyId);
+        Property GetProperty(string name);
         void Update(Property property);
         void Delete(int propertyId);
         void AddProperty(string name);

@@ -104,34 +104,48 @@ namespace BLL
                             items[i].Price + "> is not valid" + Environment.NewLine;
                         continue;
                     }
+
                     var itemPropertiesToAdd = new HashSet<ItemProperty>();
+                    var propertiesToAdd = items[i].ItemProperties.ToList();
+
                     //NOTE: items[i].Category should be nulled 
                     Category categoryToAdd = null;
                     if (items[i].Category.Name != null && 
                         (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
                     {
-                        logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
-                            items[i].Category.Name + "> does not exist" + Environment.NewLine;
-                        items[i].Category = null;
-                    }
-                    else
-                    {
-                        items[i].Category = null;
-                        items[i].CategoryId = categoryToAdd.Id;
+                        logInfo += "<" + items[i].Name + "> category does not exist is so it is added to db <" + 
+                            items[i].Category.Name + ">" + Environment.NewLine;
 
-                        var categoryProperties = categoryToAdd.Properties;
-                        var propertiesToAdd = items[i].ItemProperties.ToList();
-
-                        foreach (var categoryproperty in categoryProperties)
+                        var propertiesToAddToCategory = new List<int>(); 
+                        foreach(var property in propertiesToAdd)
                         {
-                            var propertyToAdd = propertiesToAdd.FirstOrDefault(x => x.Property.Name == categoryproperty.Name);
-                            if (propertyToAdd == null)
-                            {
-                                propertyToAdd = new ItemProperty();
-                            }
-                            itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = categoryproperty.Id, Value = propertyToAdd.Value });
+                            _propertyService.AddProperty(property.Property.Name);
+                            propertiesToAddToCategory.Add(_propertyService.GetProperty(property.Property.Name).Id);
                         }
+
+                        _categoryService.CreateCategory(items[i].Category.Name, propertiesToAddToCategory);
+                        categories = _categoryService.GetAllCategories();
+                        categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name);
+                        items[i].Category = null;
                     }
+                   
+
+                    items[i].Category = null;
+                    items[i].CategoryId = categoryToAdd.Id;
+
+                    var categoryProperties = categoryToAdd.Properties;
+
+
+                    foreach (var categoryproperty in categoryProperties)
+                    {
+                        var propertyToAdd = propertiesToAdd.FirstOrDefault(x => x.Property.Name == categoryproperty.Name);
+                        if (propertyToAdd == null)
+                        {
+                            propertyToAdd = new ItemProperty();
+                        }
+                        itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = categoryproperty.Id, Value = propertyToAdd.Value });
+                    }
+                   
 
                     items[i].ItemProperties = itemPropertiesToAdd;
 

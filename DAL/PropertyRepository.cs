@@ -43,6 +43,12 @@ namespace DAL
                     .SingleOrDefault(c => c.Id == id);
         }
 
+        public Property FindByName(string name)
+        {
+            return DbContext.Properties.Include("ItemProperties")
+                    .FirstOrDefault(c => c.Name == name);
+        }
+
         public List<Property> GetAll()
         {
             return DbContext.Properties.Include("ItemProperties").ToList();
