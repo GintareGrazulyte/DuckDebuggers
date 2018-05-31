@@ -6,6 +6,7 @@ using System.IO;
 using OfficeOpenXml;
 using BOL;
 using BOL.Property;
+using System.Globalization;
 
 namespace BLL
 {
@@ -101,8 +102,9 @@ namespace BLL
              string priceStr = ConvertTostring(worksheet.Cells[row, 3].Value);
              if (priceStr != null)
              {
-                 decimal.TryParse(priceStr.Replace(',', '.'), out decimal priceDec);
+                 decimal.TryParse(priceStr.Replace(',', '.'), NumberStyles.Any ,new NumberFormatInfo() { NumberDecimalSeparator = "." }, out decimal priceDec);
                  price = (int)(priceDec * 100);
+
              }
              else
              {
