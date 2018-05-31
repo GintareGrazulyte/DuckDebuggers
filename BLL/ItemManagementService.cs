@@ -44,11 +44,21 @@ namespace BLL
             {
                 //TODO would be nice to have a not hardcoded int function
                 string[] directories = folderToImage.Split(Path.DirectorySeparatorChar);
-                return Path.DirectorySeparatorChar + Path.Combine(directories[directories.Length - 2], Path.Combine(directories[directories.Length-1], _fileLoader.Load(folderToImage, itemToCreate.Image)));
+                //TODO check image format before loading to server
+                string result = Path.DirectorySeparatorChar + Path.Combine(directories[directories.Length - 2], Path.Combine(directories[directories.Length-1], _fileLoader.Load(folderToImage, itemToCreate.Image)));
+                if (!IsImageUrlCorrect(result))
+                {
+                    throw new Exception("Incorrect image format");
+                }
+                return result;
             }
             else if((!String.IsNullOrEmpty(itemToCreate.ImageUrl) && itemToCreate.Image == null) ||
                 (!String.IsNullOrEmpty(itemToCreate.ImageUrl) && itemToCreate.Image != null))
             {
+                if (!IsImageUrlCorrect(itemToCreate.ImageUrl))
+                {
+                    throw new Exception("Incorrect image format");
+                }
                 return itemToCreate.ImageUrl;
             }
             else
@@ -196,12 +206,13 @@ namespace BLL
                 Item foundItem = _itemRepository.FindById(itemToCreate.Id);
                 if (foundItem != null)
                     throw new Exception(); //TODO: item already exists
-
-                itemToCreate.ImageUrl = CreateItemUrl(itemToCreate, folderToImage);
-                //TODO should be checked before uplaoding the file to server
-                if (!IsImageUrlCorrect(itemToCreate.ImageUrl))
+                try
                 {
-                    throw new Exception("Incorrect image format");
+                    itemToCreate.ImageUrl = CreateItemUrl(itemToCreate, folderToImage);
+                }
+                catch
+                {
+                    throw;
                 }
                 _itemRepository.Add(itemToCreate);
                 dbContextScope.SaveChanges();
@@ -282,11 +293,13 @@ namespace BLL
                     //TODO: CategoryNotFoundException
                     throw new Exception();
                 }
-
-                itemToUpdate.ImageUrl = CreateItemUrl(itemToUpdate, folderToImage);
-                if (!IsImageUrlCorrect(itemToUpdate.ImageUrl))
+                try
                 {
-                    throw new Exception("Incorrect image format");
+                    itemToUpdate.ImageUrl = CreateItemUrl(itemToUpdate, folderToImage);
+                }
+                catch
+                {
+                    throw;
                 }
                 //TODO: copy everything here or Attach from DbContext
                 foundItem.ImageUrl = itemToUpdate.ImageUrl;
