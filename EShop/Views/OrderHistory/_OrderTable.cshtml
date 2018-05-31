@@ -43,7 +43,7 @@
             <tr>
                 <td width="10%">
                     @{
-                        if (cartItem.Item != null && cartItem.Item.Image != null)
+                        if (cartItem.Item != null && cartItem.Item.ImageUrl != null)
                         {
                             @:<img src="@Url.Content(cartItem.Item.ImageUrl)" alt="@cartItem.Item.Name" style="height:40px; width:auto;" />
                         }
