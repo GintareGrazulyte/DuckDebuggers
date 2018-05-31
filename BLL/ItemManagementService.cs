@@ -75,7 +75,6 @@ namespace BLL
                 string logInfo = "";
 
                 var categories = _categoryService.GetAllCategories();
-                var properties = _propertyService.GetAllProperties();
 
               
                 int addedCount = 0;
@@ -105,6 +104,7 @@ namespace BLL
                             items[i].Price + "> is not valid" + Environment.NewLine;
                         continue;
                     }
+                    var itemPropertiesToAdd = new HashSet<ItemProperty>();
                     //NOTE: items[i].Category should be nulled 
                     Category categoryToAdd = null;
                     if (items[i].Category.Name != null && 
@@ -118,27 +118,21 @@ namespace BLL
                     {
                         items[i].Category = null;
                         items[i].CategoryId = categoryToAdd.Id;
-                    }
 
+                        var categoryProperties = categoryToAdd.Properties;
+                        var propertiesToAdd = items[i].ItemProperties.ToList();
 
-                    //TODO category properties
-                    var propertiesToAdd = items[i].ItemProperties.ToList();
-                    var itemPropertiesToAdd = new HashSet<ItemProperty>();
-
-                    for (int j = 0; j < propertiesToAdd.Count; j++)
-                    {
-                        var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
-                        if (propertyToAdd != null)
+                        foreach (var categoryproperty in categoryProperties)
                         {
-                            itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
-                        }
-                        else
-                        {
-                            logInfo += "For item <" + items[i].Name + "> property <" +
-                               propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
+                            var propertyToAdd = propertiesToAdd.FirstOrDefault(x => x.Property.Name == categoryproperty.Name);
+                            if (propertyToAdd == null)
+                            {
+                                propertyToAdd = new ItemProperty();
+                            }
+                            itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = categoryproperty.Id, Value = propertyToAdd.Value });
                         }
                     }
-                
+
                     items[i].ItemProperties = itemPropertiesToAdd;
 
                     try
@@ -148,7 +142,8 @@ namespace BLL
                     }
                     catch (Exception e)
                     {
-                        logInfo = "Unable to save item <" + items[i].Name + "> to database. Exception message: " + e.Message;
+                        logInfo = "Unable to save item <" + items[i].Name + "> to database. Exception message: " + e.Message +
+                        Environment.NewLine;
                     }
 
                 }
