@@ -6,6 +6,7 @@ using System.IO;
 using OfficeOpenXml;
 using BOL;
 using BOL.Property;
+using OfficeOpenXml.Style;
 
 namespace BLL
 {
@@ -191,19 +192,45 @@ namespace BLL
                 var worksheet = excelPackage.Workbook.Worksheets.Add("Items");
 
                 var columnNames = new List<string> { "Product Name", "Title", "Price", "Image", "SKU code",
-                    "Description", "Category", "Properties" };
+                    "Description", "Category", "Properties", "" };
                 for (int i = 1; i < columnNames.Count + 1; i++)
                 {
                     worksheet.Column(i).Width = 20;
                     var cell = worksheet.Cells[1, i];
                     cell.Value = columnNames[i - 1];
                     cell.Style.Font.Bold = true;
-                    //= new Font("Calibri", 12, FontStyle.Bold);
+                    cell.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    cell.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    cell.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    cell.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    cell.Style.Font.Bold = true;
+                    cell.Style.Font.Size = 15;
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                 }
+
+                worksheet.Cells[1, 8, 1, 9].Merge = true;
 
                 int rowIndex = 2;
                 foreach (var item in items)
                 {
+                    var lenght = item.ItemProperties.Count; 
+                    if (lenght == 0)
+                    {
+                        lenght++;
+                    }
+                    for (int i = 1; i < 8; i++)
+                    {
+                        worksheet.Cells[rowIndex, i, rowIndex + lenght - 1, i].Merge = true;
+                    }
+                    var modelTable = worksheet.Cells[rowIndex, 1, rowIndex + lenght - 1, 9];
+                    modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    modelTable.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    modelTable.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
                     worksheet.Cells[rowIndex, 1].Value = item.Name;
                     worksheet.Cells[rowIndex, 2].Value = item.Title;
                     worksheet.Cells[rowIndex, 3].Value = item.Price;
