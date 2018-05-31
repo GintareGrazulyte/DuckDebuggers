@@ -108,7 +108,7 @@ namespace EShop.Controllers
             _itemManagementService.ImportItemsFromFile(admin, Server.MapPath("~/Uploads/Items"), file, 
                 Server.MapPath("~/Uploads/Images"), logInfoNeeded);
 
-            return View("Index", _itemQueryService.GetAllItems());
+            return RedirectToAction("Index", "Item", _itemQueryService.GetAllItems());
         }
 
         public ActionResult ExportItemsToFile(bool logInfoNeeded)
@@ -125,7 +125,7 @@ namespace EShop.Controllers
 
             if (logInfoNeeded)
             {
-                return View("Index", allItems);
+                RedirectToAction("Index", "Item", allItems);
             }
             return View("Export", new ExportedItemsViewModel { ExportedItemsFiles = GetExportedFiles() });
         }
