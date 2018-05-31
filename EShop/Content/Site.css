@@ -101,6 +101,8 @@ textarea {
     max-width: 300px;
     max-height: 500px;
     margin: 0.1%;
+    margin-bottom: 60px;
+    margin-right: 10px;
     display: none;
 }
 

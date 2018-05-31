@@ -116,6 +116,30 @@ namespace EShop.Controllers
             }
         }
 
+        public ActionResult Remove(int? id)
+        {
+            _logger.InfoFormat("Remove discount with id [{0}]", id);
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            try
+            {
+                _discountManagementService.DeleteDiscount((int)id);
+            }
+            catch(Exception e)
+            {
+                _logger.InfoFormat("Discount with id [{0}] was not found.", id);
+                return RedirectToAction("Index");
+            }
+
+            _logger.InfoFormat("Removed discount with id [{0}] from DB.",
+                id); 
+
+            return RedirectToAction("Index");
+        }
+
         // GET: Discounts/Expirations
         public ActionResult Expirations()
         {

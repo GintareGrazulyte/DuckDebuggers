@@ -59,6 +59,23 @@ namespace BLL
             }
         }
 
+        public void DeleteDiscount(int discountId)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.Create())
+            {
+
+                var foundDiscount = _discountRepository.FindById(discountId);
+                if (foundDiscount == null)
+                {
+                    //TODO: DiscountNotFoundException
+                    throw new Exception();
+                }
+
+                _discountRepository.Remove(foundDiscount);
+                dbContextScope.SaveChanges();
+            }
+        }
+
         public List<Discount> GetAllDiscounts()
         {
             using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())

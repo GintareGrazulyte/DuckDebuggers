@@ -13,5 +13,6 @@ namespace BLL_API
         List<Discount> GetAllDiscounts();
         Discount GetDiscount(int id);
         void DeleteExpiredDiscounts();
+        void DeleteDiscount(int discountId);
     }
 }

@@ -130,7 +130,7 @@ namespace EShop.Controllers
             {
                 if (item.Item.HasDiscount)
                 {
-                    item.BuyPrice = (int)(item.Item.GetPriceWithDiscount() * 100);
+                    item.BuyPrice = (int)(item.Item.GetPriceWithDiscount());
                 }
                 else
                 {

@@ -281,8 +281,15 @@ namespace EShop.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             _logger.InfoFormat("Delete item with id [{0}]", id);
-
-            _itemManagementService.DeleteItem(id);
+            try
+            {
+                _itemManagementService.DeleteItem(id);
+            }
+            catch(Exception e)
+            {
+                _logger.InfoFormat("Item with id [{0}] was not found", id);
+                return RedirectToAction("Index");
+            }
 
             _logger.InfoFormat("Item with id [{0}] was successfully deleted", id);
 

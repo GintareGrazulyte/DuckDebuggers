@@ -46,8 +46,9 @@
             </td>
         }
         <td>
-            @Html.ActionLink("Details", "Details", new { id = discount.Id })
-        </td>    
+            @Html.ActionLink("Details", "Details", new { id = discount.Id }) | 
+            @Html.ActionLink("Remove", "Remove", new { id = discount.Id })
+        </td>
     </tr>
     }
 </table>
