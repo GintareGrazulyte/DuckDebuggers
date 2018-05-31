@@ -78,6 +78,16 @@ namespace BLL
             }
         }
 
+        public Property GetProperty(string propertyName)
+        {
+            using (var dbContextScope = _dbContextScopeFactory.CreateReadOnly())
+            {
+                var property = _propertyRepository.FindByName(propertyName);
+
+                return property;
+            }
+        }
+
         public void Update(Property property)
         {
             if (property == null)
