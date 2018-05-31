@@ -120,7 +120,7 @@ namespace BLL
 
                     //NOTE: items[i].Category should be nulled 
                     Category categoryToAdd = null;
-                    if (items[i].Category.Name != null && 
+                    if (!(string.IsNullOrWhiteSpace(items[i].Category.Name) || string.IsNullOrEmpty(items[i].Category.Name)) && 
                         (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
                     {
                         logInfo += "<" + items[i].Name + "> category does not exist is so it is added to db <" + 
@@ -130,12 +130,15 @@ namespace BLL
                         foreach(var property in propertiesToAdd)
                         {
                             Property propertyInDB;
-                            if ((propertyInDB = _propertyService.GetProperty(property.Property.Name)) == null)
+                            if (!(string.IsNullOrEmpty(property.Property.Name) || string.IsNullOrWhiteSpace(property.Property.Name)))
                             {
-                                _propertyService.AddProperty(property.Property.Name);
-                                propertyInDB = _propertyService.GetProperty(property.Property.Name);
+                                if ((propertyInDB = _propertyService.GetProperty(property.Property.Name)) == null)
+                                {
+                                    _propertyService.AddProperty(property.Property.Name);
+                                    propertyInDB = _propertyService.GetProperty(property.Property.Name);
+                                }
+                                propertiesToAddToCategory.Add(propertyInDB.Id);
                             }
-                            propertiesToAddToCategory.Add(propertyInDB.Id);
                         }
 
                         _categoryService.CreateCategory(items[i].Category.Name, propertiesToAddToCategory);
