@@ -129,8 +129,13 @@ namespace BLL
                         var propertiesToAddToCategory = new List<int>(); 
                         foreach(var property in propertiesToAdd)
                         {
-                            _propertyService.AddProperty(property.Property.Name);
-                            propertiesToAddToCategory.Add(_propertyService.GetProperty(property.Property.Name).Id);
+                            Property propertyInDB;
+                            if ((propertyInDB = _propertyService.GetProperty(property.Property.Name)) == null)
+                            {
+                                _propertyService.AddProperty(property.Property.Name);
+                                propertyInDB = _propertyService.GetProperty(property.Property.Name);
+                            }
+                            propertiesToAddToCategory.Add(propertyInDB.Id);
                         }
 
                         _categoryService.CreateCategory(items[i].Category.Name, propertiesToAddToCategory);

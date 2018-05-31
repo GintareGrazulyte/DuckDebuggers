@@ -84,9 +84,6 @@ namespace BLL
             {
                 var property = _propertyRepository.FindByName(propertyName);
 
-                if (property == null)
-                    throw new ArgumentException($"Property with name {propertyName} not found");
-
                 return property;
             }
         }
