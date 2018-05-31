@@ -75,7 +75,6 @@ namespace BLL
                 string logInfo = "";
 
                 var categories = _categoryService.GetAllCategories();
-                var properties = _propertyService.GetAllProperties();
 
               
                 int addedCount = 0;
@@ -105,45 +104,37 @@ namespace BLL
                             items[i].Price + "> is not valid" + Environment.NewLine;
                         continue;
                     }
+                    var itemPropertiesToAdd = new HashSet<ItemProperty>();
                     //NOTE: items[i].Category should be nulled 
                     Category categoryToAdd = null;
                     if (items[i].Category.Name != null && 
                         (categoryToAdd = categories.FirstOrDefault(c => c.Name == items[i].Category.Name)) == null)
                     {
-                        items[i].Category = null;
                         logInfo += "<" + items[i].Name + "> category is set to NULL as category <" + 
                             items[i].Category.Name + "> does not exist" + Environment.NewLine;
+                        items[i].Category = null;
                     }
                     else
                     {
                         items[i].Category = null;
                         items[i].CategoryId = categoryToAdd.Id;
+
+                        var categoryProperties = categoryToAdd.Properties;
+                        var propertiesToAdd = items[i].ItemProperties.ToList();
+
+                        foreach (var categoryproperty in categoryProperties)
+                        {
+                            var propertyToAdd = propertiesToAdd.FirstOrDefault(x => x.Property.Name == categoryproperty.Name);
+                            if (propertyToAdd == null)
+                            {
+                                propertyToAdd = new ItemProperty();
+                            }
+                            itemPropertiesToAdd.Add(new ItemProperty() { PropertyId = categoryproperty.Id, Value = propertyToAdd.Value });
+                        }
                     }
 
-              
-                    //TODO add properties
-                    //var propertiesToAdd = items[i].ItemProperties.ToList();
-                    //var itemPropertiesToAdd = new HashSet<ItemProperty>();
-                    //for (int j = 0; j < propertiesToAdd.Count; j++)
-                    //{
-                    //    var propertyToAdd = properties.FirstOrDefault(x => x.Name == propertiesToAdd[j].Property.Name);
-                    //    if (propertyToAdd != null)
-                    //    {
-                    //        //TODO set item id
-                    //        itemPropertiesToAdd.Add(new ItemProperty { ItemId = 0, PropertyId = propertyToAdd.Id, Value = propertiesToAdd[j].Value });
-                    //    }
-                    //    else
-                    //    {
-                    //        logInfo += "For item <" + items[i].Name + "> property <" +
-                    //           propertiesToAdd[j].Property.Name + "> is not added" + Environment.NewLine;
-                    //    }
-                    //}
-                    items[i].ItemProperties = null;
-                    //TODO add property list
-                    //items[i].ItemProperties = itemPropertiesToAdd;
+                    items[i].ItemProperties = itemPropertiesToAdd;
 
-
-                    
                     try
                     {
                         CreateItemWithImage(items[i], imagesFolder);
@@ -151,7 +142,8 @@ namespace BLL
                     }
                     catch (Exception e)
                     {
-                        logInfo = "Unable to save item <" + items[i].Name + "> to database. Exception message: " + e.Message;
+                        logInfo = "Unable to save item <" + items[i].Name + "> to database. Exception message: " + e.Message +
+                        Environment.NewLine;
                     }
 
                 }

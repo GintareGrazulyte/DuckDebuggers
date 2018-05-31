@@ -16,6 +16,8 @@ namespace BLL
         {
             var items = new List<Item>();
 
+            int row = 2;
+
             var file = new FileInfo(path);
             using (ExcelPackage excelPackage = new ExcelPackage(file))
             {
@@ -26,7 +28,6 @@ namespace BLL
                     throw new Exception("Worksheet is missing");
                 }
 
-                int row = 2;
 
                 string name = null, title = null, imageUrl = null, skuCode = null, description = null,
                     categoryName = null, propertyName = null, propertyValue = null;
@@ -57,11 +58,14 @@ namespace BLL
 
                         properties = new HashSet<ItemProperty>();
 
+                        ReadValues(ref propertyName, ref propertyValue, worksheet, row);
+                        properties.Add(new ItemProperty() { Property = new Property() { Name = propertyName }, Value = propertyValue });
+
                         firstRow = false;
+                        row++;
                     }
 
-
-                    if (row == lastItemRow)
+                    if (row > lastItemRow)
                     {
                         item.ItemProperties = properties;
                         CorrectValues(item);
@@ -76,9 +80,9 @@ namespace BLL
                     }
                     else
                     {
-                        properties.Add(new ItemProperty() { Property = new Property() { Name = propertyName }, Value = propertyValue } );
-                        row++;
                         ReadValues(ref propertyName, ref propertyValue, worksheet, row);
+                        properties.Add(new ItemProperty() { Property = new Property() { Name = propertyName }, Value = propertyValue });
+                        row++;
                     }
 
                 }
@@ -236,7 +240,7 @@ namespace BLL
             if (@this.Merge)
             {
                 var idx = @this.Worksheet.GetMergeCellId(startRow, @this.Start.Column);
-                return @this.Worksheet.Cells[@this.Worksheet.MergedCells[idx - 1]].Rows + startRow;
+                return @this.Worksheet.Cells[@this.Worksheet.MergedCells[idx - 1]].Rows + startRow - 1;
             }
             else
             {
